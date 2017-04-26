@@ -5,8 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="1200" Width="1920" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="59*"/>
+            <ColumnDefinition Width="212*"/>
+            <ColumnDefinition Width="48*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="73*"/>
+            <RowDefinition Height="205*"/>
+            <RowDefinition Height="614*"/>
+            <RowDefinition Height="279*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="1" Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="211*"/>
+                <ColumnDefinition Width="1061*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="140*"/>
+                <RowDefinition Height="139*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Margin="10" TextWrapping="Wrap" FontSize="60" Text="Picking"/>
+            <TextBlock TextWrapping="Wrap" Text="Other" Margin="10,10,16,10" Grid.Row="1" FontSize="60"/>
+            <TextBlock x:Name="PickLocationsBlock" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="72"/>
+            <TextBlock x:Name="OtherLocationsBlock" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="64"/>
+        </Grid>
+        <TextBox x:Name="ScanBox" Margin="10,10,40,10" TextWrapping="Wrap" Grid.ColumnSpan="2" FontSize="34" KeyDown="ScanBox_KeyUp"/>
+        <ScrollViewer x:Name="HistoryScroller" Grid.Row="2" Grid.RowSpan="2" PanningMode="Both" VerticalScrollBarVisibility="Hidden">
+            <TextBlock x:Name="HistoryBlock" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" FontSize="26"/>
+        </ScrollViewer>
+        <TextBlock x:Name="InstructionBox" Margin="10" Grid.Row="1" TextWrapping="Wrap" Grid.ColumnSpan="2" FontSize="72" Text="Please scan your ID card" TextAlignment="Center"/>
+        <TextBlock x:Name="CurrentMode" Grid.Column="2" Margin="10" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" FontSize="60"/>
+        <TextBlock x:Name="EmployeeBlock" Grid.Column="2" Margin="10" TextWrapping="Wrap" FontSize="36"/>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <ScrollViewer>
+                <StackPanel x:Name="ItemDetailsStackPanel"/>
+            </ScrollViewer>
+
+        </Grid>
+        <UniformGrid Grid.Column="2" Grid.Row="2" Rows="4">
+            <Button x:Name="LocationButton" Content="Location" Margin="15" FontSize="48" Click="LocationButton_Click"/>
+            <Button x:Name="CountButton" Content="Count" Margin="15,5,15,15" FontSize="48" Click="CountButton_Click"/>
+            <Button x:Name="ViewButton" Content="View" Margin="15,5,15,15" FontSize="48" Click="ViewButton_Click" IsEnabled="False"/>
+            <Button x:Name="QuitButton" Content="Quit" Margin="15,5,15,15" FontSize="48" Click="QuitButton_Click"/>
+        </UniformGrid>
+
     </Grid>
 </Window>
