@@ -243,8 +243,8 @@ namespace LocationModifier2
                         var stockCheck = new StockEntry();
                         stockCheck.ShowDialog();
                         var amount = stockCheck.FinalStockEntry;
-                        //ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
-                        HistoryBlock.Text += "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From " + LocationIdConversion(InitialLocationId) + " to " + LocationIdConversion(NewLocationId) + Environment.NewLine + "======================";
+                        ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
+                        HistoryBlock.Text += "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From " + LocationIdConversion(InitialLocationId) + " to " + LocationIdConversion(NewLocationId) + Environment.NewLine + "======================" + Environment.NewLine;
                         ActiveItem = null;
                         NewLocationId = 0;
                         InitialLocationId = 0;
