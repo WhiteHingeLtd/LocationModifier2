@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LocationModifier2</name>
+    </assembly>
+    <members>
+        <member name="T:LocationModifier2.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:LocationModifier2.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:LocationModifier2.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:LocationModifier2.Dialogs.StockEntry">
+            <summary>
+            Interaction logic for StockEntry.xaml
+            </summary>
+            <summary>
+            StockEntry
+            </summary>
+        </member>
+        <member name="M:LocationModifier2.Dialogs.StockEntry.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:LocationModifier2.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:LocationModifier2.MainWindow.Instruct(System.String)">
+            <summary>
+            Method to easily update the instruction Block
+            </summary>
+            <param name="instruction">The string to update the Block to</param>
+        </member>
+        <member name="M:LocationModifier2.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:LocationModifier2.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:LocationModifier2.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:LocationModifier2.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>

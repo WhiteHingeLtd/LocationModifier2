@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LocationModifier2.Dialogs;
+using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,6 +18,12 @@ namespace LocationModifier2
         public EmployeeCollection EmpCol = new EmployeeCollection();
         public Employee AuthdEmployee = new Employee();
         public Mode CurrentSelectedMode;
+        public ScanState CurrentScanState;
+        public WhlSKU ActiveItem;
+        public SkuCollection ActiveChildrenCollection;
+        public int InitialLocationId;
+        public int NewLocationId;
+        
         private DispatcherTimer _updateMode = new DispatcherTimer();
         public MainWindow()
         {
@@ -24,6 +32,7 @@ namespace LocationModifier2
             _updateMode.Interval = new TimeSpan(0,0,0,500);
             _updateMode.Tick += UpdateMode_Tick;
             CurrentSelectedMode = Mode.View;
+            CurrentScanState = ScanState.InitialScan;
             _updateMode.Start();
             UpdateMode_Tick(null, null);
         }
@@ -49,14 +58,24 @@ namespace LocationModifier2
             }
             _updateMode.Stop();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public enum Mode
         {
             InitialValue = 0,
             Location = 1,
             View = 2,
-            Count = 3,
+            Count = 3
             
+        }
+
+        public enum ScanState
+        {
+            InitialScan = 0,
+            ScannedItem = 1,
+            ScannedOriginShelf = 2,
+            ScannedNewShelf = 3
         }
 
         public void ProcessScanBox(string scannedText)
@@ -114,14 +133,15 @@ namespace LocationModifier2
 
         }
 
-        private void ScanBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void ScanBox_KeyUp(object sender,KeyEventArgs e)
         {
-            if (e.Key == Key.Return)
+            var ctrl = sender as TextBox;
+            if (e.Key == Key.Return && ctrl != null)
             {
                 e.Handled = true;
                 try
                 {
-                    ProcessScanBox((sender as TextBox).Text);
+                    ProcessScanBox(ctrl.Text);
                 }
                 catch (Exception exception)
                 {
@@ -129,7 +149,7 @@ namespace LocationModifier2
                 }
                 finally
                 {
-                    (sender as TextBox).Text = "";
+                    ctrl.Text = "";
                 }
             }
 
@@ -145,17 +165,121 @@ namespace LocationModifier2
 
         private void ProcessCount(string data)
         {
-            
+            if (data.StartsWith("qlo") && CurrentScanState == ScanState.InitialScan)
+            {
+                Instruct("Please scan an item to adjust the stock");
+            }
+            else if (data.Length == 7)
+            {
+                Instruct("Please select a packsize");
+            }
+            else
+            {
+
+            }
         }
 
         private void ProcessLocation(string data)
         {
-            
+
+            switch (CurrentScanState)
+            {
+                case ScanState.InitialScan:
+                    if (data.StartsWith("qlo"))
+                    {
+                        Instruct("Please scan an item");
+                        ActiveItem = null;
+                        NewLocationId = 0;
+                        InitialLocationId = 0;
+                        CurrentScanState = ScanState.InitialScan;
+                    }
+                    else if ((data.StartsWith("10") && data.Length > 7) | data.Length == 13)
+                    {
+                        ItemDetailsStackPanel.Children.Clear();
+                        ActiveItem = FullSkuCollection.SearchBarcodes(data)[0];
+                        Instruct("Please scan the original location");
+                        var infoblock = new TextBlock();
+                        infoblock.Text = "Active item:" + Environment.NewLine + ActiveItem.Title.Label + "  " + ActiveItem.SKU;
+                        infoblock.FontSize = 36.0;
+                        ItemDetailsStackPanel.Children.Add(infoblock);
+                        InitialLocationId = 0;
+                        CurrentScanState = ScanState.ScannedItem;
+                    }
+                    else if (data.Length == 7 && data.StartsWith("10"))
+                    {
+                        
+                    }
+                    else
+                    {
+                        Instruct("Please scan a valid barcode");
+                    }
+                    break;
+                case ScanState.ScannedItem:
+                    if (data.Contains("qlo"))
+                    {
+                        InitialLocationId = Convert.ToInt32(data.Replace("qlo", ""));
+                        NewLocationId = 0;
+                        CurrentScanState = ScanState.ScannedOriginShelf;
+                        Instruct("Please scan the new location");
+                    }
+                    else if (data.StartsWith("10"))
+                    {
+                        Instruct("Please scan an item");
+                        ActiveItem = null;
+                        NewLocationId = 0;
+                        InitialLocationId = 0;
+                        CurrentScanState = ScanState.InitialScan;
+                    }
+                    else
+                    {
+                        Instruct("Please scan the original Location");
+                    }
+                    break;
+                case ScanState.ScannedOriginShelf:
+                    NewLocationId = Convert.ToInt32(data.Replace("qlo", ""));
+                    CurrentScanState = ScanState.ScannedNewShelf;
+                    if (ActiveItem != null && NewLocationId != 0 && InitialLocationId != 0)
+                    {
+                        var stockCheck = new StockEntry();
+                        stockCheck.ShowDialog();
+                        var amount = stockCheck.FinalStockEntry;
+                        //ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
+                        HistoryBlock.Text += "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From " + LocationIdConversion(InitialLocationId) + " to " + LocationIdConversion(NewLocationId) + Environment.NewLine + "======================";
+                        ActiveItem = null;
+                        NewLocationId = 0;
+                        InitialLocationId = 0;
+                        CurrentScanState = ScanState.InitialScan;
+                        Instruct("Item Moved. Please scan a new item");
+                    }
+                    else if (data.StartsWith("10"))
+                    {
+                        Instruct("Please scan an item");
+                        ActiveItem = null;
+                        NewLocationId = 0;
+                        InitialLocationId = 0;
+                        CurrentScanState = ScanState.InitialScan;
+                    }
+                    else
+                    {
+                        Instruct("There was an error please try again.");
+                        ActiveItem = null;
+                        NewLocationId = 0;
+                        InitialLocationId = 0;
+                        CurrentScanState = ScanState.InitialScan;
+                    }
+                    break;
+                case ScanState.ScannedNewShelf:
+
+                    break;
+                default:
+                    throw new NullReferenceException("The ScanState enum was invalid");
+            }
+
         }
 
         private void ProcessView(string data)
         {
-            if (data.StartsWith("qlo"))
+            if (data.StartsWith("qlo") )
             {
                 ItemDetailsStackPanel.Children.Clear();
                 var dict = MySQL.SelectDataDictionary("SELECT * FROM whldata.sku_locations WHERE LocationRefID='"+ data.Replace("qlo","") + "';");
@@ -172,7 +296,7 @@ namespace LocationModifier2
                 }
                 
             }
-            else if (data.StartsWith("10"))
+            else if (data.StartsWith("10") | data.Length == 13)
             {
                 var searchcoll = FullSkuCollection.SearchBarcodes(data);
                 PickLocationsBlock.Text = "";
@@ -180,6 +304,7 @@ namespace LocationModifier2
                 if (searchcoll.Count == 1)
                 {
                     var item = searchcoll[0];
+                    item.RefreshLocations();
                     Instruct(searchcoll[0].SKU + " " + searchcoll[0].Title.Label);
                     foreach (var loc in item.Locations)
                     {
@@ -194,12 +319,21 @@ namespace LocationModifier2
                         PickLocationsBlock.Text = PickLocationsBlock.Text.Trim().TrimEnd(',');
                         OtherLocationsBlock.Text = OtherLocationsBlock.Text.Trim().TrimEnd(',');
                     }
-                    var infoBlock = new TextBlock();
+
                     
                 }
                 else if (searchcoll.Count > 1)
                 {
-                    
+                    ItemDetailsStackPanel.Children.Clear();
+                    var currentItem = searchcoll[0];
+                    Instruct(currentItem.Title.Label);
+                    foreach (var result in searchcoll)
+                    {
+                        var onShelf = new TextBlock();
+                        onShelf.Text += result.SKU + " " + result.Title.Label;
+                        onShelf.FontSize = 36;
+                        ItemDetailsStackPanel.Children.Add(onShelf);
+                    }
                 }
                 else
                 {
@@ -220,6 +354,7 @@ namespace LocationModifier2
             ViewButton.IsEnabled = true;
             CurrentSelectedMode = Mode.Location;
             UpdateMode_Tick(null, null);
+            ScanBox.Focus();
         }
 
         private void CountButton_Click(object sender, RoutedEventArgs e)
@@ -230,6 +365,7 @@ namespace LocationModifier2
             ViewButton.IsEnabled = true;
             CurrentSelectedMode = Mode.Count;
             UpdateMode_Tick(null, null);
+            ScanBox.Focus();
         }
 
         private void ViewButton_Click(object sender, RoutedEventArgs e)
@@ -240,11 +376,38 @@ namespace LocationModifier2
             LocationButton.IsEnabled = true;
             CurrentSelectedMode = Mode.View;
             UpdateMode_Tick(null, null);
+            ScanBox.Focus();
         }
 
         private void QuitButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+        public string LocationIdConversion(int location)
+        {
+            try
+            {
+                var LocationString = "";
+                var locObject = MySQL.SelectData("SELECT locText FROM whldata.locationreference WHERE locID=" + location.ToString() + " LIMIT 1;") as ArrayList;
+                if (locObject != null && locObject.Count > 0)
+                {
+                    foreach (ArrayList locList in locObject)
+                    {
+                        LocationString = locList[0].ToString();
+                    }
+                }
+                else
+                {
+                    throw new NullReferenceException();
+                }
+
+                return LocationString;
+            }
+            catch (Exception)
+            {
+                return "Could not find shelf name";
+            }
+
         }
     }
 }
