@@ -4,6 +4,7 @@ using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using WHLClasses;
 namespace LocationModifier2
@@ -53,8 +54,8 @@ namespace LocationModifier2
                     CurrentMode.Text = "Count";
                     break;
                 default:
-                    Console.WriteLine("Shit's Fucked");
-                    throw new NullReferenceException();    
+                    Console.WriteLine("Enum set incorrectly");
+                    throw new NullReferenceException("Mode initialized incorrectly");    
             }
             _updateMode.Stop();
         }
@@ -158,25 +159,73 @@ namespace LocationModifier2
         /// Method to easily update the instruction Block
         /// </summary>
         /// <param name="instruction">The string to update the Block to</param>
-        private void Instruct(string instruction)
+        /// <param name="colour">The colour of the instruction block. Defaults to black</param>
+        private void Instruct(string instruction, SolidColorBrush colour = null)
         {
+            if (colour == null) colour = Brushes.Black;
             InstructionBox.Text = instruction;
+            InstructionBox.Foreground = Brushes.Black;
         }
 
         private void ProcessCount(string data)
         {
-            if (data.StartsWith("qlo") && CurrentScanState == ScanState.InitialScan)
+            switch (CurrentScanState)
             {
-                Instruct("Please scan an item to adjust the stock");
-            }
-            else if (data.Length == 7)
-            {
-                Instruct("Please select a packsize");
-            }
-            else
-            {
+                case ScanState.InitialScan:
+                    if (data.StartsWith("qlo"))
+                    {
+                        Instruct("Please scan an item to adjust the stock");
+                    }
+                    else if (data.Length == 7)
+                    {
+                        ActiveItem = null;
+                        Instruct("Please select a packsize");
+                        var searchColl = FullSkuCollection.SearchBarcodes(data);                  
+                        var results = new PacksizeSelector(searchColl);
+                        results.ShowDialog();
+                        ActiveItem = results.SelectedSku;
+                        Instruct("Please scan a location");
+                        CurrentScanState = ScanState.ScannedItem;
 
+                    }
+                    else if (data.Length == 11 | data.Length == 13)
+                    {
+                        ActiveItem = null;
+                        ActiveItem = FullSkuCollection.SearchBarcodes(data)[0];
+                        Instruct("Please scan a location");
+                        CurrentScanState = ScanState.ScannedItem;
+                    }
+                    else
+                    {
+                        Instruct("Please scan a valid barcode");
+                    }
+                    break;
+                case ScanState.ScannedItem:
+                    if (data.StartsWith("qlo"))
+                    {
+                        var currentLoc = Convert.ToInt32(data.Replace("qlo", ""));
+                        var stockCheck = new StockEntry();
+                        stockCheck.ShowDialog();
+                        var amount = stockCheck.FinalStockEntry;
+                        ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                        HistoryBlock.Text += "Updated Stock " + " of " + ActiveItem.SKU + " by " + amount.ToString()  + Environment.NewLine + "At " + LocationIdConversion(currentLoc) + Environment.NewLine + "======================" + Environment.NewLine;
+
+                    }
+                    else
+                    {
+                        Instruct("Please scan a valid shelf ID");
+                    }
+                    break;
+                case ScanState.ScannedNewShelf:
+                    break;
+                case ScanState.ScannedOriginShelf:
+                    break;
+                default:
+                    Instruct("An error occured please try again");
+                    throw new NullReferenceException();
             }
+
+           
         }
 
         private void ProcessLocation(string data)
@@ -353,7 +402,7 @@ namespace LocationModifier2
             CountButton.IsEnabled = true;
             ViewButton.IsEnabled = true;
             CurrentSelectedMode = Mode.Location;
-            UpdateMode_Tick(null, null);
+            ResetForNewScan();
             ScanBox.Focus();
         }
 
@@ -364,7 +413,7 @@ namespace LocationModifier2
             LocationButton.IsEnabled = true;
             ViewButton.IsEnabled = true;
             CurrentSelectedMode = Mode.Count;
-            UpdateMode_Tick(null, null);
+            ResetForNewScan();
             ScanBox.Focus();
         }
 
@@ -375,7 +424,7 @@ namespace LocationModifier2
             CountButton.IsEnabled = true;
             LocationButton.IsEnabled = true;
             CurrentSelectedMode = Mode.View;
-            UpdateMode_Tick(null, null);
+            ResetForNewScan();
             ScanBox.Focus();
         }
 
@@ -387,13 +436,13 @@ namespace LocationModifier2
         {
             try
             {
-                var LocationString = "";
+                var locationString = "";
                 var locObject = MySQL.SelectData("SELECT locText FROM whldata.locationreference WHERE locID=" + location.ToString() + " LIMIT 1;") as ArrayList;
                 if (locObject != null && locObject.Count > 0)
                 {
                     foreach (ArrayList locList in locObject)
                     {
-                        LocationString = locList[0].ToString();
+                        locationString = locList[0].ToString();
                     }
                 }
                 else
@@ -401,13 +450,21 @@ namespace LocationModifier2
                     throw new NullReferenceException();
                 }
 
-                return LocationString;
+                return locationString;
             }
             catch (Exception)
             {
                 return "Could not find shelf name";
             }
 
+        }
+
+        private void ResetForNewScan()
+        {
+            CurrentScanState = ScanState.InitialScan;
+            ActiveItem = null;
+            UpdateMode_Tick(null, null);
+            Instruct("Please scan a barcode");
         }
     }
 }

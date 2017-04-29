@@ -1,0 +1,23 @@
+﻿<Window x:Class="LocationModifier2.Dialogs.PacksizeSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LocationModifier2.Dialogs"
+        mc:Ignorable="d"
+        Title="Packsize Selector" Height="450" Width="450" ResizeMode="NoResize" WindowStyle="None">
+    <Grid Background="#FF0E0099">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="53*"/>
+            <RowDefinition Height="358*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <TextBlock x:Name="LoginTitle" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Please select a packsize" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
+        </Grid>
+        <UniformGrid x:Name="UniformPacksizeGrid" HorizontalAlignment="Center" Margin="78,10,94,10" Grid.Row="2" Width="278" Columns="1"/>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.RowSpan="3" Visibility="Collapsed">
+        </Border>
+
+    </Grid>
+</Window>
