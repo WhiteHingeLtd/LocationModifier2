@@ -14,6 +14,7 @@ namespace LocationModifier2.Dialogs
         public StockEntry()
         {
             InitializeComponent();
+            AddButton.IsEnabled = false;
             Keypad1.Click += Keypad_Click;
             Keypad2.Click += Keypad_Click;
             Keypad3.Click += Keypad_Click;

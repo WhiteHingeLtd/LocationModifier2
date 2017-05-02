@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using WHLClasses;
+using WHLClasses.Exceptions;
+
 namespace LocationModifier2
 {
     /// <summary>
@@ -29,6 +31,7 @@ namespace LocationModifier2
         public MainWindow()
         {
             InitializeComponent();
+            this.Focus();
             FullSkuCollection = Loader.SmartSkuCollLoad(true);
             _updateMode.Interval = new TimeSpan(0,0,0,500);
             _updateMode.Tick += UpdateMode_Tick;
@@ -36,6 +39,7 @@ namespace LocationModifier2
             CurrentScanState = ScanState.InitialScan;
             _updateMode.Start();
             UpdateMode_Tick(null, null);
+            ScanBox.Focus();
         }
 
         private void UpdateMode_Tick(object sender, EventArgs e)
@@ -81,11 +85,7 @@ namespace LocationModifier2
 
         public void ProcessScanBox(string scannedText)
         {
-            if (scannedText.StartsWith("qlo") && CurrentSelectedMode == Mode.Count)
-            {
-                Instruct("Please change your mode");
-            }
-            else if (scannedText.StartsWith("qzu"))
+            if (scannedText.StartsWith("qzu"))
             {
                 var payrollidstr = scannedText.Replace("qzu", "");
                 try
@@ -180,7 +180,7 @@ namespace LocationModifier2
                     {
                         ActiveItem = null;
                         Instruct("Please select a packsize");
-                        var searchColl = FullSkuCollection.SearchBarcodes(data);                  
+                        var searchColl = FullSkuCollection.GatherChildren(data);                  
                         var results = new PacksizeSelector(searchColl);
                         results.ShowDialog();
                         ActiveItem = results.SelectedSku;
@@ -207,8 +207,27 @@ namespace LocationModifier2
                         var stockCheck = new StockEntry();
                         stockCheck.ShowDialog();
                         var amount = stockCheck.FinalStockEntry;
-                        ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                        HistoryBlock.Text += "Updated Stock " + " of " + ActiveItem.SKU + " by " + amount.ToString()  + Environment.NewLine + "At " + LocationIdConversion(currentLoc) + Environment.NewLine + "======================" + Environment.NewLine;
+                        try
+                        {
+                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                            HistoryBlock.Text += "Updated Stock " + " of " + ActiveItem.SKU + " by " +
+                                                 amount.ToString() + Environment.NewLine + "At " +
+                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                 "======================" + Environment.NewLine;
+                            Instruct("Success. Please scan a new item");
+                            CurrentScanState = ScanState.InitialScan;
+                        }
+                        catch (NegativeStockException e)
+                        {
+                            Console.WriteLine(e);
+                            Instruct("The stock cannot be negative. Please rescan the location");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Instruct("Failed to add location. Please try again");
+                            CurrentScanState = ScanState.InitialScan;
+                        }
 
                     }
                     else
@@ -331,6 +350,8 @@ namespace LocationModifier2
             if (data.StartsWith("qlo") )
             {
                 ItemDetailsStackPanel.Children.Clear();
+                PickLocationsBlock.Text = "";
+                OtherLocationsBlock.Text = "";
                 var dict = MySQL.SelectDataDictionary("SELECT * FROM whldata.sku_locations WHERE LocationRefID='"+ data.Replace("qlo","") + "';");
                 
                 
@@ -344,6 +365,28 @@ namespace LocationModifier2
                     ItemDetailsStackPanel.Children.Add(onShelf);
                 }
                 
+            }
+            else if (data.StartsWith("10") && data.Length == 7)
+            {
+                var searchcoll = FullSkuCollection.GatherChildren(data);
+                ItemDetailsStackPanel.Children.Clear();
+                var currentItem = searchcoll[0];
+                Instruct(currentItem.Title.Label);
+                foreach (var result in searchcoll)
+                {
+                    var onShelf = new TextBlock();
+                    onShelf.Text += result.SKU + " " + result.Title.Label;
+                    onShelf.Text += Environment.NewLine;
+                    foreach (var loc in result.Locations)
+                    {
+                        onShelf.Text += loc.LocationText + ", ";
+
+                    }
+                    onShelf.Text = onShelf.Text.Trim().TrimEnd(',');
+                    onShelf.Text += Environment.NewLine;
+                    onShelf.FontSize = 36;
+                    ItemDetailsStackPanel.Children.Add(onShelf);
+                }
             }
             else if (data.StartsWith("10") | data.Length == 13)
             {
@@ -365,11 +408,12 @@ namespace LocationModifier2
                         {
                             OtherLocationsBlock.Text += loc.LocationText + ", ";
                         }
-                        PickLocationsBlock.Text = PickLocationsBlock.Text.Trim().TrimEnd(',');
-                        OtherLocationsBlock.Text = OtherLocationsBlock.Text.Trim().TrimEnd(',');
-                    }
 
-                    
+                        OtherLocationsBlock.Text = OtherLocationsBlock.Text.TrimEnd(',');
+                    }
+                    PickLocationsBlock.Text = PickLocationsBlock.Text.Trim().TrimEnd(',');
+                    OtherLocationsBlock.Text = OtherLocationsBlock.Text.Trim().TrimEnd(',');
+
                 }
                 else if (searchcoll.Count > 1)
                 {

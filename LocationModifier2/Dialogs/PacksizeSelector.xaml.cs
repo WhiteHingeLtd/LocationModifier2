@@ -30,8 +30,9 @@ namespace LocationModifier2.Dialogs
             {
                 var refctrl = new Button();
                 refctrl.Click += Refctrl_Click;
+                refctrl.Padding = new Thickness(1.0);
                 refctrl.Uid = sku.SKU;
-                refctrl.Content = sku.Title.Invoice;
+                refctrl.Content = sku.PackSize;
                 UniformPacksizeGrid.Children.Add(refctrl);
             }
         }

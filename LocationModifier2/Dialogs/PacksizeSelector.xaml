@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Dialogs"
         mc:Ignorable="d"
-        Title="Packsize Selector" Height="450" Width="450" ResizeMode="NoResize" WindowStyle="None">
+        Title="Packsize Selector" Height="450" Width="450" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterOwner">
     <Grid Background="#FF0E0099">
         <Grid.RowDefinitions>
             <RowDefinition Height="39*"/>
@@ -15,7 +15,10 @@
         <Grid>
             <TextBlock x:Name="LoginTitle" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Please select a packsize" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
         </Grid>
-        <UniformGrid x:Name="UniformPacksizeGrid" HorizontalAlignment="Center" Margin="78,10,94,10" Grid.Row="2" Width="278" Columns="1"/>
+        <ScrollViewer PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Hidden" CanContentScroll="True" Grid.Row="2">
+            <StackPanel x:Name="UniformPacksizeGrid" HorizontalAlignment="Center" Margin="78,10,94,10" Grid.Row="2" Width="278"/>
+        </ScrollViewer>
+        
         <Border BorderBrush="Black" BorderThickness="1" Grid.RowSpan="3" Visibility="Collapsed">
         </Border>
 
