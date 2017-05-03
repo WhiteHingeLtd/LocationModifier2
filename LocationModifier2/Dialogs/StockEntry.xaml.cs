@@ -10,6 +10,7 @@ namespace LocationModifier2.Dialogs
     public partial class StockEntry
     {
         public int FinalStockEntry;
+        public bool Cancel;
         private bool isNegative;
         public StockEntry()
         {
@@ -67,6 +68,12 @@ namespace LocationModifier2.Dialogs
             isNegative = false;
             AddButton.IsEnabled = false;
             RemoveButton.IsEnabled = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Cancel = true;
+            this.Close();
         }
     }
 }

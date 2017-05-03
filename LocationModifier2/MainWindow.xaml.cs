@@ -1,6 +1,7 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -204,31 +205,41 @@ namespace LocationModifier2
                     if (data.StartsWith("qlo"))
                     {
                         var currentLoc = Convert.ToInt32(data.Replace("qlo", ""));
+                        Instruct(LocationIdConversion(currentLoc));
                         var stockCheck = new StockEntry();
                         stockCheck.ShowDialog();
-                        var amount = stockCheck.FinalStockEntry;
-                        try
+                        if (stockCheck.Cancel)
                         {
-                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                            HistoryBlock.Text += "Updated Stock " + " of " + ActiveItem.SKU + " by " +
-                                                 amount.ToString() + Environment.NewLine + "At " +
-                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                 "======================" + Environment.NewLine;
-                            Instruct("Success. Please scan a new item");
-                            CurrentScanState = ScanState.InitialScan;
+                            Instruct("Please select a new location");
+                            CurrentScanState = ScanState.ScannedItem;
                         }
-                        catch (NegativeStockException e)
+                        else
                         {
-                            Console.WriteLine(e);
-                            Instruct("The stock cannot be negative. Please rescan the location");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Instruct("Failed to add location. Please try again");
-                            CurrentScanState = ScanState.InitialScan;
-                        }
 
+
+                            var amount = stockCheck.FinalStockEntry;
+                            try
+                            {
+                                ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                HistoryBlock.Text += "Updated Stock " + " of " + ActiveItem.SKU + " by " +
+                                                     amount.ToString() + Environment.NewLine + "At " +
+                                                     LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                     "======================" + Environment.NewLine;
+                                Instruct("Success. Please scan a new item");
+                                CurrentScanState = ScanState.InitialScan;
+                            }
+                            catch (NegativeStockException e)
+                            {
+                                Console.WriteLine(e);
+                                Instruct("The stock cannot be negative. Please rescan the location");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                Instruct("Failed to add location. Please try again");
+                                CurrentScanState = ScanState.InitialScan;
+                            }
+                        }
                     }
                     else
                     {
@@ -357,10 +368,19 @@ namespace LocationModifier2
                 
                 foreach (var result in dict)
                 {
+                    int stock;
+                    try
+                    {
+                        stock = Convert.ToInt32(result["additonalInfo"]);
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        stock = 0;
+                    }
                     var onShelf = new TextBlock();
                     var searchColl = FullSkuCollection.SearchBarcodes(result["Sku"].ToString());
                     var item = searchColl[0];
-                    onShelf.Text += item.SKU + " " + item.Title.Label;
+                    onShelf.Text += item.SKU + " " + item.Title.Label + " " + stock.ToString();
                     onShelf.FontSize = 36;
                     ItemDetailsStackPanel.Children.Add(onShelf);
                 }
