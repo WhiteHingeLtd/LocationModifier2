@@ -165,7 +165,7 @@ namespace LocationModifier2
         {
             if (colour == null) colour = Brushes.Black;
             InstructionBox.Text = instruction;
-            InstructionBox.Foreground = Brushes.Black;
+            InstructionBox.Foreground = colour;
         }
 
         private void ProcessCount(string data)
@@ -215,8 +215,6 @@ namespace LocationModifier2
                         }
                         else
                         {
-
-
                             var amount = stockCheck.FinalStockEntry;
                             try
                             {
@@ -277,9 +275,11 @@ namespace LocationModifier2
                         ItemDetailsStackPanel.Children.Clear();
                         ActiveItem = FullSkuCollection.SearchBarcodes(data)[0];
                         Instruct("Please scan the original location");
-                        var infoblock = new TextBlock();
-                        infoblock.Text = "Active item:" + Environment.NewLine + ActiveItem.Title.Label + "  " + ActiveItem.SKU;
-                        infoblock.FontSize = 36.0;
+                        var infoblock = new TextBlock
+                        {
+                            Text = "Active item:" + Environment.NewLine + ActiveItem.Title.Label + "  " + ActiveItem.SKU,
+                            FontSize = 36.0
+                        };
                         ItemDetailsStackPanel.Children.Add(infoblock);
                         InitialLocationId = 0;
                         CurrentScanState = ScanState.ScannedItem;
@@ -360,6 +360,7 @@ namespace LocationModifier2
         {
             if (data.StartsWith("qlo") )
             {
+                Instruct(LocationIdConversion(Convert.ToInt32(data.Replace("qlo",""))));
                 ItemDetailsStackPanel.Children.Clear();
                 PickLocationsBlock.Text = "";
                 OtherLocationsBlock.Text = "";
@@ -388,6 +389,8 @@ namespace LocationModifier2
             }
             else if (data.StartsWith("10") && data.Length == 7)
             {
+                PickLocationsBlock.Text = "";
+                OtherLocationsBlock.Text = "";
                 var searchcoll = FullSkuCollection.GatherChildren(data);
                 ItemDetailsStackPanel.Children.Clear();
                 var currentItem = searchcoll[0];
@@ -416,10 +419,15 @@ namespace LocationModifier2
                 if (searchcoll.Count == 1)
                 {
                     var item = searchcoll[0];
+                    ItemDetailsStackPanel.Children.Clear();
+                    Instruct(item.Title.Label);
                     item.RefreshLocations();
                     Instruct(searchcoll[0].SKU + " " + searchcoll[0].Title.Label);
+                    
                     foreach (var loc in item.Locations)
                     {
+                        var stockInfoBlock = new TextBlock();
+                        stockInfoBlock.FontSize = 36.0;
                         if (loc.LocationType == SKULocation.SKULocationType.Pickable)
                         {
                             PickLocationsBlock.Text += loc.LocationText + ", ";
@@ -428,11 +436,12 @@ namespace LocationModifier2
                         {
                             OtherLocationsBlock.Text += loc.LocationText + ", ";
                         }
-
-                        OtherLocationsBlock.Text = OtherLocationsBlock.Text.TrimEnd(',');
+                        stockInfoBlock.Text = loc.LocationText + " Stock: " + Convert.ToInt32(loc.Additional).ToString();
+                        ItemDetailsStackPanel.Children.Add(stockInfoBlock);
                     }
                     PickLocationsBlock.Text = PickLocationsBlock.Text.Trim().TrimEnd(',');
                     OtherLocationsBlock.Text = OtherLocationsBlock.Text.Trim().TrimEnd(',');
+                    
 
                 }
                 else if (searchcoll.Count > 1)
