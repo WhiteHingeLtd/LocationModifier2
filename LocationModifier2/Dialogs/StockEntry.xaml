@@ -36,6 +36,7 @@
         <Button x:Name="AddButton" Content="Add" Margin="10,10,366,10" Grid.Row="2" RenderTransformOrigin="-0.243,0.883" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="Button_Click"/>
         <Button x:Name="RemoveButton" Content="Remove" Margin="365,10,10,10" Grid.Row="2" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="RemoveButton_Click"/>
         <Button x:Name="CancelButton" Content="Cancel" Margin="0,246,400,0" Grid.Row="3" Foreground="White" BorderBrush="{x:Null}" Background="#72919191" Click="CancelButton_Click"/>
+        <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="75" Height="42" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="SetButton_Click"/>
 
     </Grid>
 </Window>

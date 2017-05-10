@@ -33,9 +33,9 @@
                 <TextBlock x:Name="PickLocationsBlock" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="72"/>
                 <TextBlock x:Name="OtherLocationsBlock" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="64"/>
             </Grid>
-            <TextBox x:Name="ScanBox" Margin="10,10,40,10" TextWrapping="Wrap" Grid.ColumnSpan="2" FontSize="34" KeyDown="ScanBox_KeyUp"/>
+            <TextBox x:Name="ScanBox" Margin="10,10,40,10" TextWrapping="Wrap" Grid.ColumnSpan="2" FontSize="34" KeyDown="ScanBox_KeyUp" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
             <ScrollViewer x:Name="HistoryScroller" Grid.Row="2" Grid.RowSpan="2" PanningMode="Both" VerticalScrollBarVisibility="Hidden">
-                <TextBlock x:Name="HistoryBlock" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" FontSize="24" FontFamily="Lucida Console"/>
+                <TextBlock x:Name="HistoryBlock" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" FontSize="24" FontFamily="Lucida Console" ScrollViewer.CanContentScroll="True"/>
             </ScrollViewer>
             <Grid Grid.Row="1" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>

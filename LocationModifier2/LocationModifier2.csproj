@@ -14,7 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>Y:\Intra\AppPublish\LocMod2\</PublishUrl>
+    <PublishUrl>V:\Intra\AppPublish\LocMod2\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -27,7 +27,7 @@
     <InstallUrl>http://apps.ad.whitehinge.com/AppPublish/LocMod2/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -91,6 +91,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\MsgDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\PacksizeSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -109,6 +113,9 @@
     </Compile>
     <Compile Include="Dialogs\LocationSelection.xaml.cs">
       <DependentUpon>LocationSelection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\MsgDialog.xaml.cs">
+      <DependentUpon>MsgDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\PacksizeSelector.xaml.cs">
       <DependentUpon>PacksizeSelector.xaml</DependentUpon>

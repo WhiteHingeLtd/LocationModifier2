@@ -20,7 +20,7 @@ namespace LocationModifier2
         public GenericDataController Loader = new GenericDataController();
         public SkuCollection FullSkuCollection;
         public EmployeeCollection EmpCol = new EmployeeCollection();
-        public Employee AuthdEmployee = new Employee();
+        public Employee AuthdEmployee;
         public Mode CurrentSelectedMode;
         public ScanState CurrentScanState;
         public WhlSKU ActiveItem;
@@ -206,7 +206,7 @@ namespace LocationModifier2
                     {
                         var currentLoc = Convert.ToInt32(data.Replace("qlo", ""));
                         Instruct(LocationIdConversion(currentLoc));
-                        var stockCheck = new StockEntry();
+                        var stockCheck = new StockEntry(true);
                         stockCheck.ShowDialog();
                         if (stockCheck.Cancel)
                         {
@@ -216,14 +216,37 @@ namespace LocationModifier2
                         else
                         {
                             var amount = stockCheck.FinalStockEntry;
+                            var currentstate = stockCheck.CurrentSet;
                             try
                             {
-                                ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                                HistoryBlock.Text += "Updated Stock " + " of " + ActiveItem.SKU + " by " +
-                                                     amount.ToString() + Environment.NewLine + "At " +
-                                                     LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                     "======================" + Environment.NewLine;
-                                Instruct("Success. Please scan a new item");
+                                switch (currentstate)
+                                {
+                                        case StockEntry.AddRemoveSet.Add:
+                                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                            HistoryBlock.Text += "Added " +  amount.ToString()+ " of " + ActiveItem.SKU + " by " +
+                                                                 amount.ToString() + Environment.NewLine + "At " +
+                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                 "======================" + Environment.NewLine;
+                                            Instruct("Success. Please scan a new item");
+                                        break;
+                                        case StockEntry.AddRemoveSet.Remove:
+                                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                            HistoryBlock.Text += "Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
+                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                 "======================" + Environment.NewLine;
+                                            Instruct("Success. Please scan a new item");
+                                        break;
+                                        case StockEntry.AddRemoveSet.Set:
+                                        ActiveItem.SetLocationStockWithAudit(currentLoc,AuthdEmployee,amount);
+                                            HistoryBlock.Text += "Set stock of " + ActiveItem.SKU + " To "+ amount.ToString() + Environment.NewLine + "At " +
+                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                 "======================" + Environment.NewLine;
+                                            Instruct("Success. Please scan a new item");
+                                        break;
+                                    default:
+                                            break;
+                                }
+
                                 CurrentScanState = ScanState.InitialScan;
                             }
                             catch (NegativeStockException e)
@@ -319,7 +342,7 @@ namespace LocationModifier2
                     CurrentScanState = ScanState.ScannedNewShelf;
                     if (ActiveItem != null && NewLocationId != 0 && InitialLocationId != 0)
                     {
-                        var stockCheck = new StockEntry();
+                        var stockCheck = new StockEntry(true);
                         stockCheck.ShowDialog();
                         var amount = stockCheck.FinalStockEntry;
                         ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
@@ -503,7 +526,17 @@ namespace LocationModifier2
 
         private void QuitButton_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            var msg = new MsgDialog("App Shutdown","Do you want to close this application?");
+            msg.ShowDialog();
+            if (msg.Result)
+            {
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                ScanBox.Focus();
+            }
+            
         }
         public string LocationIdConversion(int location)
         {
@@ -538,6 +571,16 @@ namespace LocationModifier2
             ActiveItem = null;
             UpdateMode_Tick(null, null);
             Instruct("Please scan a barcode");
+        }
+
+        private void ScanBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Background = Brushes.Red;
+        }
+
+        private void ScanBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Background = Brushes.White;
         }
     }
 }
