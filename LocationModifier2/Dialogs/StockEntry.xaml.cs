@@ -56,6 +56,7 @@ namespace LocationModifier2.Dialogs
             catch (Exception)
             {
                 LoginScanBox.Text = "";
+                LoginTitle.Text = "Please try again";
             }
 
         }

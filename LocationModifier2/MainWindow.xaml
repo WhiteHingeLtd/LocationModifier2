@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2"
         mc:Ignorable="d"
-        Title="Location Modifier" Height="1200" Width="1920" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None">
+        Title="Location Modifier" Height="1200" Width="1920" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None" GotFocus="Window_GotFocus" Loaded="Window_Loaded">
     <Viewbox>
         <Grid Width="1920" Height="1200">
             <Grid.ColumnDefinitions>
@@ -34,8 +34,8 @@
                 <TextBlock x:Name="OtherLocationsBlock" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="64"/>
             </Grid>
             <TextBox x:Name="ScanBox" Margin="10,10,40,10" TextWrapping="Wrap" Grid.ColumnSpan="2" FontSize="34" KeyDown="ScanBox_KeyUp" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
-            <ScrollViewer x:Name="HistoryScroller" Grid.Row="2" Grid.RowSpan="2" PanningMode="Both" VerticalScrollBarVisibility="Hidden">
-                <TextBlock x:Name="HistoryBlock" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" FontSize="24" FontFamily="Lucida Console" ScrollViewer.CanContentScroll="True"/>
+            <ScrollViewer x:Name="HistoryScroller" Grid.Row="2" Grid.RowSpan="2" PanningMode="Both" VerticalScrollBarVisibility="Hidden" CanContentScroll="True">
+                <TextBlock x:Name="HistoryBlock" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="24" FontFamily="Lucida Console" ScrollViewer.CanContentScroll="True" Height="942" Text=" "/>
             </ScrollViewer>
             <Grid Grid.Row="1" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>

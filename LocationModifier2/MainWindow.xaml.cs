@@ -223,24 +223,25 @@ namespace LocationModifier2
                                 {
                                         case StockEntry.AddRemoveSet.Add:
                                             ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                                            HistoryBlock.Text += "Added " +  amount.ToString()+ " of " + ActiveItem.SKU + " by " +
-                                                                 amount.ToString() + Environment.NewLine + "At " +
-                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                                 "======================" + Environment.NewLine;
+                                            HistoryBlock.Text = HistoryBlock.Text.Insert(0,
+                                                    "Added " + amount.ToString() + " of " + ActiveItem.SKU + " by " +
+                                                    amount.ToString() + Environment.NewLine + "At " +
+                                                    LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                    "======================" + Environment.NewLine);  
                                             Instruct("Success. Please scan a new item");
                                         break;
                                         case StockEntry.AddRemoveSet.Remove:
                                             ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                                            HistoryBlock.Text += "Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
-                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                                 "======================" + Environment.NewLine;
+                                            HistoryBlock.Text = HistoryBlock.Text.Insert(0,"Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
+                                                                     LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                     "======================" + Environment.NewLine);
                                             Instruct("Success. Please scan a new item");
                                         break;
                                         case StockEntry.AddRemoveSet.Set:
-                                        ActiveItem.SetLocationStockWithAudit(currentLoc,AuthdEmployee,amount);
-                                            HistoryBlock.Text += "Set stock of " + ActiveItem.SKU + " To "+ amount.ToString() + Environment.NewLine + "At " +
-                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                                 "======================" + Environment.NewLine;
+                                            ActiveItem.SetLocationStockWithAudit(currentLoc,AuthdEmployee,amount);
+                                            HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Set stock of " + ActiveItem.SKU + " To "+ amount.ToString() + Environment.NewLine + "At " +
+                                                                     LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                     "======================" + Environment.NewLine);
                                             Instruct("Success. Please scan a new item");
                                         break;
                                     default:
@@ -342,16 +343,27 @@ namespace LocationModifier2
                     CurrentScanState = ScanState.ScannedNewShelf;
                     if (ActiveItem != null && NewLocationId != 0 && InitialLocationId != 0)
                     {
-                        var stockCheck = new StockEntry(true);
+                        var stockCheck = new StockEntry();
                         stockCheck.ShowDialog();
                         var amount = stockCheck.FinalStockEntry;
-                        ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
-                        HistoryBlock.Text += "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From " + LocationIdConversion(InitialLocationId) + " to " + LocationIdConversion(NewLocationId) + Environment.NewLine + "======================" + Environment.NewLine;
-                        ActiveItem = null;
-                        NewLocationId = 0;
-                        InitialLocationId = 0;
-                        CurrentScanState = ScanState.InitialScan;
-                        Instruct("Item Moved. Please scan a new item");
+                        try
+                        {
+                            ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
+                            HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
+                                                        + LocationIdConversion(InitialLocationId) + " to " + LocationIdConversion(NewLocationId) + Environment.NewLine
+                                                        + "======================" + Environment.NewLine);
+                            ActiveItem = null;
+                            NewLocationId = 0;
+                            InitialLocationId = 0;
+                            CurrentScanState = ScanState.InitialScan;
+                            Instruct("Item Moved. Please scan a new item");
+                        }
+                        catch (NegativeStockException)
+                        {
+                            Instruct("You cannot have negative stock. Please enter a valid value");
+                            CurrentScanState = ScanState.ScannedOriginShelf;
+                        }
+
                     }
                     else if (data.StartsWith("10"))
                     {
@@ -499,6 +511,7 @@ namespace LocationModifier2
             ViewButton.IsEnabled = true;
             CurrentSelectedMode = Mode.Location;
             ResetForNewScan();
+
             ScanBox.Focus();
         }
 
@@ -571,6 +584,9 @@ namespace LocationModifier2
             ActiveItem = null;
             UpdateMode_Tick(null, null);
             Instruct("Please scan a barcode");
+            ItemDetailsStackPanel.Children.Clear();
+            PickLocationsBlock.Text = "";
+            OtherLocationsBlock.Text = "";
         }
 
         private void ScanBox_LostFocus(object sender, RoutedEventArgs e)
@@ -581,6 +597,17 @@ namespace LocationModifier2
         private void ScanBox_GotFocus(object sender, RoutedEventArgs e)
         {
             ScanBox.Background = Brushes.White;
+        }
+
+        private void Window_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Focus();
+            
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Focus();
         }
     }
 }
