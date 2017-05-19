@@ -33,7 +33,7 @@ namespace LocationModifier2.Dialogs
                 refctrl.Click += Refctrl_Click;
                 refctrl.Padding = new Thickness(1.0);
                 refctrl.Uid = sku.SKU;
-                refctrl.Content = sku.Title.Label + " Pack of " + sku.PackSize.ToString();
+                refctrl.Content = " Pack of " + sku.PackSize.ToString() + sku.Title.Label;
                 refctrl.FontSize = 36.0;
                 UniformPacksizeGrid.Children.Add(refctrl);
             }
