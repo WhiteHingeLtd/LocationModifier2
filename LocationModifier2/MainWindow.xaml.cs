@@ -200,8 +200,8 @@ namespace LocationModifier2
                         }
                         else
                         {
-                            var searchColl = FullSkuCollection.GatherChildren(data);
-                            var results = new PacksizeSelector(searchColl);
+                            
+                            var results = new PacksizeSelector(searchcoll);
                             results.ShowDialog();
                             ActiveItem = results.SelectedSku;
                             if (ActiveItem != null)
