@@ -251,10 +251,22 @@ namespace LocationModifier2
                                             Instruct("Success. Please scan a new item");
                                         break;
                                         case StockEntry.AddRemoveSet.Remove:
-                                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                                            HistoryBlock.Text = HistoryBlock.Text.Insert(0,"Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
-                                                                     LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                                     "======================" + Environment.NewLine);
+                                            if (amount == 0)
+                                            {
+                                                ActiveItem.RemoveLocationWithAudit(currentLoc, AuthdEmployee);
+                                                HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed all of " + ActiveItem.SKU + Environment.NewLine + "At " +
+                                                                                                LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                                                "======================" + Environment.NewLine);
+                                            }
+                                            else
+                                            {
+                                                ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                                HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
+                                                                                                LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                                                "======================" + Environment.NewLine);
+                                            }
+                                            
+                                            
                                             Instruct("Success. Please scan a new item");
                                         break;
                                         case StockEntry.AddRemoveSet.Set:

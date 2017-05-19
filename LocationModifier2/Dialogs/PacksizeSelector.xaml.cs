@@ -28,11 +28,13 @@ namespace LocationModifier2.Dialogs
             InitializeComponent();
             foreach (var sku in skus)
             {
+                if (sku.SKU.Contains("xxxx")) continue;
                 var refctrl = new Button();
                 refctrl.Click += Refctrl_Click;
                 refctrl.Padding = new Thickness(1.0);
                 refctrl.Uid = sku.SKU;
-                refctrl.Content = sku.Title.Label + " Pack of " + sku.PackSize.ToString();  
+                refctrl.Content = sku.Title.Label + " Pack of " + sku.PackSize.ToString();
+                refctrl.FontSize = 36.0;
                 UniformPacksizeGrid.Children.Add(refctrl);
             }
         }
@@ -55,6 +57,11 @@ namespace LocationModifier2.Dialogs
                 Console.WriteLine(ex);
                 LoginTitle.Text = "Please try again";
             }
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
