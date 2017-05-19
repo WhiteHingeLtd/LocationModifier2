@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -192,7 +193,10 @@ namespace LocationModifier2
                     {
                         ActiveItem = null;
                         var searchcoll = FullSkuCollection.SearchBarcodes(data);
-                        if (searchcoll.Count == 1)
+                        var searchcoll2 = new SkuCollection(true);
+                        searchcoll2.AddRange(from sku in searchcoll where !sku.SKU.Contains("xxxx") select sku);
+                        
+                        if (searchcoll2.Count == 1)
                         {
                             ActiveItem = searchcoll[0];
                             Instruct("Please scan a location");
