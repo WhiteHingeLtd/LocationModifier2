@@ -59,7 +59,6 @@ namespace LocationModifier2
                     CurrentMode.Text = "Count";
                     break;
                 default:
-                    Console.WriteLine("Enum set incorrectly");
                     throw new NullReferenceException("Mode initialized incorrectly");    
             }
             _updateMode.Stop();
@@ -192,9 +191,30 @@ namespace LocationModifier2
                     else if (data.Length == 11 | data.Length == 13)
                     {
                         ActiveItem = null;
-                        ActiveItem = FullSkuCollection.SearchBarcodes(data)[0];
-                        Instruct("Please scan a location");
-                        CurrentScanState = ScanState.ScannedItem;
+                        var searchcoll = FullSkuCollection.SearchBarcodes(data);
+                        if (searchcoll.Count == 1)
+                        {
+                            ActiveItem = searchcoll[0];
+                            Instruct("Please scan a location");
+                            CurrentScanState = ScanState.ScannedItem;
+                        }
+                        else
+                        {
+                            var searchColl = FullSkuCollection.GatherChildren(data);
+                            var results = new PacksizeSelector(searchColl);
+                            results.ShowDialog();
+                            ActiveItem = results.SelectedSku;
+                            if (ActiveItem != null)
+                            {
+                                Instruct("Please scan a location");
+                                CurrentScanState = ScanState.ScannedItem;
+                            }
+                            else
+                            {
+                                Instruct("Please scan a valid barcode");
+                            }
+                        }
+
                     }
                     else
                     {
@@ -244,8 +264,6 @@ namespace LocationModifier2
                                                                      "======================" + Environment.NewLine);
                                             Instruct("Success. Please scan a new item");
                                         break;
-                                    default:
-                                            break;
                                 }
 
                                 CurrentScanState = ScanState.InitialScan;
@@ -308,9 +326,34 @@ namespace LocationModifier2
                         InitialLocationId = 0;
                         CurrentScanState = ScanState.ScannedItem;
                     }
-                    else if (data.Length == 7 && data.StartsWith("10"))
+                    else if (data.Length == 7 && data.StartsWith("10") | data.Length == 13)
                     {
-                        
+                        ActiveItem = null;
+                        var searchcoll = FullSkuCollection.SearchBarcodes(data);
+                        if (searchcoll.Count == 1)
+                        {
+                            ActiveItem = searchcoll[0];
+                            Instruct("Please scan a location");
+                            CurrentScanState = ScanState.ScannedItem;
+                        }
+                        else
+                        {
+                            var searchColl = FullSkuCollection.GatherChildren(data);
+                            var results = new PacksizeSelector(searchColl);
+                            results.ShowDialog();
+                            ActiveItem = results.SelectedSku;
+                            if (ActiveItem != null)
+                            {
+                                Instruct("Please scan a location");
+                                CurrentScanState = ScanState.ScannedItem;
+                            }
+                            else
+                            {
+                                Instruct("Please scan a valid barcode");
+                            }
+                        }
+
+
                     }
                     else
                     {
@@ -407,7 +450,7 @@ namespace LocationModifier2
                     int stock;
                     try
                     {
-                        stock = Convert.ToInt32(result["additonalInfo"]);
+                        stock = Convert.ToInt32(result["additionalInfo"]);
                     }
                     catch (KeyNotFoundException)
                     {
@@ -432,6 +475,7 @@ namespace LocationModifier2
                 Instruct(currentItem.Title.Label);
                 foreach (var result in searchcoll)
                 {
+                    result.RefreshLocations();
                     var onShelf = new TextBlock();
                     onShelf.Text += result.SKU + " " + result.Title.Label;
                     onShelf.Text += Environment.NewLine;
@@ -487,7 +531,7 @@ namespace LocationModifier2
                     foreach (var result in searchcoll)
                     {
                         var onShelf = new TextBlock();
-                        onShelf.Text += result.SKU + " " + result.Title.Label;
+                        onShelf.Text += result.SKU + " " + result.Title.Label +" " + result.GetLocation(SKULocation.SKULocationType.Pickable).LocationText;
                         onShelf.FontSize = 36;
                         ItemDetailsStackPanel.Children.Add(onShelf);
                     }
