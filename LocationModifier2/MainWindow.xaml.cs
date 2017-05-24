@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -294,6 +295,7 @@ namespace LocationModifier2
                                 Console.WriteLine(ex.Message);
                                 Instruct("Failed to add location. Please try again");
                                 CurrentScanState = ScanState.InitialScan;
+                                throw;
                             }
                         }
                     }
@@ -346,7 +348,7 @@ namespace LocationModifier2
                     {
                         ActiveItem = null;
                         var searchcoll = FullSkuCollection.SearchBarcodes(data);
-                        if (searchcoll.Count == 1)
+                        if (searchcoll.Count(x => !x.SKU.Contains("xxxx")) == 1)
                         {
                             ActiveItem = searchcoll[0];
                             Instruct("Please scan a location");
@@ -394,11 +396,32 @@ namespace LocationModifier2
                     }
                     else
                     {
-                        Instruct("Please scan the original Location");
+                        var conv = LocationNameConversion(data);
+                        if (conv != -1)
+                        {
+                            InitialLocationId = conv;
+                            NewLocationId = 0;
+                            CurrentScanState = ScanState.ScannedOriginShelf;
+                            Instruct("Please input the new location");
+                        }
+                        else Instruct("Please scan the original location");
                     }
                     break;
                 case ScanState.ScannedOriginShelf:
-                    NewLocationId = Convert.ToInt32(data.Replace("qlo", ""));
+                    if (data.Contains("qlo"))
+                    {
+                        NewLocationId = Convert.ToInt32(data.Replace("qlo", ""));
+                    }
+                    else
+                    {
+                        var conv = LocationNameConversion(data);
+                        if (conv != -1)
+                        {
+                            NewLocationId = conv;
+                        }
+                        else NewLocationId = 0;
+                    }
+                    
                     CurrentScanState = ScanState.ScannedNewShelf;
                     if (ActiveItem != null && NewLocationId != 0 && InitialLocationId != 0)
                     {
@@ -408,9 +431,11 @@ namespace LocationModifier2
                         try
                         {
                             ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
-                            HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
-                                                        + LocationIdConversion(InitialLocationId) + " to " + LocationIdConversion(NewLocationId) + Environment.NewLine
-                                                        + "======================" + Environment.NewLine);
+                            HistoryBlock.Text = HistoryBlock.Text.Insert(0,
+                                "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
+                                + LocationIdConversion(InitialLocationId) + " to " +
+                                LocationIdConversion(NewLocationId) + Environment.NewLine
+                                + "======================" + Environment.NewLine);
                             ActiveItem = null;
                             NewLocationId = 0;
                             InitialLocationId = 0;
@@ -422,7 +447,15 @@ namespace LocationModifier2
                             Instruct("You cannot have negative stock. Please enter a valid value");
                             CurrentScanState = ScanState.ScannedOriginShelf;
                         }
-
+                        catch (Exception)
+                        {
+                            Instruct("There was an error please try again.");
+                            ActiveItem = null;
+                            NewLocationId = 0;
+                            InitialLocationId = 0;
+                            CurrentScanState = ScanState.InitialScan;
+                            throw;
+                        }
                     }
                     else if (data.StartsWith("10"))
                     {
@@ -442,7 +475,13 @@ namespace LocationModifier2
                     }
                     break;
                 case ScanState.ScannedNewShelf:
-
+                {
+                    Instruct("There was an error please try again.");
+                    ActiveItem = null;
+                    NewLocationId = 0;
+                    InitialLocationId = 0;
+                    CurrentScanState = ScanState.InitialScan;
+                }
                     break;
                 default:
                     throw new NullReferenceException("The ScanState enum was invalid");
@@ -463,19 +502,20 @@ namespace LocationModifier2
                 
                 foreach (var result in dict)
                 {
+                    if (result["Sku"].ToString().Contains("xxxx")) continue;
                     int stock;
                     try
                     {
                         stock = Convert.ToInt32(result["additionalInfo"]);
                     }
-                    catch (KeyNotFoundException)
+                    catch (Exception)
                     {
                         stock = 0;
                     }
                     var onShelf = new TextBlock();
                     var searchColl = FullSkuCollection.SearchBarcodes(result["Sku"].ToString());
                     var item = searchColl[0];
-                    onShelf.Text += item.SKU + " " + item.Title.Label + " " + stock.ToString();
+                    onShelf.Text += item.SKU + " " + item.Title.Label + Environment.NewLine+ "Stock: " + stock.ToString();
                     onShelf.FontSize = 36;
                     ItemDetailsStackPanel.Children.Add(onShelf);
                 }
@@ -497,7 +537,7 @@ namespace LocationModifier2
                     onShelf.Text += Environment.NewLine;
                     foreach (var loc in result.Locations)
                     {
-                        onShelf.Text += loc.LocationText + ", ";
+                        onShelf.Text += loc.LocationText + ", " + Environment.NewLine + "Stock: " + loc.Additional;
 
                     }
                     onShelf.Text = onShelf.Text.Trim().TrimEnd(',');
@@ -636,6 +676,34 @@ namespace LocationModifier2
                 return "Could not find shelf name";
             }
 
+        }
+
+        public int LocationNameConversion(string location)
+        {
+            try
+            {
+                var locationID = 0;
+                var locObject = MySQL.SelectData("SELECT locid FROM whldata.locationreference WHERE locText='" + location.ToString().ToUpper() + "' LIMIT 1;") as ArrayList;
+                if (locObject != null && locObject.Count > 0)
+                {
+                    foreach (ArrayList locList in locObject)
+                    {
+                        int.TryParse(locList[0].ToString(), out locationID);
+                    }
+                }
+                else
+                {
+                    locationID = -1;
+                    return locationID;
+
+                }
+
+                return locationID;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
         }
 
         private void ResetForNewScan()
