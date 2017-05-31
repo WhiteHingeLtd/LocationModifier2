@@ -99,6 +99,9 @@
     <Compile Include="UserControls\PacksizeControl.xaml.cs">
       <DependentUpon>PacksizeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ShelfControl.xaml.cs">
+      <DependentUpon>ShelfControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\LocationSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\PacksizeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ShelfControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
