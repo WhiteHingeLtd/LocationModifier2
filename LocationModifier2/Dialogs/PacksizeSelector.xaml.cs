@@ -8,7 +8,7 @@ namespace LocationModifier2.Dialogs
     /// <summary>
     /// Interaction logic for PacksizeSelector.xaml
     /// </summary>
-    public partial class PacksizeSelector : Window
+    public partial class PacksizeSelector
     {
         public WhlSKU SelectedSku;
         public SkuCollection skucoll;

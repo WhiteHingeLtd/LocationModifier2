@@ -1,9 +1,7 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -515,7 +513,8 @@ namespace LocationModifier2
                     var onShelf = new TextBlock();
                     var searchColl = FullSkuCollection.SearchBarcodes(result["Sku"].ToString());
                     var item = searchColl[0];
-                    onShelf.Text += item.SKU + " " + item.Title.Label + Environment.NewLine+ "Stock: " + stock.ToString();
+                    onShelf.Text += item.SKU + " " + item.Title.Label + Environment.NewLine + "Stock: " +
+                                    stock.ToString() + Environment.NewLine;
                     onShelf.FontSize = 36;
                     ItemDetailsStackPanel.Children.Add(onShelf);
                 }
@@ -561,8 +560,10 @@ namespace LocationModifier2
                     
                     foreach (var loc in item.Locations)
                     {
-                        var stockInfoBlock = new TextBlock();
-                        stockInfoBlock.FontSize = 36.0;
+                        var stockInfoBlock = new TextBlock
+                        {
+                            FontSize = 36.0
+                        };
                         if (loc.LocationType == SKULocation.SKULocationType.Pickable)
                         {
                             PickLocationsBlock.Text += loc.LocationText + ", ";
@@ -683,7 +684,7 @@ namespace LocationModifier2
             try
             {
                 var locationID = 0;
-                var locObject = MySQL.SelectData("SELECT locid FROM whldata.locationreference WHERE locText='" + location.ToString().ToUpper() + "' LIMIT 1;") as ArrayList;
+                var locObject = MySQL.SelectData("SELECT locid FROM whldata.locationreference WHERE locText='" + location.ToUpper() + "' LIMIT 1;") as ArrayList;
                 if (locObject != null && locObject.Count > 0)
                 {
                     foreach (ArrayList locList in locObject)
