@@ -1,12 +1,14 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using LocationModifier2.Cool;
 using WHLClasses;
 using WHLClasses.Exceptions;
 
@@ -19,6 +21,7 @@ namespace LocationModifier2
     {
         public GenericDataController Loader = new GenericDataController();
         public SkuCollection FullSkuCollection;
+        public SkuCollection MixdownSkuCollection;
         public EmployeeCollection EmpCol = new EmployeeCollection();
         public Employee AuthdEmployee;
         public Mode CurrentSelectedMode;
@@ -34,6 +37,10 @@ namespace LocationModifier2
             InitializeComponent();
             this.Focus();
             FullSkuCollection = Loader.SmartSkuCollLoad(true);
+            Misc.OperationDialog("Preparing other stuff", delegate(object sender, DoWorkEventArgs args)
+            {
+                MixdownSkuCollection = FullSkuCollection.MakeMixdown();
+            });
             _updateMode.Interval = new TimeSpan(0,0,0,500);
             _updateMode.Tick += UpdateMode_Tick;
             CurrentSelectedMode = Mode.View;
@@ -41,6 +48,8 @@ namespace LocationModifier2
             _updateMode.Start();
             UpdateMode_Tick(null, null);
             ScanBox.Focus();
+
+            (new ItemWindow(this)).Show();
         }
 
         private void UpdateMode_Tick(object sender, EventArgs e)
