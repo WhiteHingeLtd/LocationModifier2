@@ -1,6 +1,7 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using WHLClasses;
 using WHLClasses.Exceptions;
+using WHLClasses.Reporting;
 
 namespace LocationModifier2
 {
@@ -28,6 +30,7 @@ namespace LocationModifier2
         public int InitialLocationId;
         public int NewLocationId;
         
+        internal SkuCollection ActiveColl = new SkuCollection(true); 
         private DispatcherTimer _updateMode = new DispatcherTimer();
         public MainWindow()
         {
@@ -155,11 +158,14 @@ namespace LocationModifier2
             }
 
         }
+        
         /// <summary>
         /// Method to easily update the instruction Block
         /// </summary>
         /// <param name="instruction">The string to update the Block to</param>
         /// <param name="colour">The colour of the instruction block. Defaults to black</param>
+        /// Todo
+        [DebuggerStepThrough]
         private void Instruct(string instruction, SolidColorBrush colour = null)
         {
             if (colour == null) colour = Brushes.Black;
@@ -179,35 +185,29 @@ namespace LocationModifier2
                     else if (data.Length == 7)
                     {
                         ActiveItem = null;
-                        Instruct("Please select a packsize");
-                        var searchColl = FullSkuCollection.GatherChildren(data);                  
-                        var results = new PacksizeSelector(searchColl);
-                        results.ShowDialog();
-                        ActiveItem = results.SelectedSku;
+                        ActiveColl = null;
+                        ActiveColl = FullSkuCollection.GatherChildren(data);
+
+                        ActiveItem = ActiveColl[0];
                         Instruct("Please scan a location");
                         CurrentScanState = ScanState.ScannedItem;
 
                     }
                     else if (data.Length == 11 | data.Length == 13)
                     {
+                        ActiveColl = null;
                         ActiveItem = null;
-                        var searchcoll = FullSkuCollection.SearchBarcodes(data);
-                        var searchcoll2 = new SkuCollection(true);
-                        searchcoll2.AddRange(from sku in searchcoll where !sku.SKU.Contains("xxxx") select sku);
+                        var searchColl = FullSkuCollection.SearchBarcodes(data);
+                        ActiveColl = FullSkuCollection.GatherChildren(searchColl[0].ShortSku);
                         
-                        if (searchcoll2.Count == 1)
+
+                        if (ActiveColl.Count == 0)
                         {
-                            ActiveItem = searchcoll[0];
-                            Instruct("Please scan a location");
-                            CurrentScanState = ScanState.ScannedItem;
+                            Instruct("Please scan a valid barcode");
                         }
                         else
                         {
-                            
-                            var results = new PacksizeSelector(searchcoll);
-                            results.ShowDialog();
-                            ActiveItem = results.SelectedSku;
-                            if (ActiveItem != null)
+                            if (ActiveColl != null)
                             {
                                 Instruct("Please scan a location");
                                 CurrentScanState = ScanState.ScannedItem;
@@ -225,77 +225,101 @@ namespace LocationModifier2
                     }
                     break;
                 case ScanState.ScannedItem:
+
                     if (data.StartsWith("qlo"))
                     {
                         var currentLoc = Convert.ToInt32(data.Replace("qlo", ""));
                         Instruct(LocationIdConversion(currentLoc));
-                        var stockCheck = new StockEntry(true);
-                        stockCheck.ShowDialog();
-                        if (stockCheck.Cancel)
+                        var cancel = false;
+                        foreach (var Child in ActiveColl)
                         {
-                            Instruct("Please select a new location");
-                            CurrentScanState = ScanState.ScannedItem;
-                        }
-                        else
-                        {
-                            var amount = stockCheck.FinalStockEntry;
-                            var currentstate = stockCheck.CurrentSet;
-                            try
+                            if (cancel) break;
+                            if (Child.SKU.Contains("xxxx")) continue;
+
+                            var stockCheck = new StockEntry(Child.SKU,true);
+                            stockCheck.ShowDialog();
+                            if (stockCheck.FinalStockEntry == 0) continue;
+
+                            if (stockCheck.Cancel)
                             {
-                                switch (currentstate)
+                                Instruct("Please select a new location");
+                                CurrentScanState = ScanState.ScannedItem;
+                                cancel = true;
+                            }
+                            else
+                            {
+                                var amount = stockCheck.FinalStockEntry;
+                                var currentstate = stockCheck.CurrentSet;
+                                try
                                 {
+                                    switch (currentstate)
+                                    {
                                         case StockEntry.AddRemoveSet.Add:
-                                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                            Child.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
                                             HistoryBlock.Text = HistoryBlock.Text.Insert(0,
-                                                    "Added " + amount.ToString() + " of " + ActiveItem.SKU + " by " +
-                                                    amount.ToString() + Environment.NewLine + "At " +
-                                                    LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                    "======================" + Environment.NewLine);  
+                                                "Added " + amount.ToString() + " of " + Child.SKU + " by " +
+                                                amount.ToString() + Environment.NewLine + "At " +
+                                                LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                "======================" + Environment.NewLine);
                                             Instruct("Success. Please scan a new item");
-                                        break;
+                                            break;
                                         case StockEntry.AddRemoveSet.Remove:
                                             if (amount == 0)
                                             {
-                                                ActiveItem.RemoveLocationWithAudit(currentLoc, AuthdEmployee);
-                                                HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed all of " + ActiveItem.SKU + Environment.NewLine + "At " +
+                                                Child.RemoveLocationWithAudit(currentLoc, AuthdEmployee);
+                                                HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed all of " + Child.SKU + Environment.NewLine + "At " +
                                                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
                                                                                                 "======================" + Environment.NewLine);
                                             }
                                             else
                                             {
-                                                ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
-                                                HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
+                                                Child.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                                HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed " + amount.ToString() + " of " + Child.SKU + Environment.NewLine + "At " +
                                                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
                                                                                                 "======================" + Environment.NewLine);
                                             }
-                                            
-                                            
-                                            Instruct("Success. Please scan a new item");
-                                        break;
-                                        case StockEntry.AddRemoveSet.Set:
-                                            ActiveItem.SetLocationStockWithAudit(currentLoc,AuthdEmployee,amount);
-                                            HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Set stock of " + ActiveItem.SKU + " To "+ amount.ToString() + Environment.NewLine + "At " +
-                                                                     LocationIdConversion(currentLoc) + Environment.NewLine +
-                                                                     "======================" + Environment.NewLine);
-                                            Instruct("Success. Please scan a new item");
-                                        break;
-                                }
 
-                                CurrentScanState = ScanState.InitialScan;
-                            }
-                            catch (NegativeStockException e)
-                            {
-                                Console.WriteLine(e);
-                                Instruct("The stock cannot be negative. Please rescan the location");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                                Instruct("Failed to add location. Please try again");
-                                CurrentScanState = ScanState.InitialScan;
-                                throw;
+
+                                            Instruct("Success. Please scan a new item");
+                                            break;
+                                        case StockEntry.AddRemoveSet.Set:
+                                            Child.SetLocationStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                            HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Set stock of " + Child.SKU + " To " + amount.ToString() + Environment.NewLine + "At " +
+                                                                                            LocationIdConversion(currentLoc) + Environment.NewLine +
+                                                                                            "======================" + Environment.NewLine);
+                                            Instruct("Success. Please scan a new item");
+                                            break;
+                                    }
+
+
+                                    CurrentScanState = ScanState.InitialScan;
+                                }
+                                catch (NegativeStockException e)
+                                {
+                                    Console.WriteLine(e);
+                                    Instruct("The stock cannot be negative. Please rescan the location");
+                                    CurrentScanState = ScanState.ScannedItem;
+                                    cancel = true;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.Message);
+                                    Instruct("Failed to add location. Please try again");
+                                    CurrentScanState = ScanState.InitialScan;
+                                    cancel = true;
+                                    try
+                                    {
+                                        ex.Data.Add("Sku", Child.SKU);
+                                        ex.Data.Add("NewLoc", NewLocationId);
+                                        ex.Data.Add("OldLoc", InitialLocationId);
+                                    }
+                                    catch (Exception ){}
+
+                                    ErrorReporting.ReportException(ex);
+                                }
                             }
                         }
+   
                     }
                     else
                     {
@@ -332,6 +356,7 @@ namespace LocationModifier2
                     {
                         ItemDetailsStackPanel.Children.Clear();
                         ActiveItem = FullSkuCollection.SearchBarcodes(data)[0];
+                        ActiveColl = FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                         Instruct("Please scan the original location");
                         var infoblock = new TextBlock
                         {
@@ -346,6 +371,7 @@ namespace LocationModifier2
                     {
                         ActiveItem = null;
                         var searchcoll = FullSkuCollection.SearchBarcodes(data);
+                        ActiveColl = FullSkuCollection.GatherChildren(searchcoll[0].ShortSku);
                         if (searchcoll.Count(x => !x.SKU.Contains("xxxx")) == 1)
                         {
                             ActiveItem = searchcoll[0];
@@ -355,9 +381,8 @@ namespace LocationModifier2
                         else
                         {
                             var searchColl = FullSkuCollection.GatherChildren(data);
-                            var results = new PacksizeSelector(searchColl);
-                            results.ShowDialog();
-                            ActiveItem = results.SelectedSku;
+                            ActiveItem = searchColl[0];
+
                             if (ActiveItem != null)
                             {
                                 Instruct("Please scan a location");
@@ -388,6 +413,7 @@ namespace LocationModifier2
                     {
                         Instruct("Please scan an item");
                         ActiveItem = null;
+                        ActiveColl = null;
                         NewLocationId = 0;
                         InitialLocationId = 0;
                         CurrentScanState = ScanState.InitialScan;
@@ -413,47 +439,61 @@ namespace LocationModifier2
                     else
                     {
                         var conv = LocationNameConversion(data);
-                        if (conv != -1)
-                        {
-                            NewLocationId = conv;
-                        }
-                        else NewLocationId = 0;
+                        NewLocationId = conv != -1 ? conv : 0;
                     }
                     
                     CurrentScanState = ScanState.ScannedNewShelf;
-                    if (ActiveItem != null && NewLocationId != 0 && InitialLocationId != 0)
+                    if (ActiveColl != null && NewLocationId != 0 && InitialLocationId != 0)
                     {
-                        var stockCheck = new StockEntry();
-                        stockCheck.ShowDialog();
-                        var amount = stockCheck.FinalStockEntry;
-                        try
+
+                        var childColl = FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                        var cont = true;
+                        if(ActiveColl.Count == childColl.Count)
+                        foreach (var child in childColl)
                         {
-                            ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
-                            HistoryBlock.Text = HistoryBlock.Text.Insert(0,
-                                "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
-                                + LocationIdConversion(InitialLocationId) + " to " +
-                                LocationIdConversion(NewLocationId) + Environment.NewLine
-                                + "======================" + Environment.NewLine);
-                            ActiveItem = null;
+                            if (!cont) continue;
+                            var stockCheck = new StockEntry(child.SKU);
+                            stockCheck.ShowDialog();
+                            var amount = stockCheck.FinalStockEntry;
+                            try
+                            {
+
+                                child.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
+                                HistoryBlock.Text = HistoryBlock.Text.Insert(0,
+                                    "Moved " + amount.ToString() + " of " + child.SKU + Environment.NewLine + "From "
+                                    + LocationIdConversion(InitialLocationId) + " to " +
+                                    LocationIdConversion(NewLocationId) + Environment.NewLine
+                                    + "======================" + Environment.NewLine);
+                                
+
+                            }
+                            catch (NegativeStockException)
+                            {
+                                cont = false;
+                                Instruct("You cannot have negative stock. Please enter a valid value");
+                                CurrentScanState = ScanState.ScannedOriginShelf;
+                            }
+                            catch (Exception ex)
+                            {
+                                Instruct("There was an error please try again.");
+                                ActiveItem = null;
+                                NewLocationId = 0;
+                                InitialLocationId = 0;
+                                CurrentScanState = ScanState.InitialScan;
+                                cont = false;
+                                ErrorReporting.ReportException(ex);
+                            }
+                        }
+                        if (cont)
+                        {
                             NewLocationId = 0;
                             InitialLocationId = 0;
                             CurrentScanState = ScanState.InitialScan;
                             Instruct("Item Moved. Please scan a new item");
-                        }
-                        catch (NegativeStockException)
-                        {
-                            Instruct("You cannot have negative stock. Please enter a valid value");
-                            CurrentScanState = ScanState.ScannedOriginShelf;
-                        }
-                        catch (Exception)
-                        {
-                            Instruct("There was an error please try again.");
                             ActiveItem = null;
-                            NewLocationId = 0;
-                            InitialLocationId = 0;
-                            CurrentScanState = ScanState.InitialScan;
-                            throw;
                         }
+
+
                     }
                     else if (data.StartsWith("10"))
                     {

@@ -13,16 +13,18 @@ namespace LocationModifier2.Dialogs
         {
             Add = 0,
             Remove = 1,
-            Set = 2
+            Set = 2,
+            Skip = 3
 
         }
         public AddRemoveSet CurrentSet = AddRemoveSet.Add;
         public int FinalStockEntry;
         public bool Cancel;
         private bool _isNegative;
-        public StockEntry(bool disableremove = false)
+        public StockEntry(string title, bool disableremove = false)
         {
             InitializeComponent();
+            LoginTitle.Text = title;
             AddButton.IsEnabled = false;
             Keypad1.Click += Keypad_Click;
             Keypad2.Click += Keypad_Click;
@@ -97,6 +99,13 @@ namespace LocationModifier2.Dialogs
             AddButton.IsEnabled = true;
             RemoveButton.IsEnabled = true;
             SetButton.IsEnabled = false;
+        }
+
+        private void SkipButton_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentSet = AddRemoveSet.Skip;
+            FinalStockEntry = 0;
+            this.Close();
         }
     }
 }
