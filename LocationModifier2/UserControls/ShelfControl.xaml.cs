@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WHLClasses;
+using WHLClasses.Exceptions;
 
 namespace LocationModifier2.UserControls
 {
@@ -74,7 +75,8 @@ namespace LocationModifier2.UserControls
             {
                 foreach (var item in ActiveCollection)
                 {
-                    item.RemoveLocationWithAudit(LocationId,MWRef._OldMW.AuthdEmployee);
+                    if(item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1) throw new LocationNullReferenceException("This location has only one pickable location");
+                    else item.RemoveLocationWithAudit(LocationId,MWRef._OldMW.AuthdEmployee);
                 }
                 var msg = new MsgDialog("Success", "This location has been removed");
                 msg.ShowDialog();
