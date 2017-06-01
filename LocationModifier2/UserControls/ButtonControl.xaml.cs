@@ -1,5 +1,6 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
+using System.Linq;
 using System.Windows;
 using LocationModifier2.Cool;
 using WHLClasses;
@@ -20,7 +21,8 @@ namespace LocationModifier2.UserControls
             MainRefWindow = MainRef;
             LocationID = locationId;
             ActiveItem = sku;
-
+            var select = (from loc in sku.Locations where loc.LocationID == locationId select loc.Additional).Single();
+            MainButton.Content = select;
         }
 
 
@@ -35,13 +37,8 @@ namespace LocationModifier2.UserControls
                     ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry);
                     MainButton.Content = stockCounter.FinalStockEntry;
                 }
-                catch (Exception)
-                {
-                }
+                catch (Exception){}
             }
-
-            
-
         }
     }
 }
