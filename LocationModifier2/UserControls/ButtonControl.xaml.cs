@@ -43,7 +43,7 @@ namespace LocationModifier2.UserControls
             {
                 try
                 {
-                    ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry);
+                    ActiveItem.SetLocationStockWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry);
                     MainButton.Content = stockCounter.FinalStockEntry;
                 }
                 catch (Exception){}
