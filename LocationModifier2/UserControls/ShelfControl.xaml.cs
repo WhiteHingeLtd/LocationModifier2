@@ -75,12 +75,13 @@ namespace LocationModifier2.UserControls
             {
                 foreach (var item in ActiveCollection)
                 {
-                    if(item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1) throw new LocationNullReferenceException("This location has only one pickable location");
+                    if(item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
                     else item.RemoveLocationWithAudit(LocationId,MWRef._OldMW.AuthdEmployee);
                 }
                 var msg = new MsgDialog("Success", "This location has been removed");
                 msg.ShowDialog();
             }
+            
             MWRef.ProcessScan(ActiveCollection[0].ShortSku);
             MWRef.Refocus();
         }

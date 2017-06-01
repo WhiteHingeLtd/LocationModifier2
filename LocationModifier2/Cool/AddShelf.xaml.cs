@@ -46,6 +46,7 @@ namespace LocationModifier2.Cool
                 {
                     sku.AddLocationWithAudit(newdata,IwRef._OldMW.AuthdEmployee,0);
                 }
+                this.Close();
                 IwRef.ProcessScan(ActiveItem.ShortSku);
             }
             else
