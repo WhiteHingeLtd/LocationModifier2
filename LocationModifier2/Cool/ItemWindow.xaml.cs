@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LocationModifier2.UserControls;
+using WHLClasses;
 
 namespace LocationModifier2.Cool
 {
@@ -51,6 +53,10 @@ namespace LocationModifier2.Cool
             if (!ScanData.StartsWith("qlo"))
             {
                 //Googogo
+                //Clear
+                PacksizeHolder.Children.Clear();
+                LocationControlHolder.Children.Clear();
+
                 //Find it first
                 var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
                 if (Matches.Count == 1)
@@ -61,6 +67,30 @@ namespace LocationModifier2.Cool
 
                     //Get kids.
                     var kids = _OldMW.FullSkuCollection.GatherChildren(Matches[0].ShortSku);
+                    //Get the list of locaitons,
+                    var LocationIDs = new Dictionary<int, string>();
+                    foreach (WhlSKU Kid in kids)
+                    {
+                        //We're gonna have to iterate and get a list of locations.
+                        foreach (SKULocation loc in Kid.Locations)
+                        {
+                            if (!LocationIDs.Keys.Contains(loc.LocationID))
+                            {
+                                LocationIDs.Add(loc.LocationID, loc.LocationText);
+                            }
+                        }
+                    }
+                    //Now go again and make the controls.
+                    foreach (WhlSKU Kid in kids)
+                    {
+                        PacksizeHolder.Children.Add(new PacksizeControl(LocationIDs.Keys.ToList(), Kid, this));
+                    }
+                    //And now the lcoations.
+                    foreach (KeyValuePair<int, string> LocID in LocationIDs)
+                    {
+                        LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value,  kids, this));
+                    }
+
                 }
             }
             else

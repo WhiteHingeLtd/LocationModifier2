@@ -37,7 +37,7 @@
                         <Label x:Name="label" Content="Pack of" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold"/>
                     </Border>
                     <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,-778,0">
-                        <WrapPanel x:Name="PacksizeHolder" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="100" MinWidth="600" MinHeight="100" Background="#FFCEFFE9"/>
+                        <WrapPanel x:Name="PacksizeHolder" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="600" MinHeight="100" Background="#FFCEFFE9"/>
                     </Grid>
                     <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" Grid.Column="1" HorizontalAlignment="Left"/>
                 </Grid>

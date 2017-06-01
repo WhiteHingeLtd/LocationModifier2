@@ -27,7 +27,7 @@ namespace LocationModifier2.UserControls
         internal string LocationText;
         internal SkuCollection ActiveCollection = new SkuCollection(true);
         internal ItemWindow MWRef;
-        internal Dictionary<string,int> Additionals;
+        internal Dictionary<string,int> Additionals = new Dictionary<string, int>();
         public ShelfControl(int locId,string locText,SkuCollection skuColl, ItemWindow main)
         {
             InitializeComponent();

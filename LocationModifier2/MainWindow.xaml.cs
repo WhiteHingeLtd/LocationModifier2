@@ -11,6 +11,8 @@ using System.Windows.Threading;
 using LocationModifier2.Cool;
 using WHLClasses;
 using WHLClasses.Exceptions;
+using WHLClasses.MySQL_Old;
+using WHLClasses.SQL;
 
 namespace LocationModifier2
 {
@@ -49,7 +51,11 @@ namespace LocationModifier2
             UpdateMode_Tick(null, null);
             ScanBox.Focus();
 
-            (new ItemWindow(this)).Show();
+            var realwindow = new ItemWindow(this);
+            realwindow.Show();
+            this.Hide();
+            realwindow.WindowState = WindowState.Maximized;
+
         }
 
         private void UpdateMode_Tick(object sender, EventArgs e)
@@ -504,7 +510,7 @@ namespace LocationModifier2
                 ItemDetailsStackPanel.Children.Clear();
                 PickLocationsBlock.Text = "";
                 OtherLocationsBlock.Text = "";
-                var dict = MySQL.SelectDataDictionary("SELECT * FROM whldata.sku_locations WHERE LocationRefID='"+ data.Replace("qlo","") + "';");
+                var dict = MySQL_New.GetData("SELECT * FROM whldata.sku_locations WHERE LocationRefID='"+ data.Replace("qlo","") + "';");
                 
                 
                 foreach (var result in dict)
@@ -666,7 +672,7 @@ namespace LocationModifier2
             try
             {
                 var locationString = "";
-                var locObject = MySQL.SelectData("SELECT locText FROM whldata.locationreference WHERE locID=" + location.ToString() + " LIMIT 1;") as ArrayList;
+                var locObject = MySQL_Ext.SelectData("SELECT locText FROM whldata.locationreference WHERE locID=" + location.ToString() + " LIMIT 1;") as ArrayList;
                 if (locObject != null && locObject.Count > 0)
                 {
                     foreach (ArrayList locList in locObject)
@@ -693,7 +699,7 @@ namespace LocationModifier2
             try
             {
                 var locationID = 0;
-                var locObject = MySQL.SelectData("SELECT locid FROM whldata.locationreference WHERE locText='" + location.ToUpper() + "' LIMIT 1;") as ArrayList;
+                var locObject = MySQL_Ext.SelectData("SELECT locid FROM whldata.locationreference WHERE locText='" + location.ToUpper() + "' LIMIT 1;") as ArrayList;
                 if (locObject != null && locObject.Count > 0)
                 {
                     foreach (ArrayList locList in locObject)
