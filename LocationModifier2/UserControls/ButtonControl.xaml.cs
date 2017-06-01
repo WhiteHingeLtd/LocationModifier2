@@ -21,8 +21,17 @@ namespace LocationModifier2.UserControls
             MainRefWindow = MainRef;
             LocationID = locationId;
             ActiveItem = sku;
-            var select = (from loc in sku.Locations where loc.LocationID == locationId select loc.Additional).Single();
-            MainButton.Content = select;
+            try
+            {
+                var select = (from loc in sku.Locations where loc.LocationID == locationId select loc.Additional).Single();
+                MainButton.Content = select;
+            }
+            catch (InvalidOperationException)
+            {
+                MainButton.Content = 0;
+            }
+            
+            
         }
 
 
