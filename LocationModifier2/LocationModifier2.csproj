@@ -93,6 +93,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UserControls\ButtonControl.xaml.cs">
+      <DependentUpon>ButtonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PacksizeControl.xaml.cs">
+      <DependentUpon>PacksizeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ShelfControl.xaml.cs">
+      <DependentUpon>ShelfControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Cool\ItemWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,6 +149,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\ButtonControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\PacksizeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ShelfControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
