@@ -34,24 +34,10 @@ namespace LocationModifier2.UserControls
             LocationId = locId;
             LocationText = locText;
             ActiveCollection = skuColl;
+            ShelfTextBlock.Text = locText;
             MWRef = main;
-            Additionals.Clear();
-            foreach (var sku in skuColl)
-            {
-                int info = -1;
-                try
-                {
-                    info = (from loc in sku.Locations
-                            where (loc.LocationID == locId)
-                            select Convert.ToInt32(loc.Additional))
-                        .Single();
-                }
-                catch (InvalidOperationException)
-                {
-                    continue;
-                }
-                if(info != -1) Additionals.Add(sku.SKU,info);
-            }
+            
+            UpdateDictionary();
         }
 
         private void ShelfControlUC_TouchUp(object sender, TouchEventArgs e)
@@ -64,8 +50,30 @@ namespace LocationModifier2.UserControls
             RemoveAllFromShelf();
         }
 
+        private void UpdateDictionary()
+        {
+            Additionals.Clear();
+            foreach (var sku in ActiveCollection)
+            {
+                int info = -1;
+                try
+                {
+                    info = (from loc in sku.Locations
+                            where (loc.LocationID == LocationId)
+                            select Convert.ToInt32(loc.Additional))
+                        .Single();
+                }
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+                if (info != -1) Additionals.Add(sku.SKU, info);
+            }
+        }
+
         private void RemoveAllFromShelf()
         {
+            UpdateDictionary();
             if (Additionals.Any(add => add.Value != 0))
             {
                 var msg = new MsgDialog("ERROR","These shelves aren't empty!");
