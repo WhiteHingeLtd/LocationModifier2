@@ -99,7 +99,7 @@ namespace LocationModifier2.Cool
 
         }
 
-        private void ProcessScan(string ScanData)
+        internal void ProcessScan(string ScanData)
         {
             if (ScanData.StartsWith("qzu"))
             {

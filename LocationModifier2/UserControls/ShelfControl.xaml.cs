@@ -76,7 +76,10 @@ namespace LocationModifier2.UserControls
                 {
                     item.RemoveLocationWithAudit(LocationId,MWRef._OldMW.AuthdEmployee);
                 }
+                var msg = new MsgDialog("Success", "This location has been removed");
+                msg.ShowDialog();
             }
+            MWRef.ProcessScan(ActiveCollection[0].ShortSku);
             MWRef.Refocus();
         }
 
