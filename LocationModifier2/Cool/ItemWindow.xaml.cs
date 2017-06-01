@@ -98,11 +98,15 @@ namespace LocationModifier2.Cool
                         //Now go again and make the controls.
                         foreach (WhlSKU Kid in kids)
                         {
-                            var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
-                            packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
-                            packsizecontrol.MouseLeftButtonDown += NotesScroller_MouseLeftButtonDown;
-                            packsizecontrol.MouseMove += NotesScroller_MouseMove;
-                            PacksizeHolder.Children.Add(packsizecontrol);
+                            if (Kid.NewItem.IsListed)
+                            {
+                                var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
+                                packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
+                                packsizecontrol.MouseLeftButtonDown += NotesScroller_MouseLeftButtonDown;
+                                packsizecontrol.MouseMove += NotesScroller_MouseMove;
+                                PacksizeHolder.Children.Add(packsizecontrol);
+                            }
+                            
                         }
                         //And now the lcoations.
                         foreach (KeyValuePair<int, string> LocID in newdict)
@@ -158,5 +162,24 @@ namespace LocationModifier2.Cool
             }
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Refocus();
+        }
+
+        private void ScanBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Refocus();
+        }
+
+        private void ScanBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Background = Brushes.LightCoral;
+        }
+
+        private void ScanBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Background = Brushes.PaleGreen;
+        }
     }
 }
