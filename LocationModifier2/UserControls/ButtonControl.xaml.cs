@@ -23,14 +23,15 @@ namespace LocationModifier2.UserControls
             ActiveItem = sku;
             try
             {
-                var select = (from loc in sku.Locations where loc.LocationID == locationId select loc.Additional).Single();
+                var select =
+                    (from loc in sku.Locations where loc.LocationID == locationId select loc.Additional).Single();
                 MainButton.Content = select;
             }
             catch (InvalidOperationException)
             {
                 MainButton.Content = 0;
             }
-            
+
             
         }
 
@@ -47,6 +48,10 @@ namespace LocationModifier2.UserControls
                     MainButton.Content = stockCounter.FinalStockEntry;
                 }
                 catch (Exception){}
+                finally
+                {
+                    MainRefWindow.Refocus();
+                }
             }
         }
     }
