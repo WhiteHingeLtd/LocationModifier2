@@ -75,6 +75,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -106,6 +108,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DistinguishChoices.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\LocationSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +138,9 @@
     </Compile>
     <Compile Include="Cool\ItemWindow.xaml.cs">
       <DependentUpon>ItemWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DistinguishChoices.xaml.cs">
+      <DependentUpon>DistinguishChoices.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\LocationSelection.xaml.cs">
       <DependentUpon>LocationSelection.xaml</DependentUpon>

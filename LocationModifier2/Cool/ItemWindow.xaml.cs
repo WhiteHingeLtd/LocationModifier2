@@ -48,6 +48,56 @@ namespace LocationModifier2.Cool
             ScanBox.Focus();
         }
 
+        private void LoadGrid(WhlSKU sku)
+        {
+            //GOGOOGO WE HACVE MATCH
+            ItemName.Text = sku.Title.Label;
+            ShortSku.Text = sku.ShortSku;
+
+            //Get kids.
+            var kids = _OldMW.FullSkuCollection.GatherChildren(sku.ShortSku);
+            //Get the list of locaitons,
+            var LocationIDs = new Dictionary<int, string>();
+            foreach (WhlSKU Kid in kids)
+            {
+                //Refresh thing
+                Kid.RefreshLocations();
+                //We're gonna have to iterate and get a list of locations.
+                foreach (SKULocation loc in Kid.Locations)
+                {
+                    if (!LocationIDs.Keys.Contains(loc.LocationID))
+                    {
+                        LocationIDs.Add(loc.LocationID, loc.LocationText);
+                    }
+                }
+            }
+            //Sort them to fix the faggy ordering
+            var orderedlocations = from entry in LocationIDs orderby entry.Key ascending select entry;
+            var newdict = new Dictionary<int, string>();
+            foreach (KeyValuePair<int, string> asd in orderedlocations)
+            {
+                newdict.Add(asd.Key, asd.Value);
+            }
+            //Now go again and make the controls.
+            foreach (WhlSKU Kid in kids)
+            {
+                if (Kid.NewItem.IsListed)
+                {
+                    var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
+                    packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
+                    packsizecontrol.MouseLeftButtonDown += NotesScroller_MouseLeftButtonDown;
+                    packsizecontrol.MouseMove += NotesScroller_MouseMove;
+                    PacksizeHolder.Children.Add(packsizecontrol);
+                }
+
+            }
+            //And now the lcoations.
+            foreach (KeyValuePair<int, string> LocID in newdict)
+            {
+                LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value, kids, this));
+            }
+
+        }
 
         private void ProcessScan(string ScanData)
         {
@@ -67,53 +117,14 @@ namespace LocationModifier2.Cool
                     var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
                     if (Matches.Count == 1)
                     {
-                        //GOGOOGO WE HACVE MATCH
-                        ItemName.Text = Matches[0].Title.Label;
-                        ShortSku.Text = Matches[0].ShortSku;
-
-                        //Get kids.
-                        var kids = _OldMW.FullSkuCollection.GatherChildren(Matches[0].ShortSku);
-                        //Get the list of locaitons,
-                        var LocationIDs = new Dictionary<int, string>();
-                        foreach (WhlSKU Kid in kids)
-                        {
-                            //Refresh thing
-                            Kid.RefreshLocations();
-                            //We're gonna have to iterate and get a list of locations.
-                            foreach (SKULocation loc in Kid.Locations)
-                            {
-                                if (!LocationIDs.Keys.Contains(loc.LocationID))
-                                {
-                                    LocationIDs.Add(loc.LocationID, loc.LocationText);
-                                }
-                            }
-                        }
-                        //Sort them to fix the faggy ordering
-                        var orderedlocations = from entry in LocationIDs orderby entry.Key ascending select entry;
-                        var newdict = new Dictionary<int, string>();
-                        foreach (KeyValuePair<int, string> asd in orderedlocations)
-                        {
-                            newdict.Add(asd.Key, asd.Value);
-                        }
-                        //Now go again and make the controls.
-                        foreach (WhlSKU Kid in kids)
-                        {
-                            if (Kid.NewItem.IsListed)
-                            {
-                                var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
-                                packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
-                                packsizecontrol.MouseLeftButtonDown += NotesScroller_MouseLeftButtonDown;
-                                packsizecontrol.MouseMove += NotesScroller_MouseMove;
-                                PacksizeHolder.Children.Add(packsizecontrol);
-                            }
-                            
-                        }
-                        //And now the lcoations.
-                        foreach (KeyValuePair<int, string> LocID in newdict)
-                        {
-                            LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value, kids, this));
-                        }
-
+                       LoadGrid(Matches[0]);
+                    }else if (Matches.Count > 1)
+                    {
+                        LoadGrid(Distinguish.DistinguishSku(Matches));
+                    }
+                    else
+                    {
+                        (new MsgDialog("ERROR", "Unable to find any items which matched the search!")).ShowDialog();
                     }
                 }
                 else
