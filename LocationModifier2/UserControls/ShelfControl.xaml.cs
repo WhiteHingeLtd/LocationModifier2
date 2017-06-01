@@ -25,7 +25,7 @@ namespace LocationModifier2.UserControls
             LocationId = locId;
             LocationText = locText;
             ActiveCollection = skuColl;
-            ShelfTextBlock.Text = locText;
+            Button1.Content = locText;
             MWRef = main;
             
             UpdateDictionary();
@@ -78,6 +78,11 @@ namespace LocationModifier2.UserControls
                 }
             }
             MWRef.Refocus();
+        }
+
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            RemoveAllFromShelf();
         }
     }
 }

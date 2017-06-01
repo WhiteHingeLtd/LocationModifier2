@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="140" Width="140" MinHeight="100" TouchUp="ShelfControlUC_TouchUp" MouseUp="ShelfControlUC_MouseUp">
     <Grid>
-        <TextBlock x:Name="ShelfTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="A19-19" VerticalAlignment="Center" FontSize="36"/>
+        <Button x:Name="Button1" Click="Button_Click" Background="#00DDDDDD" FontSize="36"></Button>
+        <!--<TextBlock x:Name="ShelfTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="A19-19" VerticalAlignment="Center" FontSize="36"/>-->
 
     </Grid>
 </UserControl>
