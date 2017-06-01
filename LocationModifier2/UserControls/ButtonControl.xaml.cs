@@ -39,7 +39,7 @@ namespace LocationModifier2.UserControls
         {
             var stockCounter = new StockEntry();
             stockCounter.ShowDialog();
-            if (stockCounter.FinalStockEntry > 0)
+            if (stockCounter.FinalStockEntry > -1)
             {
                 try
                 {
