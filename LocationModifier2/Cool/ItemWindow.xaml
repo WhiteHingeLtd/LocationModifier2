@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Cool"
         mc:Ignorable="d"
-        Title="ItemWindow" SizeToContent="WidthAndHeight">
+        Title="ItemWindow" Width="1280" Height="720">
     <Viewbox Stretch="Fill">
         <Grid Width="1280" Height="720">
             <Grid.ColumnDefinitions>
