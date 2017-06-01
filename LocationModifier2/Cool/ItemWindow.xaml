@@ -46,7 +46,7 @@
                                 <ColumnDefinition Width="121"/>
                             </Grid.ColumnDefinitions>
                             <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" HorizontalAlignment="Left"/>
-                            <Button x:Name="button1" Grid.Column="1" Margin="10">
+                            <Button x:Name="AddShelfButton" Grid.Column="1" Margin="10" Click="AddShelfButton_Click">
                                 <TextBlock TextAlignment="Center" TextWrapping="Wrap" FontSize="24">ADD SHELF</TextBlock></Button>
                         </Grid>
                     </Grid>

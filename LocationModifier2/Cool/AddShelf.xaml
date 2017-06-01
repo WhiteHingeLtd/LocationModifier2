@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Cool"
         mc:Ignorable="d"
-        Title="AddShelf" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="AddShelf" Height="480" Width="799" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+    <Viewbox Stretch="Fill">
+        <Grid Width="800" Height="480">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="99*"/>
+                <ColumnDefinition Width="701*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="27*"/>
+                <RowDefinition Height="133*"/>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="ScanBox" HorizontalAlignment="Left" Height="19" TextWrapping="Wrap" VerticalAlignment="Top" Width="97" BorderBrush="Black" GotFocus="ScanBox_GotFocus" LostFocus="ScanBox_LostFocus" KeyDown="ScanBox_KeyDown"/>
+            <TextBlock x:Name="InstructBox" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Grid.Column="1" FontSize="36" Height="50"/>
+
+        </Grid>
+    </Viewbox>
 </Window>

@@ -25,8 +25,8 @@ namespace LocationModifier2.Cool
 
         internal MainWindow _OldMW = null;
         internal ShelfWindow ShelfWin = null;
-
-
+        internal WhlSKU ActiveItem;
+        internal SkuCollection ActiveCollection;
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
@@ -118,19 +118,23 @@ namespace LocationModifier2.Cool
                     if (!ScanData.StartsWith("qlo"))
                     {
                         //Googogo
-                        //Clear
-                        PacksizeHolder.Children.Clear();
-                        LocationControlHolder.Children.Clear();
+                    //Clear
+                    PacksizeHolder.Children.Clear();
+                    LocationControlHolder.Children.Clear();
 
-                        //Find it first
-                        var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
-                        if (Matches.Count == 1)
-                        {
-                            LoadGrid(Matches[0]);
-                        }
-                        else if (Matches.Count > 1)
-                        {
-                            LoadGrid(Distinguish.DistinguishSku(Matches));
+                    //Find it first
+                    var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                    if (Matches.Count == 1)
+                    {
+                        ActiveItem = Matches[0];
+                        ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                       LoadGrid(Matches[0]);
+                    }else if (Matches.Count > 1)
+                    {
+                        var item = Distinguish.DistinguishSku(Matches);
+                        ActiveItem = item;
+                        ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                        LoadGrid(item);
                         }
                         else
                         {
@@ -151,7 +155,7 @@ namespace LocationModifier2.Cool
             {
                 WHLClasses.Reporting.ErrorReporting.ReportException(ex, false);
                 (new MsgDialog("Scan Error", "An unknown error occurred while processing you scan.")).ShowDialog();
-                Refocus()
+                Refocus();
             }
 
             
@@ -212,6 +216,13 @@ namespace LocationModifier2.Cool
         private void ScanBox_GotFocus(object sender, RoutedEventArgs e)
         {
             ScanBox.Background = Brushes.PaleGreen;
+        }
+
+        private void AddShelfButton_Click(object sender, RoutedEventArgs e)
+        {
+            new AddShelf(this, ActiveItem, ActiveCollection).ShowDialog();
+            ProcessScan(ActiveItem.ShortSku);
+            Refocus();
         }
     }
 }

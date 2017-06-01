@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WHLClasses;
 
 namespace LocationModifier2.Cool
 {
@@ -19,9 +12,69 @@ namespace LocationModifier2.Cool
     /// </summary>
     public partial class AddShelf : Window
     {
-        public AddShelf()
+        internal ItemWindow IwRef;
+        internal WhlSKU ActiveItem;
+        internal SkuCollection ActiveCollection;
+        public AddShelf(ItemWindow Ref, WhlSKU sku,SkuCollection resultColl)
         {
             InitializeComponent();
+            ActiveItem = sku;
+            ActiveCollection = resultColl;
+            IwRef = Ref;
+            Instruct("Scan a new shelf location");
+            Refocus();
         }
+
+        private void ScanBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Background = Brushes.PaleGreen;
+        }
+
+        private void ScanBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ScanBox.Background = Brushes.LightCoral;
+        }
+
+        private void ProcessScan(string data)
+        {
+            if (data.StartsWith("qlo"))
+            {
+                var newdata = Convert.ToInt32(data.Replace("qlo", ""));
+                var shelfname = IwRef._OldMW.LocationIdConversion(newdata);
+                Instruct("Adding to " + shelfname);
+                foreach (var sku in ActiveCollection)
+                {
+                    sku.AddLocationWithAudit(newdata,IwRef._OldMW.AuthdEmployee,0);
+                }
+                IwRef.ProcessScan(ActiveItem.ShortSku);
+            }
+            else
+            {
+                Instruct("Please scan a valid shelf location");
+            }
+        }
+        private void ScanBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ProcessScan(ScanBox.Text);
+                Refocus();
+            }
+        }
+        #region StepThroughs
+        [DebuggerStepThrough]
+        private void Instruct(string text)
+        {
+            InstructBox.Text = text;
+        }
+        [DebuggerStepThrough]
+        private void Refocus()
+        {
+            ScanBox.Text = "";
+            ScanBox.Focus();
+        }
+        #endregion
+
+
     }
 }
