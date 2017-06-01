@@ -10,7 +10,7 @@
             <ColumnDefinition Width="120"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <WrapPanel x:Name="ExpandPanel" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+        <WrapPanel x:Name="ExpandPanel" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="80"/>
         <TextBlock x:Name="PacksizeBlock" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Text="1000" FontSize="24"/>
 
     </Grid>

@@ -38,11 +38,19 @@ namespace LocationModifier2.UserControls
             Additionals.Clear();
             foreach (var sku in skuColl)
             {
-                var info = (from loc in sku.Locations
+                int info = -1;
+                try
+                {
+                    info = (from loc in sku.Locations
                             where (loc.LocationID == locId)
-                    select Convert.ToInt32(loc.Additional))
-                    .Single();
-                Additionals.Add(sku.SKU,info);
+                            select Convert.ToInt32(loc.Additional))
+                        .Single();
+                }
+                catch (InvalidOperationException)
+                {
+                    continue;
+                }
+                if(info != -1) Additionals.Add(sku.SKU,info);
             }
         }
 
