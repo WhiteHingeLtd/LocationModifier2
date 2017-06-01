@@ -38,7 +38,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>T:\IT\Remote Debugs\LocMod2\</OutputPath>
+    <OutputPath>V:\IT\Remote Debugs\LocMod2\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -98,6 +98,12 @@
     <Compile Include="Cool\AddShelf.xaml.cs">
       <DependentUpon>AddShelf.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Cool\ShelfWindow.xaml.cs">
+      <DependentUpon>ShelfWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Cool\ShelfWindowControl.xaml.cs">
+      <DependentUpon>ShelfWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ButtonControl.xaml.cs">
       <DependentUpon>ButtonControl.xaml</DependentUpon>
     </Compile>
@@ -112,6 +118,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Cool\ItemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cool\ShelfWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cool\ShelfWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

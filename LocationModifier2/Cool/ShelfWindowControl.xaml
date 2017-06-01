@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="LocationModifier2.Cool.ShelfWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LocationModifier2.Cool"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Width="882" Height="50">
+    
+        <Grid Width="880" Height="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="480"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock x:Name="ItemTitle" HorizontalAlignment="Center" TextWrapping="Wrap" Text=" Big ling title text which fits things like hat and coat peg" VerticalAlignment="Center" FontSize="22" Grid.Column="1" TextAlignment="Center"/>
+            <TextBlock x:Name="Packsize" HorizontalAlignment="Center" TextWrapping="Wrap" Text="pack 10000" VerticalAlignment="Center" FontSize="22" Grid.Column="2"/>
+            <TextBlock x:Name="Stocklevel" HorizontalAlignment="Center" TextWrapping="Wrap" Text="5999" VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Grid.Column="3"/>
+        <Button Background="#FFCDCDCD" BorderBrush="#FFE6E6E6" Click="Button_Click" >
+            <TextBlock x:Name="Shortsku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="1005630" VerticalAlignment="Center" FontWeight="Bold" FontSize="24"/>
+        </Button>
+    </Grid>
+</UserControl>

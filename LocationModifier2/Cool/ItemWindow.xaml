@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Cool"
         mc:Ignorable="d"
-        Title="ItemWindow" Width="1280" Height="720" Loaded="Window_Loaded">
+        Title="ItemWindow" Width="1280" Height="720" Loaded="Window_Loaded" WindowStyle="None">
     <Viewbox Stretch="Fill">
         <Grid Width="900" Height="506">
             <Grid.ColumnDefinitions>
@@ -52,7 +52,7 @@
                     </Grid>
                 </Viewbox>
             </ScrollViewer>
-            <TextBox x:Name="ScanBox" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="ScanBox_KeyUp" MouseLeftButtonDown="ScanBox_MouseLeftButtonDown" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
+            <TextBox x:Name="ScanBox" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="ScanBox_KeyUp" MouseLeftButtonDown="ScanBox_MouseLeftButtonDown" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
             <Button x:Name="button" Content="QUIT" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="65" Height="50" RenderTransformOrigin="0.5,0.5" Margin="0,0,-8,0" Background="#FF830000" Foreground="White" FontSize="24" FontWeight="Bold" Click="button_Click">
                 <Button.RenderTransform>
                     <TransformGroup>

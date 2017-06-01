@@ -24,12 +24,13 @@ namespace LocationModifier2.Cool
     {
 
         internal MainWindow _OldMW = null;
+        internal ShelfWindow ShelfWin = null;
 
 
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
-
+            ShelfWin = new ShelfWindow(this);
             _OldMW = realMainWindow;
         }
 
@@ -81,7 +82,7 @@ namespace LocationModifier2.Cool
             //Now go again and make the controls.
             foreach (WhlSKU Kid in kids)
             {
-                if (Kid.NewItem.IsListed)
+                if (Kid.NewItem.IsListed || Kid.PackSize == 1)
                 {
                     var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
                     packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
@@ -101,46 +102,66 @@ namespace LocationModifier2.Cool
 
         internal void ProcessScan(string ScanData)
         {
-            if (ScanData.StartsWith("qzu"))
+            try
             {
-                _OldMW.ProcessScanBox(ScanData);
-            }else if (_OldMW.AuthdEmployee != null)
+                ShelfWin.Hide();
+            }
+            catch{}
+            try
             {
-                if (!ScanData.StartsWith("qlo"))
+                if (ScanData.StartsWith("qzu"))
                 {
-                    //Googogo
-                    //Clear
-                    PacksizeHolder.Children.Clear();
-                    LocationControlHolder.Children.Clear();
+                    _OldMW.ProcessScanBox(ScanData);
+                }
+                else if (_OldMW.AuthdEmployee != null)
+                {
+                    if (!ScanData.StartsWith("qlo"))
+                    {
+                        //Googogo
+                        //Clear
+                        PacksizeHolder.Children.Clear();
+                        LocationControlHolder.Children.Clear();
 
-                    //Find it first
-                    var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
-                    if (Matches.Count == 1)
-                    {
-                       LoadGrid(Matches[0]);
-                    }else if (Matches.Count > 1)
-                    {
-                        LoadGrid(Distinguish.DistinguishSku(Matches));
+                        //Find it first
+                        var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                        if (Matches.Count == 1)
+                        {
+                            LoadGrid(Matches[0]);
+                        }
+                        else if (Matches.Count > 1)
+                        {
+                            LoadGrid(Distinguish.DistinguishSku(Matches));
+                        }
+                        else
+                        {
+                            (new MsgDialog("ERROR", "Unable to find any items which matched the search!")).ShowDialog();
+                        }
                     }
                     else
                     {
-                        (new MsgDialog("ERROR", "Unable to find any items which matched the search!")).ShowDialog();
+                        ProcessToShelfScreen(ScanData);
                     }
                 }
                 else
                 {
-                    ProcessToShelfScreen(ScanData);
+                    (new MsgDialog("ERROR", "You must log in before scanning stuff")).ShowDialog();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                (new MsgDialog("ERROR", "You must log in before scanning stuff")).ShowDialog();
+                WHLClasses.Reporting.ErrorReporting.ReportException(ex, false);
+                (new MsgDialog("Scan Error", "An unknown error occurred while processing you scan.")).ShowDialog();
+                Refocus()
             }
+
+            
         }
 
         private void ProcessToShelfScreen(string ScanData)
         {
-            
+            ShelfWin.Show();
+            ShelfWin.LoadShelf(ScanData);
+
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
