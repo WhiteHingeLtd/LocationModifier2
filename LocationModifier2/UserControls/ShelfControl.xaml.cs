@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LocationModifier2.Cool;
 using LocationModifier2.Dialogs;
 using WHLClasses;
 
@@ -25,9 +26,9 @@ namespace LocationModifier2.UserControls
         internal int LocationId;
         internal string LocationText;
         internal SkuCollection ActiveCollection = new SkuCollection(true);
-        internal MainWindow MWRef;
+        internal ItemWindow MWRef;
         internal Dictionary<string,int> Additionals;
-        public ShelfControl(int locId,string locText,SkuCollection skuColl,MainWindow main)
+        public ShelfControl(int locId,string locText,SkuCollection skuColl, ItemWindow main)
         {
             InitializeComponent();
             LocationId = locId;
@@ -66,7 +67,7 @@ namespace LocationModifier2.UserControls
             {
                 foreach (var item in ActiveCollection)
                 {
-                    item.RemoveLocationWithAudit(LocationId,MWRef.AuthdEmployee);
+                    item.RemoveLocationWithAudit(LocationId,MWRef._OldMW.AuthdEmployee);
                 }
             }
         }
