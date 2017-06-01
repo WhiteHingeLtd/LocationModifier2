@@ -59,7 +59,7 @@ namespace LocationModifier2.UserControls
                 try
                 {
                     info = (from loc in sku.Locations
-                            where (loc.LocationID == locId)
+                            where (loc.LocationID == LocationId)
                             select Convert.ToInt32(loc.Additional))
                         .Single();
                 }
