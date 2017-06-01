@@ -73,13 +73,22 @@ namespace LocationModifier2.UserControls
             }
             else
             {
-                foreach (var item in ActiveCollection)
+                try
                 {
-                    if(item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
-                    else item.RemoveLocationWithAudit(LocationId,MWRef._OldMW.AuthdEmployee);
+                    foreach (var item in ActiveCollection)
+                    {
+                        if (item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
+                        else item.RemoveLocationWithAudit(LocationId, MWRef._OldMW.AuthdEmployee);
+                    }
+                    var msg = new MsgDialog("Success", "This location has been removed");
+                    msg.ShowDialog();
                 }
-                var msg = new MsgDialog("Success", "This location has been removed");
-                msg.ShowDialog();
+                catch (LocationNullReferenceException)
+                {
+                    var msg = new MsgDialog("ERROR", "You cannot remove this location as it is the last pickable location");
+                    msg.ShowDialog();
+                }
+
             }
             
             MWRef.ProcessScan(ActiveCollection[0].ShortSku);
