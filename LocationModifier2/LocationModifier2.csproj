@@ -102,6 +102,10 @@
     <Compile Include="UserControls\ShelfControl.xaml.cs">
       <DependentUpon>ShelfControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Cool\ItemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\LocationSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,6 +129,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cool\ItemWindow.xaml.cs">
+      <DependentUpon>ItemWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\LocationSelection.xaml.cs">
       <DependentUpon>LocationSelection.xaml</DependentUpon>
