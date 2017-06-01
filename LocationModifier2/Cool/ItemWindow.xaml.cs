@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LocationModifier2.Dialogs;
 using LocationModifier2.UserControls;
 using WHLClasses;
 
@@ -50,59 +51,69 @@ namespace LocationModifier2.Cool
 
         private void ProcessScan(string ScanData)
         {
-            if (!ScanData.StartsWith("qlo"))
+            if (ScanData.StartsWith("qzu"))
             {
-                //Googogo
-                //Clear
-                PacksizeHolder.Children.Clear();
-                LocationControlHolder.Children.Clear();
-
-                //Find it first
-                var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
-                if (Matches.Count == 1)
+                _OldMW.ProcessScanBox(ScanData);
+            }else if (_OldMW.AuthdEmployee != null)
+            {
+                if (!ScanData.StartsWith("qlo"))
                 {
-                    //GOGOOGO WE HACVE MATCH
-                    ItemName.Text = Matches[0].Title.Label;
-                    ShortSku.Text = Matches[0].ShortSku;
+                    //Googogo
+                    //Clear
+                    PacksizeHolder.Children.Clear();
+                    LocationControlHolder.Children.Clear();
 
-                    //Get kids.
-                    var kids = _OldMW.FullSkuCollection.GatherChildren(Matches[0].ShortSku);
-                    //Get the list of locaitons,
-                    var LocationIDs = new Dictionary<int, string>();
-                    foreach (WhlSKU Kid in kids)
+                    //Find it first
+                    var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                    if (Matches.Count == 1)
                     {
-                        //We're gonna have to iterate and get a list of locations.
-                        foreach (SKULocation loc in Kid.Locations)
+                        //GOGOOGO WE HACVE MATCH
+                        ItemName.Text = Matches[0].Title.Label;
+                        ShortSku.Text = Matches[0].ShortSku;
+
+                        //Get kids.
+                        var kids = _OldMW.FullSkuCollection.GatherChildren(Matches[0].ShortSku);
+                        //Get the list of locaitons,
+                        var LocationIDs = new Dictionary<int, string>();
+                        foreach (WhlSKU Kid in kids)
                         {
-                            if (!LocationIDs.Keys.Contains(loc.LocationID))
+                            //We're gonna have to iterate and get a list of locations.
+                            foreach (SKULocation loc in Kid.Locations)
                             {
-                                LocationIDs.Add(loc.LocationID, loc.LocationText);
+                                if (!LocationIDs.Keys.Contains(loc.LocationID))
+                                {
+                                    LocationIDs.Add(loc.LocationID, loc.LocationText);
+                                }
                             }
                         }
-                    }
-                    //Sort them to fix the faggy ordering
-                    var orderedlocations = from entry in LocationIDs orderby entry.Key ascending select entry;
-                    var newdict = new Dictionary<int, string>();
-                    foreach (KeyValuePair<int, string> asd in orderedlocations)
-                    {
-                        newdict.Add(asd.Key, asd.Value);
-                    }
-                    //Now go again and make the controls.
-                    foreach (WhlSKU Kid in kids)
-                    {
-                        PacksizeHolder.Children.Add(new PacksizeControl(newdict.Keys.ToList(), Kid, this));
-                    }
-                    //And now the lcoations.
-                    foreach (KeyValuePair<int, string> LocID in newdict)
-                    {
-                        LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value,  kids, this));
-                    }
+                        //Sort them to fix the faggy ordering
+                        var orderedlocations = from entry in LocationIDs orderby entry.Key ascending select entry;
+                        var newdict = new Dictionary<int, string>();
+                        foreach (KeyValuePair<int, string> asd in orderedlocations)
+                        {
+                            newdict.Add(asd.Key, asd.Value);
+                        }
+                        //Now go again and make the controls.
+                        foreach (WhlSKU Kid in kids)
+                        {
+                            PacksizeHolder.Children.Add(new PacksizeControl(newdict.Keys.ToList(), Kid, this));
+                        }
+                        //And now the lcoations.
+                        foreach (KeyValuePair<int, string> LocID in newdict)
+                        {
+                            LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value, kids, this));
+                        }
 
+                    }
+                }
+                else
+                {
+                    ProcessToShelfScreen(ScanData);
                 }
             }
             else
             {
-                ProcessToShelfScreen(ScanData);
+                (new MsgDialog("asd", "You must log in before scannign stuff")).ShowDialog();
             }
         }
 
