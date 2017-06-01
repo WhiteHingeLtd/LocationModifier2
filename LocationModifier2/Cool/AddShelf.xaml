@@ -5,20 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Cool"
         mc:Ignorable="d"
-        Title="AddShelf" Height="480" Width="799" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
-    <Viewbox Stretch="Fill">
+        Title="AddShelf" Background="#D8000000" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" WindowState="Maximized">
+    <Viewbox>
         <Grid Width="800" Height="480">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="99*"/>
-                <ColumnDefinition Width="701*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="27*"/>
-                <RowDefinition Height="133*"/>
-            </Grid.RowDefinitions>
-            <TextBox x:Name="ScanBox" HorizontalAlignment="Left" Height="19" TextWrapping="Wrap" VerticalAlignment="Top" Width="97" BorderBrush="Black" GotFocus="ScanBox_GotFocus" LostFocus="ScanBox_LostFocus" KeyDown="ScanBox_KeyDown"/>
-            <TextBlock x:Name="InstructBox" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Grid.Column="1" FontSize="36" Height="50"/>
+            <Grid Width="500" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                <RotateTransform Angle="954" CenterY="0.5" CenterX="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="#FFC1C4D6" Offset="0"/>
+                        <GradientStop Color="#FFD5E0CD" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="InstructBox" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" FontSize="36" Height="50"/>
 
+            </Grid>
+            <TextBox x:Name="ScanBox" HorizontalAlignment="Left" Height="19" TextWrapping="Wrap" VerticalAlignment="Top" Width="97" BorderBrush="Black" GotFocus="ScanBox_GotFocus" LostFocus="ScanBox_LostFocus" KeyDown="ScanBox_KeyDown"/>
         </Grid>
     </Viewbox>
 </Window>
