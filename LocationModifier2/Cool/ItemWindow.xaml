@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Cool"
         mc:Ignorable="d"
-        Title="ItemWindow" Width="1280" Height="720">
+        Title="ItemWindow" Width="1280" Height="720" Loaded="Window_Loaded">
     <Viewbox Stretch="Fill">
         <Grid Width="900" Height="506">
             <Grid.ColumnDefinitions>
@@ -18,10 +18,10 @@
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Column="2" Background="Black" Margin="0,0,48,0">
-                <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="shortsku" VerticalAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold"/>
+                <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="_" VerticalAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold"/>
             </Grid>
             <Viewbox Grid.Column="1" Margin="10,0">
-                <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="item nameitem nameitem nameitem nameitem nameitem nameitem nameitem nameitem name"/>
+                <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="_"/>
             </Viewbox>
             <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Viewbox StretchDirection="UpOnly" MinHeight="430" MinWidth="860" VerticalAlignment="Top" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalAlignment="Left">
@@ -37,14 +37,14 @@
                     <Border BorderBrush="#FF646464" BorderThickness="1">
                         <Label x:Name="label" Content="Pack of" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold"/>
                     </Border>
-                    <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,-778,0">
-                        <StackPanel x:Name="PacksizeHolder" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="521" MinHeight="100" Background="#FFCEFFE9"/>
+                    <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0" Grid.ColumnSpan="2">
+                            <StackPanel x:Name="PacksizeHolder" MinWidth="400" MinHeight="100" Background="#FFCEFFD9" HorizontalAlignment="Left"/>
                     </Grid>
                     <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" Grid.Column="1" HorizontalAlignment="Left"/>
                 </Grid>
                 </Viewbox>
             </ScrollViewer>
-            <TextBox x:Name="ScanBox" TextWrapping="Wrap" Text="scan here pls" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="ScanBox_KeyUp"/>
+            <TextBox x:Name="ScanBox" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="ScanBox_KeyUp" MouseLeftButtonDown="ScanBox_MouseLeftButtonDown" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
             <Button x:Name="button" Content="QUIT" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="65" Height="50" RenderTransformOrigin="0.5,0.5" Margin="0,0,-8,0" Background="#FF830000" Foreground="White" FontSize="24" FontWeight="Bold" Click="button_Click">
                 <Button.RenderTransform>
                     <TransformGroup>
