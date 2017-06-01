@@ -121,5 +121,10 @@ namespace LocationModifier2.Cool
         {
             
         }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }
