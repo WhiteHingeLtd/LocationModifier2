@@ -24,8 +24,8 @@ namespace LocationModifier2.Cool
     {
 
         internal MainWindow _OldMW = null;
-
-
+        internal WhlSKU ActiveItem;
+        internal SkuCollection ActiveCollection;
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
@@ -117,10 +117,15 @@ namespace LocationModifier2.Cool
                     var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
                     if (Matches.Count == 1)
                     {
+                        ActiveItem = Matches[0];
+                        ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                        LoadGrid(Matches[0]);
                     }else if (Matches.Count > 1)
                     {
-                        LoadGrid(Distinguish.DistinguishSku(Matches));
+                        var item = Distinguish.DistinguishSku(Matches);
+                        ActiveItem = item;
+                        ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                        LoadGrid(item);
                     }
                     else
                     {
@@ -191,6 +196,13 @@ namespace LocationModifier2.Cool
         private void ScanBox_GotFocus(object sender, RoutedEventArgs e)
         {
             ScanBox.Background = Brushes.PaleGreen;
+        }
+
+        private void AddShelfButton_Click(object sender, RoutedEventArgs e)
+        {
+            new AddShelf(this, ActiveItem, ActiveCollection).ShowDialog();
+            ProcessScan(ActiveItem.ShortSku);
+            Refocus();
         }
     }
 }
