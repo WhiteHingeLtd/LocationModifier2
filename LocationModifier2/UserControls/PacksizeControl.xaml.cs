@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
+using LocationModifier2.Cool;
 using WHLClasses;
 
 namespace LocationModifier2.UserControls
@@ -10,9 +11,9 @@ namespace LocationModifier2.UserControls
     public partial class PacksizeControl : UserControl
     {
         internal WhlSKU ActiveItem;
-        internal MainWindow MainWindowRef;
+        internal ItemWindow MainWindowRef;
         internal List<int> LocList;
-        public PacksizeControl(List<int> locationList,WhlSKU sku,MainWindow main)
+        public PacksizeControl(List<int> locationList,WhlSKU sku, ItemWindow main)
         {
             InitializeComponent();
             ActiveItem = sku;

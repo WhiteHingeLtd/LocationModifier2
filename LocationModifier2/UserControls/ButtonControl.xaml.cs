@@ -1,6 +1,7 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
 using System.Windows;
+using LocationModifier2.Cool;
 using WHLClasses;
 namespace LocationModifier2.UserControls
 {
@@ -12,8 +13,8 @@ namespace LocationModifier2.UserControls
     {
         internal WhlSKU ActiveItem;
         internal int LocationID;
-        internal MainWindow MainRefWindow;
-        public ButtonControl(WhlSKU sku, MainWindow MainRef,int locationId )
+        internal ItemWindow MainRefWindow;
+        public ButtonControl(WhlSKU sku, ItemWindow MainRef,int locationId )
         {
             InitializeComponent();
             MainRefWindow = MainRef;
@@ -31,7 +32,7 @@ namespace LocationModifier2.UserControls
             {
                 try
                 {
-                    ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.AuthdEmployee, stockCounter.FinalStockEntry);
+                    ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry);
                     MainButton.Content = stockCounter.FinalStockEntry;
                 }
                 catch (Exception)
