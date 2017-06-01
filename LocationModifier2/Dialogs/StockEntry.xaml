@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Dialogs"
         mc:Ignorable="d"
-        Title="StockEntry" Height="750" Width="750" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
-    <Viewbox Stretch="Fill">
-        <Grid Background="#FF0E0099">
+        Title="StockEntry" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" MaxHeight="1200">
+    <Viewbox>
+        <Grid Background="#FF0E0099" Width="450" Height="350">
             <Grid.RowDefinitions>
                 <RowDefinition Height="39*"/>
                 <RowDefinition Height="53*"/>
-                <RowDefinition Height="62*"/>
-                <RowDefinition Height="296*"/>
+                <RowDefinition Height="0*"/>
+                <RowDefinition Height="358*"/>
             </Grid.RowDefinitions>
             <Grid>
                 <TextBlock x:Name="LoginTitle" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Please enter an amount" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
@@ -34,10 +34,10 @@
             <TextBox x:Name="LoginScanBox" HorizontalAlignment="Center" Height="33" Margin="90,10,81,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="279" Background="{x:Null}" BorderBrush="White" Foreground="White" FontSize="24" HorizontalContentAlignment="Center"/>
             <Border BorderBrush="Black" BorderThickness="1" Grid.RowSpan="4" Visibility="Collapsed">
             </Border>
-            <Button x:Name="AddButton" Content="Add" Margin="10,10,366,10" Grid.Row="2" RenderTransformOrigin="-0.243,0.883" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="Button_Click" Visibility="Collapsed"/>
-            <Button x:Name="RemoveButton" Content="Remove" Margin="365,10,10,10" Grid.Row="2" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="RemoveButton_Click" Visibility="Collapsed"/>
+            <Button x:Name="AddButton" Content="Add" Margin="10,0,366,348" Grid.Row="3" RenderTransformOrigin="-0.243,0.883" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="Button_Click" Visibility="Collapsed"/>
+            <Button x:Name="RemoveButton" Content="Remove" Margin="365,0,10,348" Grid.Row="3" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="RemoveButton_Click" Visibility="Collapsed"/>
             <Button x:Name="CancelButton" Content="Cancel" Margin="0,246,400,0" Grid.Row="3" Foreground="White" BorderBrush="{x:Null}" Background="#72919191" Click="CancelButton_Click"/>
-            <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="75" Height="42" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="SetButton_Click" Visibility="Collapsed"/>
+            <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Width="74" Height="42" Background="#72919191" BorderBrush="{x:Null}" Foreground="White" Click="SetButton_Click" Visibility="Collapsed" Margin="188,0,188,316"/>
 
         </Grid>
     </Viewbox>

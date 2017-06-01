@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ItemWindow" Width="1280" Height="720">
     <Viewbox Stretch="Fill">
-        <Grid Width="1280" Height="720">
+        <Grid Width="900" Height="506">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="25*"/>
                 <ColumnDefinition Width="462*"/>
@@ -17,14 +17,14 @@
                 <RowDefinition/>
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Column="2" Background="Black" Margin="0,0,45,0">
-                <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="shortsku" VerticalAlignment="Center" Foreground="White" FontSize="56" FontFamily="Segoe UI Semibold"/>
+            <Grid Grid.Column="2" Background="Black" Margin="0,0,48,0">
+                <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="shortsku" VerticalAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold"/>
             </Grid>
-            <Viewbox Grid.Column="1">
+            <Viewbox Grid.Column="1" Margin="10,0">
                 <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="item nameitem nameitem nameitem nameitem nameitem nameitem nameitem nameitem name"/>
             </Viewbox>
-            <ScrollViewer HorizontalAlignment="Left" Height="630" Grid.Row="1" VerticalAlignment="Top" Width="1280" Grid.ColumnSpan="3" PanningMode="Both" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8" MinHeight="630" Width="500" MinWidth="1280">
+            <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Viewbox StretchDirection="UpOnly" MinHeight="430" MinWidth="860" VerticalAlignment="Top" HorizontalAlignment="Left"><Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="Auto"/>
@@ -37,13 +37,14 @@
                         <Label x:Name="label" Content="Pack of" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold"/>
                     </Border>
                     <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,-778,0">
-                        <StackPanel x:Name="PacksizeHolder" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="600" MinHeight="100" Background="#FFCEFFE9"/>
+                        <StackPanel x:Name="PacksizeHolder" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="521" MinHeight="100" Background="#FFCEFFE9"/>
                     </Grid>
                     <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" Grid.Column="1" HorizontalAlignment="Left"/>
                 </Grid>
+                </Viewbox>
             </ScrollViewer>
             <TextBox x:Name="ScanBox" TextWrapping="Wrap" Text="scan here pls" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="ScanBox_KeyUp"/>
-            <Button x:Name="button" Content="QUIT" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="90" Height="50" RenderTransformOrigin="0.5,0.5" Margin="0,0,-25,0" Background="#FF830000" Foreground="White" FontSize="24" FontWeight="Bold" Click="button_Click">
+            <Button x:Name="button" Content="QUIT" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="65" Height="50" RenderTransformOrigin="0.5,0.5" Margin="0,0,-8,0" Background="#FF830000" Foreground="White" FontSize="24" FontWeight="Bold" Click="button_Click">
                 <Button.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

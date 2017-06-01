@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LocationModifier2.UserControls"
              mc:Ignorable="d">
-    <Grid Width="140" Height="70" >
+    <Grid Width="140" Height="80" >
         <Button x:Name="MainButton" Content="Button" Margin="5" Click="MainButton_Click" FontSize="24"/>
         <Border BorderBrush="#FF646464" BorderThickness="1"/>
 

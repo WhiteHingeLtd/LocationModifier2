@@ -77,6 +77,8 @@ namespace LocationModifier2.Cool
                         var LocationIDs = new Dictionary<int, string>();
                         foreach (WhlSKU Kid in kids)
                         {
+                            //Refresh thing
+                            Kid.RefreshLocations();
                             //We're gonna have to iterate and get a list of locations.
                             foreach (SKULocation loc in Kid.Locations)
                             {
@@ -113,7 +115,7 @@ namespace LocationModifier2.Cool
             }
             else
             {
-                (new MsgDialog("asd", "You must log in before scannign stuff")).ShowDialog();
+                (new MsgDialog("ERROR", "You must log in before scanning stuff")).ShowDialog();
             }
         }
 
