@@ -95,6 +95,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Cool\AddShelf.xaml.cs">
+      <DependentUpon>AddShelf.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ButtonControl.xaml.cs">
       <DependentUpon>ButtonControl.xaml</DependentUpon>
     </Compile>
@@ -104,6 +107,10 @@
     <Compile Include="UserControls\ShelfControl.xaml.cs">
       <DependentUpon>ShelfControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Cool\AddShelf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Cool\ItemWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
