@@ -23,8 +23,9 @@
             <Viewbox Grid.Column="1" Margin="10,0">
                 <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="item nameitem nameitem nameitem nameitem nameitem nameitem nameitem nameitem name"/>
             </Viewbox>
-            <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Viewbox StretchDirection="UpOnly" MinHeight="430" MinWidth="860" VerticalAlignment="Top" HorizontalAlignment="Left"><Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8">
+            <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Viewbox StretchDirection="UpOnly" MinHeight="430" MinWidth="860" VerticalAlignment="Top" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalAlignment="Left">
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="Auto"/>

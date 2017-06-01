@@ -98,7 +98,11 @@ namespace LocationModifier2.Cool
                         //Now go again and make the controls.
                         foreach (WhlSKU Kid in kids)
                         {
-                            PacksizeHolder.Children.Add(new PacksizeControl(newdict.Keys.ToList(), Kid, this));
+                            var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
+                            packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
+                            packsizecontrol.MouseLeftButtonDown += NotesScroller_MouseLeftButtonDown;
+                            packsizecontrol.MouseMove += NotesScroller_MouseMove;
+                            PacksizeHolder.Children.Add(packsizecontrol);
                         }
                         //And now the lcoations.
                         foreach (KeyValuePair<int, string> LocID in newdict)
@@ -128,5 +132,31 @@ namespace LocationModifier2.Cool
         {
             Application.Current.Shutdown();
         }
+
+
+        Point ScrollerMousePos;
+        double ScrollerVerticalOffset;
+        double ScrollerHorizontalOffset;
+        private void NotesScroller_MouseLeftButtonDown(object Sender, MouseButtonEventArgs E)
+        {
+            NotesScroller.CaptureMouse();
+            ScrollerMousePos = E.GetPosition(NotesScroller);
+            ScrollerVerticalOffset = NotesScroller.VerticalOffset;
+            ScrollerHorizontalOffset = NotesScroller.HorizontalOffset;
+        }
+        private void NotesScroller_MouseLeftButtonUp(object Sender, MouseButtonEventArgs E)
+        {
+            NotesScroller.ReleaseMouseCapture();
+            Refocus();
+        }
+        private void NotesScroller_MouseMove(object Sender, MouseEventArgs E)
+        {
+            if (NotesScroller.IsMouseCaptured)
+            {
+                NotesScroller.ScrollToVerticalOffset(ScrollerVerticalOffset + (ScrollerMousePos.Y - E.GetPosition(NotesScroller).Y));
+                NotesScroller.ScrollToHorizontalOffset(ScrollerHorizontalOffset + (ScrollerMousePos.X - E.GetPosition(NotesScroller).X));
+            }
+        }
+
     }
 }
