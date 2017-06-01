@@ -37,6 +37,8 @@ namespace LocationModifier2.Cool
         internal void LoadShelf(string ScanData)
         {
             Headers = false;
+            ItemName.Text = "No items found";
+            ShortSku.Text = ScanData.Replace("qlo", "");
             PacksizeHolder.Children.Clear();
            LocationID = Convert.ToInt32(ScanData.Replace("qlo", ""));
             maindisp = this.Dispatcher;
@@ -111,6 +113,7 @@ namespace LocationModifier2.Cool
         {
             this.Hide();
             ItWi.ProcessScan(ScanData);
+            Refocus();
             
         }
 
