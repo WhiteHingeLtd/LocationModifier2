@@ -80,13 +80,20 @@ namespace LocationModifier2.Cool
                             }
                         }
                     }
+                    //Sort them to fix the faggy ordering
+                    var orderedlocations = from entry in LocationIDs orderby entry.Key ascending select entry;
+                    var newdict = new Dictionary<int, string>();
+                    foreach (KeyValuePair<int, string> asd in orderedlocations)
+                    {
+                        newdict.Add(asd.Key, asd.Value);
+                    }
                     //Now go again and make the controls.
                     foreach (WhlSKU Kid in kids)
                     {
-                        PacksizeHolder.Children.Add(new PacksizeControl(LocationIDs.Keys.ToList(), Kid, this));
+                        PacksizeHolder.Children.Add(new PacksizeControl(newdict.Keys.ToList(), Kid, this));
                     }
                     //And now the lcoations.
-                    foreach (KeyValuePair<int, string> LocID in LocationIDs)
+                    foreach (KeyValuePair<int, string> LocID in newdict)
                     {
                         LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value,  kids, this));
                     }
