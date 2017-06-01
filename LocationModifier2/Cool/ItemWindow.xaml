@@ -26,22 +26,30 @@
             <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Viewbox StretchDirection="UpOnly" MinHeight="430" MinWidth="860" VerticalAlignment="Top" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalAlignment="Left">
                     <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Border BorderBrush="#FF646464" BorderThickness="1">
-                        <Label x:Name="label" Content="Pack of" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold"/>
-                    </Border>
-                    <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="#FF646464" BorderThickness="1">
+                            <TextBlock x:Name="label" Text="Pack of" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0" Grid.ColumnSpan="2">
                             <StackPanel x:Name="PacksizeHolder" MinWidth="400" MinHeight="100" Background="#FFCEFFD9" HorizontalAlignment="Left"/>
+                        </Grid>
+                        <Grid Grid.Column="1" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="121"/>
+                            </Grid.ColumnDefinitions>
+                            <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" HorizontalAlignment="Left"/>
+                            <Button x:Name="button1" Grid.Column="1" Margin="10">
+                                <TextBlock TextAlignment="Center" TextWrapping="Wrap" FontSize="24">ADD SHELF</TextBlock></Button>
+                        </Grid>
                     </Grid>
-                    <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" Grid.Column="1" HorizontalAlignment="Left"/>
-                </Grid>
                 </Viewbox>
             </ScrollViewer>
             <TextBox x:Name="ScanBox" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyUp="ScanBox_KeyUp" MouseLeftButtonDown="ScanBox_MouseLeftButtonDown" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
