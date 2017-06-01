@@ -9,21 +9,22 @@
     <Viewbox Stretch="Fill">
         <Grid Width="900" Height="506">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="462*"/>
-                <ColumnDefinition Width="153*"/>
+                <ColumnDefinition Width="54*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="553*"/>
+                <ColumnDefinition Width="215*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Column="2" Background="Black" Margin="0,0,48,0">
+            <Grid Grid.Column="3" Background="Black" Margin="0,0,48,0">
                 <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="_" VerticalAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold"/>
             </Grid>
-            <Viewbox Grid.Column="1" Margin="10,0">
+            <Viewbox Grid.Column="2" Margin="10,0,10,3">
                 <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="_"/>
             </Viewbox>
-            <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="4" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFE8E8E8">
                 <Viewbox StretchDirection="UpOnly" MinHeight="430" MinWidth="860" VerticalAlignment="Top" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalAlignment="Left">
                     <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove">
                         <Grid.ColumnDefinitions>
@@ -34,26 +35,43 @@
                             <RowDefinition Height="100"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        <Border Grid.ColumnSpan="2" Grid.RowSpan="2" BorderThickness="1" BorderBrush="#FF878787"/>
                         <Border BorderBrush="#FF646464" BorderThickness="1">
-                            <TextBlock x:Name="label" Text="Pack of" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Grid>
+                                <TextBlock x:Name="label_Copy1" Text="Packsizes" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="4,71,27,0"/>
+                                <TextBlock x:Name="label_Copy" Text="Locations" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="29,0,0,71"/>
+                                <Border BorderBrush="#FF464646" BorderThickness="1" HorizontalAlignment="Left" Height="1" VerticalAlignment="Top" Width="153" RenderTransformOrigin="0.5,0.5" Margin="-17,50,-18,0">
+                                    <Border.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="38.817"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Border.RenderTransform>
+                                </Border>
+                            </Grid>
                         </Border>
-                        <Grid Grid.Row="1" MinWidth="500" MinHeight="50" Background="#FFFFDDDD" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0" Grid.ColumnSpan="2">
-                            <StackPanel x:Name="PacksizeHolder" MinWidth="400" MinHeight="100" Background="#FFCEFFD9" HorizontalAlignment="Left"/>
+                        <Grid Grid.Row="1" MinWidth="500" MinHeight="50" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0" Grid.ColumnSpan="2">
+                            <StackPanel x:Name="PacksizeHolder" MinWidth="400" MinHeight="100" HorizontalAlignment="Left"/>
                         </Grid>
-                        <Grid Grid.Column="1" >
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="121"/>
-                            </Grid.ColumnDefinitions>
-                            <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" Background="#FFCED7FF" HorizontalAlignment="Left"/>
-                            <Button x:Name="AddShelfButton" Grid.Column="1" Margin="10" Click="AddShelfButton_Click">
-                                <TextBlock TextAlignment="Center" TextWrapping="Wrap" FontSize="24">ADD SHELF</TextBlock></Button>
-                        </Grid>
+                        <Border Grid.Column="1" BorderBrush="#FF595959" BorderThickness="0,0,0,1">
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="121"/>
+                                </Grid.ColumnDefinitions>
+                                <WrapPanel x:Name="LocationControlHolder" MinWidth="400" MinHeight="100" HorizontalAlignment="Left"/>
+                                <Button x:Name="AddShelfButton" Grid.Column="1" Margin="10" Click="AddShelfButton_Click">
+                                    <TextBlock TextAlignment="Center" TextWrapping="Wrap" FontSize="24"><Run Text="ADD SHELF"/></TextBlock>
+                                </Button>
+                            </Grid>
+                        </Border>
                     </Grid>
                 </Viewbox>
             </ScrollViewer>
             <TextBox x:Name="ScanBox" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="ScanBox_KeyUp" MouseLeftButtonDown="ScanBox_MouseLeftButtonDown" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>
-            <Button x:Name="button" Content="QUIT" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="65" Height="50" RenderTransformOrigin="0.5,0.5" Margin="0,0,-8,0" Background="#FF830000" Foreground="White" FontSize="24" FontWeight="Bold" Click="button_Click">
+            <Button x:Name="button" Content="QUIT" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Width="65" Height="50" RenderTransformOrigin="0.5,0.5" Margin="0,6,-8,7" Background="#FF830000" Foreground="White" FontSize="24" FontWeight="Bold" Click="button_Click">
                 <Button.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -62,6 +80,9 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Button.RenderTransform>
+            </Button>
+            <Button x:Name="AuditButton" Grid.Column="1" Margin="3" FontSize="18" Click="AuditButton_Click">
+                <TextBlock Text="Audit Trail" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
             </Button>
 
         </Grid>

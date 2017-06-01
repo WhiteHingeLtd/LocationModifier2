@@ -98,6 +98,12 @@
     <Compile Include="Cool\AddShelf.xaml.cs">
       <DependentUpon>AddShelf.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Cool\AuditControl.xaml.cs">
+      <DependentUpon>AuditControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Cool\AuditTrailWindow.xaml.cs">
+      <DependentUpon>AuditTrailWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Cool\ShelfWindow.xaml.cs">
       <DependentUpon>ShelfWindow.xaml</DependentUpon>
     </Compile>
@@ -114,6 +120,14 @@
       <DependentUpon>ShelfControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Cool\AddShelf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cool\AuditControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cool\AuditTrailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

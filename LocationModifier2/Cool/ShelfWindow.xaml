@@ -9,23 +9,23 @@
     <Viewbox Stretch="Fill">
         <Grid Width="900" Height="506">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*"/>
-                <ColumnDefinition Width="462*"/>
-                <ColumnDefinition Width="153*"/>
+                <ColumnDefinition Width="54*"/>
+                <ColumnDefinition Width="631*"/>
+                <ColumnDefinition Width="215*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Column="2" Background="Black" Margin="0,0,48,0">
-                <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="_" VerticalAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold"/>
+                <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="_" VerticalAlignment="Center" Foreground="White" FontSize="40"/>
             </Grid>
-            <Viewbox Grid.Column="1" Margin="10,0">
+            <Viewbox Grid.Column="1" Margin="10,0,10,3">
                 <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="_"/>
             </Viewbox>
-            <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove">
+            <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="3" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" Background="#FFE8E8E8">
                 <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFE8E8E8" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" Width="882">
-                    <StackPanel x:Name="PacksizeHolder" MinWidth="400" MinHeight="100" Background="#FFCEFFD9"/>
+                    <StackPanel x:Name="PacksizeHolder" MinWidth="400" MinHeight="100" Background="#FFE8E8E8"/>
                 </Grid>
             </ScrollViewer>
             <TextBox x:Name="ScanBox" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" KeyDown="ScanBox_KeyUp" MouseLeftButtonDown="ScanBox_MouseLeftButtonDown" LostFocus="ScanBox_LostFocus" GotFocus="ScanBox_GotFocus"/>

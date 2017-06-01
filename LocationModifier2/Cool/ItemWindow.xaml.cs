@@ -224,5 +224,10 @@ namespace LocationModifier2.Cool
             ProcessScan(ActiveItem.ShortSku);
             Refocus();
         }
+
+        private void AuditButton_Click(object sender, RoutedEventArgs e)
+        {
+            (new AuditTrailWindow(ShortSku.Text, ItemName.Text)).ShowDialog();
+        }
     }
 }
