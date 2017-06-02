@@ -26,6 +26,7 @@ namespace LocationModifier2.Cool
         internal ItemWindow ItWi = null;
         internal bool Headers = true;
         private int LocationID = 0;
+
         public ShelfWindow(ItemWindow IW)
         {
             InitializeComponent();
@@ -40,13 +41,13 @@ namespace LocationModifier2.Cool
             ItemName.Text = "No items found";
             ShortSku.Text = ScanData.Replace("qlo", "");
             PacksizeHolder.Children.Clear();
-           LocationID = Convert.ToInt32(ScanData.Replace("qlo", ""));
+            LocationID = Convert.ToInt32(ScanData.Replace("qlo", ""));
             maindisp = this.Dispatcher;
 
             //Get matching skus from mixdown.
 
             Misc.OperationDialog("Scanning for Items...", DoProcess);
-            
+
         }
 
         internal void AddControl(WhlSKU Sku, int LocationID)
@@ -59,22 +60,24 @@ namespace LocationModifier2.Cool
             var worker = (sender as BackgroundWorker);
             //Get skus
             var Skus = GetSkusWithLocation(LocationID, ItWi._OldMW.MixdownSkuCollection);
-            //Then get thir children
+
             foreach (WhlSKU sku in Skus)
             {
+
                 foreach (WhlSKU kid in ItWi._OldMW.FullSkuCollection.GatherChildren(sku.ShortSku))
                 {
-                    if (kid.NewItem.IsListed || kid.PackSize == 1)
-                    {
+                    if ((kid.NewItem.IsListed || kid.PackSize == 1) && kid.Locations.Any(loc => loc.LocationID == LocationID))
+                    { 
                         //GOGOOGOGOOGO
                         maindisp.Invoke(() => AddControl(kid, LocationID));
                     }
                 }
             }
+
+
         }
 
-
-
+        //Then get thir children
         #region Steals
 
         internal List<WhlSKU> GetSkusWithLocation(int TargetID, SkuCollection Source)
