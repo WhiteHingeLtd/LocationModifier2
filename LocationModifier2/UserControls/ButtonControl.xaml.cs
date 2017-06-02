@@ -38,20 +38,54 @@ namespace LocationModifier2.UserControls
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
-            var stockCounter = new StockEntry();
+            var stockCounter = new StockEntry2(ActiveItem,LocationID);
             stockCounter.ShowDialog();
             if (stockCounter.FinalStockEntry > -1 && !stockCounter.Cancel)
             {
-                try
+                switch (stockCounter.CurrentState)
                 {
-                    ActiveItem.SetLocationStockWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry);
-                    MainButton.Content = stockCounter.FinalStockEntry;
+                    case StockEntry2.ButtonType.SetStock:
+                        try
+                        {
+                            ActiveItem.SetLocationStockWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry);
+                            MainButton.Content = stockCounter.FinalStockEntry;
+                        }
+                        catch (Exception) { }
+                        finally
+                        {
+                            MainRefWindow.Refocus();
+                        }
+                        break;
+                    case StockEntry2.ButtonType.MoveSomeStock:
+                        try
+                        {
+                            ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.ActiveLocation);
+                            MainButton.Content = stockCounter.FinalStockEntry;
+                        }
+                        catch (Exception) { }
+                        finally
+                        {
+                            MainRefWindow.ProcessScan(ActiveItem.SKU);
+                            MainRefWindow.Refocus();
+                        }
+                        break;
+                    case StockEntry2.ButtonType.MoveAllStock:
+                        try
+                        { 
+                            ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.ActiveLocation);
+                            MainButton.Content = stockCounter.FinalStockEntry;
+                        }
+                        catch (Exception) { }
+                        finally
+                        {
+                            MainRefWindow.ProcessScan(ActiveItem.SKU);
+                            MainRefWindow.Refocus();
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                catch (Exception){}
-                finally
-                {
-                    MainRefWindow.Refocus();
-                }
+                
             }
         }
     }

@@ -110,6 +110,9 @@
     <Compile Include="Cool\ShelfWindowControl.xaml.cs">
       <DependentUpon>ShelfWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\StockEntry2.xaml.cs">
+      <DependentUpon>StockEntry2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ButtonControl.xaml.cs">
       <DependentUpon>ButtonControl.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Cool\ShelfWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\StockEntry2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

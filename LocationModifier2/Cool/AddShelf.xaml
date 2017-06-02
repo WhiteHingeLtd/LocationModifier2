@@ -33,6 +33,7 @@
 
             </Grid>
             <TextBox x:Name="ScanBox" HorizontalAlignment="Left" Height="19" TextWrapping="Wrap" VerticalAlignment="Top" Width="97" BorderBrush="Black" GotFocus="ScanBox_GotFocus" LostFocus="ScanBox_LostFocus" KeyDown="ScanBox_KeyDown"/>
+            <Button Content="Cancel" Margin="10,406,579,10" Click="Button_Click" FontSize="36"/>
         </Grid>
     </Viewbox>
 </Window>

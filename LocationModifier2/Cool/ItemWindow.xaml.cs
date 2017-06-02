@@ -58,7 +58,15 @@ namespace LocationModifier2.Cool
             //Get kids.
             var kids = _OldMW.FullSkuCollection.GatherChildren(sku.ShortSku);
             //Get the list of locaitons,
-            var LocationIDs = new Dictionary<int, string>();
+            var LocationIDs = new Dictionary<int, SKULocation>();
+            var locationMapping = new Dictionary<SKULocation.SKULocationType, int>()
+            {
+                {SKULocation.SKULocationType.Pickable, 0},
+                {SKULocation.SKULocationType.Storage, 1},
+                {SKULocation.SKULocationType.Delivery, 2},
+                {SKULocation.SKULocationType.Prepack, 3},
+                {SKULocation.SKULocationType.PrepackInstant, 4}
+            };
             foreach (WhlSKU Kid in kids)
             {
                 //Refresh thing
@@ -68,16 +76,16 @@ namespace LocationModifier2.Cool
                 {
                     if (!LocationIDs.Keys.Contains(loc.LocationID))
                     {
-                        LocationIDs.Add(loc.LocationID, loc.LocationText);
+                        LocationIDs.Add(loc.LocationID, loc);
                     }
                 }
             }
             //Sort them to fix the faggy ordering
-            var orderedlocations = from entry in LocationIDs orderby entry.Key ascending select entry;
+            var orderedlocations = LocationIDs.OrderBy(x => locationMapping[x.Value.LocationType]);
             var newdict = new Dictionary<int, string>();
-            foreach (KeyValuePair<int, string> asd in orderedlocations)
+            foreach (KeyValuePair<int, SKULocation> asd in orderedlocations)
             {
-                newdict.Add(asd.Key, asd.Value);
+                newdict.Add(asd.Key, asd.Value.LocationText);
             }
             //Now go again and make the controls.
             foreach (WhlSKU Kid in kids)
@@ -118,12 +126,13 @@ namespace LocationModifier2.Cool
                     if (!ScanData.StartsWith("qlo"))
                     {
                         //Googogo
-                    //Clear
+                        //Clear
                     PacksizeHolder.Children.Clear();
                     LocationControlHolder.Children.Clear();
 
                     //Find it first
-                    var Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                    var Matches = _OldMW.MixdownSkuCollection.SearchBarcodes(ScanData);
+                    if (Matches.Count == 0) Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
                     if (Matches.Count == 1)
                     {
                         ActiveItem = Matches[0];
@@ -136,10 +145,10 @@ namespace LocationModifier2.Cool
                         ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                         LoadGrid(item);
                         }
-                        else
-                        {
-                            (new MsgDialog("ERROR", "Unable to find any items which matched the search!")).ShowDialog();
-                        }
+                    else
+                    {
+                        new MsgDialog("ERROR", "Unable to find any items which matched the search!").ShowDialog();
+                    }
                     }
                     else
                     {
@@ -227,7 +236,7 @@ namespace LocationModifier2.Cool
 
         private void AuditButton_Click(object sender, RoutedEventArgs e)
         {
-            (new AuditTrailWindow(ShortSku.Text, ItemName.Text)).ShowDialog();
+            (new AuditTrailWindow(ShortSku.Text, ItemName.Text,this)).ShowDialog();
         }
     }
 }

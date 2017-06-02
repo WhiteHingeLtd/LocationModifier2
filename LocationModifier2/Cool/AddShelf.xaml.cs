@@ -74,8 +74,17 @@ namespace LocationModifier2.Cool
             ScanBox.Text = "";
             ScanBox.Focus();
         }
+
         #endregion
-
-
+        /// <summary>
+        /// Cancel Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            IwRef.ProcessScan(ActiveItem.ShortSku);
+        }
     }
 }
