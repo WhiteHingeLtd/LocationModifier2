@@ -59,7 +59,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.MoveSomeStock:
                         try
                         {
-                            ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.ActiveLocation);
+                            ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation);
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception) { }
@@ -72,7 +72,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.MoveAllStock:
                         try
                         { 
-                            ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.ActiveLocation);
+                            ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow._OldMW.AuthdEmployee, stockCounter.NewLocation);
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception) { }
