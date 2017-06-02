@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LocationModifier2.Cool
 {
@@ -8,11 +9,13 @@ namespace LocationModifier2.Cool
     /// </summary>
     public partial class AuditControl
     {
+        [SuppressMessage("ReSharper", "RedundantToStringCall")]
         public AuditControl(Dictionary<string,object> data)
         {
             InitializeComponent();
-            AdjustText.Text = auditstrings[(data["AuditEvent"] as int?).Value] + " " + data["stock"].ToString();
-            DetailText.Text = (data["DateRecorded"] as DateTime?).Value.ToString("dd/MM/yyyy HH:mm:ss") + " - User " +
+            AdjustText.Text = auditstrings[((int?) data["AuditEvent"]).Value] + " " + data["stock"].ToString();
+
+            DetailText.Text = ((DateTime?) data["DateRecorded"]).Value.ToString("dd/MM/yyyy HH:mm:ss") + " - User " +
                               data["AuditUserID"].ToString() + " on " + data["packsize"].ToString() + " pack at " +
                               data["loctext"].ToString();
         }

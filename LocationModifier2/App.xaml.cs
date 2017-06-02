@@ -10,7 +10,7 @@ namespace LocationModifier2
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            WHLClasses.Reporting.ErrorReporting.ReportException(e.Exception,true,true);
+            WHLClasses.Reporting.ErrorReporting.ReportException(e.Exception);
            
         }
     }

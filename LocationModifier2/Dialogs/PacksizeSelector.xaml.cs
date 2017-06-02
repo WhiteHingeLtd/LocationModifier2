@@ -34,13 +34,13 @@ namespace LocationModifier2.Dialogs
             var ctrl = sender as Button;
             try
             {
+                if (ctrl == null) return;
                 SelectedSku = skucoll.SearchBarcodes(ctrl.Uid)[0];
                 if (SelectedSku.SKU == ctrl.Uid)
                 {
                     this.Close();
                 }
                 else throw new NullReferenceException();
-
             }
             catch (Exception ex)
             {

@@ -10,7 +10,7 @@ namespace LocationModifier2.Cool
     /// <summary>
     /// Interaction logic for AddShelf.xaml
     /// </summary>
-    public partial class AddShelf : Window
+    public partial class AddShelf
     {
         internal ItemWindow IwRef;
         internal WhlSKU ActiveItem;

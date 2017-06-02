@@ -42,7 +42,8 @@ namespace LocationModifier2.Dialogs
 
         private void Keypad_Click(object sender, RoutedEventArgs e)
         {
-            LoginScanBox.Text += (sender as Button).Content;
+            var button = sender as Button;
+            if (button != null) LoginScanBox.Text += button.Content;
         }
 
         private void KeypadEnter_Click(object sender, RoutedEventArgs e)

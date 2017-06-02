@@ -1,14 +1,13 @@
-﻿using LocationModifier2.Dialogs;
+﻿using LocationModifier2.Cool;
+using LocationModifier2.Dialogs;
 using System;
 using System.Collections;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using LocationModifier2.Cool;
 using WHLClasses;
 using WHLClasses.Exceptions;
 using WHLClasses.MySQL_Old;

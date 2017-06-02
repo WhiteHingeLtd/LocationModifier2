@@ -16,7 +16,7 @@
             <TextBlock x:Name="LoginTitle" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Please select a packsize" VerticalAlignment="Center" Foreground="White" FontSize="24"/>
         </Grid>
         <ScrollViewer PanningMode="HorizontalOnly" VerticalScrollBarVisibility="Hidden" CanContentScroll="True" Grid.Row="2">
-            <StackPanel x:Name="UniformPacksizeGrid" HorizontalAlignment="Center" Grid.Row="2" Width="693"/>
+            <StackPanel x:Name="UniformPacksizeGrid" HorizontalAlignment="Center" Width="693"/>
         </ScrollViewer>
 
         <Border BorderBrush="Black" BorderThickness="1" Grid.RowSpan="3" Visibility="Collapsed">

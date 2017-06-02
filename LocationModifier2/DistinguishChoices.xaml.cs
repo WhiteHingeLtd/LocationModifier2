@@ -1,43 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using LocationModifier2.Dialogs;
-using LocationModifier2.UserControls;
 using WHLClasses;
-public partial class DistinguishChoices : Window
+public partial class DistinguishChoices
 {
-	public void FillWindow(SkuCollection SkUColl)
+	public void FillWindow(SkuCollection skuColl)
 	{
 		DistinguishChoicesHolder.Children.Clear();
-		SkUColl.Sort((WhlSKU X, WhlSKU Y) => X.PackSize.CompareTo(Y.PackSize));
-		foreach (WhlSKU Sku in SkUColl) {
-			if (Sku.PackSize > 0) {
-				Button NewButton = new Button();
-				NewButton.FontFamily = TemplateButton.FontFamily;
-				NewButton.Background = TemplateButton.Background;
-				NewButton.Foreground = TemplateButton.Foreground;
-				NewButton.FontSize = TemplateButton.FontSize;
-				NewButton.FontWeight = TemplateButton.FontWeight;
-				NewButton.Margin = new Thickness(4);
-				NewButton.Width = TemplateButton.Width;
-				NewButton.Height = TemplateButton.Height;
-				//Formatting done, we can FINALLY start doing useful datas.
-				NewButton.Content = Sku.Title.Distinguish.ToUpper() + " " + Sku.PackSize.ToString() + " pack";
-				NewButton.Name = "ch" + Sku.SKU;
-				NewButton.Tag = Sku;
-				NewButton.Click += ButtonClicker;
-				DistinguishChoicesHolder.Children.Add(NewButton);
-			}
+		skuColl.Sort(( x, y) => x.PackSize.CompareTo(y.PackSize));
+		foreach (var sku in skuColl)
+        {
+		    if (sku.PackSize <= 0) continue;
+		    var newButton = new Button
+		    {
+		        FontFamily = TemplateButton.FontFamily,
+		        Background = TemplateButton.Background,
+		        Foreground = TemplateButton.Foreground,
+		        FontSize = TemplateButton.FontSize,
+		        FontWeight = TemplateButton.FontWeight,
+		        Margin = new Thickness(4),
+		        Width = TemplateButton.Width,
+		        Height = TemplateButton.Height,
+		        Content = sku.Title.Distinguish.ToUpper() + " " + sku.PackSize.ToString() + " pack",
+		        Name = "ch" + sku.SKU,
+		        Tag = sku
+		    };
+		    //Formatting done, we can FINALLY start doing useful datas.
+		    newButton.Click += ButtonClicker;
+		    DistinguishChoicesHolder.Children.Add(newButton);
 		}
 		//Mouse Murder
 		System.Windows.Forms.Cursor.Position = new System.Drawing.Point(0, 0);
@@ -53,8 +42,9 @@ public partial class DistinguishChoices : Window
 
 	public void ButtonClicker(object Sender, RoutedEventArgs E)
 	{
-		Returnable = (Sender as Button).Tag as WhlSKU;
-		//Me.DialogResult = True
+	    var button = Sender as Button;
+	    if (button != null) Returnable = button.Tag as WhlSKU;
+	    //Me.DialogResult = True
 		Hide();
 	}
 
@@ -78,7 +68,7 @@ public partial class DistinguishChoices : Window
     }
 }
 
-static internal class Distinguish
+internal static class Distinguish
 {
 
 
@@ -91,11 +81,7 @@ static internal class Distinguish
 	/// <returns></returns>
 	public static WhlSKU DistinguishSku(SkuCollection DistinguishOptions, bool SupportsCancellation = false)
 	{
-		if (SupportsCancellation) {
-			DistinguishWindow.CancelButton.Visibility = Visibility.Visible;
-		} else {
-			DistinguishWindow.CancelButton.Visibility = Visibility.Collapsed;
-		}
+		DistinguishWindow.CancelButton.Visibility = SupportsCancellation ? Visibility.Visible : Visibility.Collapsed;
 		DistinguishWindow.FillWindow(DistinguishOptions);
 		DistinguishWindow.ShowDialog();
 		return DistinguishWindow.Returnable;
