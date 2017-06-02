@@ -1,18 +1,11 @@
-﻿using System;
+﻿using LocationModifier2.Dialogs;
+using LocationModifier2.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using LocationModifier2.Dialogs;
-using LocationModifier2.UserControls;
 using WHLClasses;
 
 namespace LocationModifier2.Cool
@@ -20,27 +13,25 @@ namespace LocationModifier2.Cool
     /// <summary>
     /// Interaction logic for ItemWindow.xaml
     /// </summary>
-    public partial class ItemWindow : Window
+    public partial class ItemWindow
     {
 
-        internal MainWindow _OldMW = null;
-        internal ShelfWindow ShelfWin = null;
+        internal MainWindow OldMw;
+        internal ShelfWindow ShelfWin;
         internal WhlSKU ActiveItem;
         internal SkuCollection ActiveCollection;
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
             ShelfWin = new ShelfWindow(this);
-            _OldMW = realMainWindow;
+            OldMw = realMainWindow;
         }
 
         private void ScanBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                ProcessScan(ScanBox.Text);
-                Refocus();
-            }
+            if (e.Key != Key.Enter) return;
+            ProcessScan(ScanBox.Text);
+            Refocus();
         }
 
         internal void Refocus()
@@ -56,7 +47,7 @@ namespace LocationModifier2.Cool
             ShortSku.Text = sku.ShortSku;
 
             //Get kids.
-            var kids = _OldMW.FullSkuCollection.GatherChildren(sku.ShortSku);
+            var kids = OldMw.FullSkuCollection.GatherChildren(sku.ShortSku);
             //Get the list of locaitons,
             var LocationIDs = new Dictionary<int, SKULocation>();
             var locationMapping = new Dictionary<SKULocation.SKULocationType, int>()
@@ -114,14 +105,17 @@ namespace LocationModifier2.Cool
             {
                 ShelfWin.Hide();
             }
-            catch{}
+            catch (Exception)
+            {
+                //It's not visible
+            }
             try
             {
                 if (ScanData.StartsWith("qzu"))
                 {
-                    _OldMW.ProcessScanBox(ScanData);
+                    OldMw.ProcessScanBox(ScanData);
                 }
-                else if (_OldMW.AuthdEmployee != null)
+                else if (OldMw.AuthdEmployee != null)
                 {
                     if (!ScanData.StartsWith("qlo"))
                     {
@@ -131,18 +125,18 @@ namespace LocationModifier2.Cool
                     LocationControlHolder.Children.Clear();
 
                     //Find it first
-                    var Matches = _OldMW.MixdownSkuCollection.SearchBarcodes(ScanData);
-                    if (Matches.Count == 0) Matches = _OldMW.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                    var Matches = OldMw.MixdownSkuCollection.SearchBarcodes(ScanData);
+                    if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, true);
                     if (Matches.Count == 1)
                     {
                         ActiveItem = Matches[0];
-                        ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                        ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                        LoadGrid(Matches[0]);
                     }else if (Matches.Count > 1)
                     {
                         var item = Distinguish.DistinguishSku(Matches);
                         ActiveItem = item;
-                        ActiveCollection = _OldMW.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                        ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                         LoadGrid(item);
                         }
                     else

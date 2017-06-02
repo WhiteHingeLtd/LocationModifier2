@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
-using LocationModifier2.Cool;
+﻿using LocationModifier2.Cool;
+using System.Collections.Generic;
 using WHLClasses;
 
 namespace LocationModifier2.UserControls
@@ -8,7 +7,7 @@ namespace LocationModifier2.UserControls
     /// <summary>
     /// Interaction logic for PacksizeControl.xaml
     /// </summary>
-    public partial class PacksizeControl : UserControl
+    public partial class PacksizeControl
     {
         internal WhlSKU ActiveItem;
         internal ItemWindow MainWindowRef;

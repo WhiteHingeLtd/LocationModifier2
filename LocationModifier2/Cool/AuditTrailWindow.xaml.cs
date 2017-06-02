@@ -7,15 +7,15 @@ namespace LocationModifier2.Cool
     /// <summary>
     /// Interaction logic for AuditTrailWindow.xaml
     /// </summary>
-    public partial class AuditTrailWindow : Window
+    public partial class AuditTrailWindow
     {
-        private ItemWindow iwRef;
+        private ItemWindow _iwRef;
         public AuditTrailWindow(string Shortsku, string Title,ItemWindow main)
         {
             InitializeComponent();
 
             ItemName.Text = Title;
-            iwRef = main;
+            _iwRef = main;
             //Get teh data and iterate.
             var data =
                 MySQL_New.GetData(
@@ -29,7 +29,7 @@ namespace LocationModifier2.Cool
         private void button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            iwRef.Refocus();
+            _iwRef.Refocus();
         }
     }
 }

@@ -3,7 +3,6 @@ using LocationModifier2.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using WHLClasses;
 using WHLClasses.Exceptions;
@@ -13,12 +12,12 @@ namespace LocationModifier2.UserControls
     /// <summary>
     /// Interaction logic for ShelfControl.xaml
     /// </summary>
-    public partial class ShelfControl : UserControl
+    public partial class ShelfControl
     {
         internal int LocationId;
         internal string LocationText;
-        internal SkuCollection ActiveCollection = new SkuCollection(true);
-        internal ItemWindow MWRef;
+        internal SkuCollection ActiveCollection;
+        internal ItemWindow IwRef;
         internal Dictionary<string,int> Additionals = new Dictionary<string, int>();
         public ShelfControl(int locId,string locText,SkuCollection skuColl, ItemWindow main)
         {
@@ -27,7 +26,7 @@ namespace LocationModifier2.UserControls
             LocationText = locText;
             ActiveCollection = skuColl;
             Button1.Content = locText;
-            MWRef = main;
+            IwRef = main;
             
             UpdateDictionary();
         }
@@ -47,7 +46,7 @@ namespace LocationModifier2.UserControls
             Additionals.Clear();
             foreach (var sku in ActiveCollection)
             {
-                int info = -1;
+                int info;
                 try
                 {
                     info = (from loc in sku.Locations
@@ -78,7 +77,22 @@ namespace LocationModifier2.UserControls
                     foreach (var item in ActiveCollection)
                     {
                         if (item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
-                        else item.RemoveLocationWithAudit(LocationId, MWRef._OldMW.AuthdEmployee);
+                        else
+                        {
+                            try
+                            {
+                                item.RemoveLocationWithAudit(LocationId, IwRef.OldMw.AuthdEmployee);
+                            }
+                            catch (LocationNullReferenceException)
+                            {
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.Data.Add("Sku",item.SKU);
+                                throw;
+                            }
+                            
+                        }
                     }
                     var msg = new MsgDialog("Success", "This location has been removed");
                     msg.ShowDialog();
@@ -91,8 +105,8 @@ namespace LocationModifier2.UserControls
 
             }
             
-            MWRef.ProcessScan(ActiveCollection[0].ShortSku);
-            MWRef.Refocus();
+            IwRef.ProcessScan(ActiveCollection[0].ShortSku);
+            IwRef.Refocus();
         }
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)

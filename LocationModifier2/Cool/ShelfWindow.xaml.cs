@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using WHLClasses;
 
@@ -20,12 +13,12 @@ namespace LocationModifier2.Cool
     /// <summary>
     /// Interaction logic for ShelfWindow.xaml
     /// </summary>
-    public partial class ShelfWindow : Window
+    public partial class ShelfWindow 
     {
-        internal Dispatcher maindisp = null;
-        internal ItemWindow ItWi = null;
+        internal Dispatcher MainDisp;
+        internal ItemWindow ItWi;
         internal bool Headers = true;
-        private int LocationID = 0;
+        private int _locationId;
 
         public ShelfWindow(ItemWindow IW)
         {
@@ -41,8 +34,8 @@ namespace LocationModifier2.Cool
             ItemName.Text = "No items found";
             ShortSku.Text = ScanData.Replace("qlo", "");
             PacksizeHolder.Children.Clear();
-            LocationID = Convert.ToInt32(ScanData.Replace("qlo", ""));
-            maindisp = this.Dispatcher;
+            _locationId = Convert.ToInt32(ScanData.Replace("qlo", ""));
+            MainDisp = this.Dispatcher;
 
             //Get matching skus from mixdown.
 
@@ -50,26 +43,25 @@ namespace LocationModifier2.Cool
 
         }
 
-        internal void AddControl(WhlSKU Sku, int LocationID)
+        internal void AddControl(WhlSKU sku, int locationId)
         {
-            PacksizeHolder.Children.Add(new ShelfWindowControl(Sku, this, LocationID));
+            PacksizeHolder.Children.Add(new ShelfWindowControl(sku, this, locationId));
         }
 
         internal void DoProcess(object sender, DoWorkEventArgs e)
         {
-            var worker = (sender as BackgroundWorker);
             //Get skus
-            var Skus = GetSkusWithLocation(LocationID, ItWi._OldMW.MixdownSkuCollection);
+            var Skus = GetSkusWithLocation(_locationId, ItWi.OldMw.MixdownSkuCollection);
 
             foreach (WhlSKU sku in Skus)
             {
 
-                foreach (WhlSKU kid in ItWi._OldMW.FullSkuCollection.GatherChildren(sku.ShortSku))
+                foreach (WhlSKU kid in ItWi.OldMw.FullSkuCollection.GatherChildren(sku.ShortSku))
                 {
-                    if ((kid.NewItem.IsListed || kid.PackSize == 1) && kid.Locations.Any(loc => loc.LocationID == LocationID))
+                    if ((kid.NewItem.IsListed || kid.PackSize == 1) && kid.Locations.Any(loc => loc.LocationID == _locationId))
                     { 
                         //GOGOOGOGOOGO
-                        maindisp.Invoke(() => AddControl(kid, LocationID));
+                        MainDisp.Invoke(() => AddControl(kid, _locationId));
                     }
                 }
             }
@@ -112,41 +104,34 @@ namespace LocationModifier2.Cool
             Application.Current.Shutdown();
         }
 
-        internal void ProcessScan(string ScanData)
+        internal void ProcessScan(string scanData)
         {
             this.Hide();
-            ItWi.ProcessScan(ScanData);
+            ItWi.ProcessScan(scanData);
             Refocus();
             
         }
 
-        Point ScrollerMousePos;
-        double ScrollerVerticalOffset;
-        double ScrollerHorizontalOffset;
-        private void NotesScroller_MouseLeftButtonDown(object Sender, MouseButtonEventArgs E)
+        private Point _scrollerMousePos;
+        private double _scrollerVerticalOffset;
+        private double _scrollerHorizontalOffset;
+        private void NotesScroller_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             NotesScroller.CaptureMouse();
-            ScrollerMousePos = E.GetPosition(NotesScroller);
-            ScrollerVerticalOffset = NotesScroller.VerticalOffset;
-            ScrollerHorizontalOffset = NotesScroller.HorizontalOffset;
+            _scrollerMousePos = e.GetPosition(NotesScroller);
+            _scrollerVerticalOffset = NotesScroller.VerticalOffset;
+            _scrollerHorizontalOffset = NotesScroller.HorizontalOffset;
         }
-        private void NotesScroller_MouseLeftButtonUp(object Sender, MouseButtonEventArgs E)
+        private void NotesScroller_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             NotesScroller.ReleaseMouseCapture();
             Refocus();
         }
-        private void NotesScroller_MouseMove(object Sender, MouseEventArgs E)
+        private void NotesScroller_MouseMove(object sender, MouseEventArgs e)
         {
-            if (NotesScroller.IsMouseCaptured)
-            {
-                NotesScroller.ScrollToVerticalOffset(ScrollerVerticalOffset + (ScrollerMousePos.Y - E.GetPosition(NotesScroller).Y));
-                NotesScroller.ScrollToHorizontalOffset(ScrollerHorizontalOffset + (ScrollerMousePos.X - E.GetPosition(NotesScroller).X));
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            Refocus();
+            if (!NotesScroller.IsMouseCaptured) return;
+            NotesScroller.ScrollToVerticalOffset(_scrollerVerticalOffset + (_scrollerMousePos.Y - e.GetPosition(NotesScroller).Y));
+            NotesScroller.ScrollToHorizontalOffset(_scrollerHorizontalOffset + (_scrollerMousePos.X - e.GetPosition(NotesScroller).X));
         }
 
         private void ScanBox_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

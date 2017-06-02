@@ -40,11 +40,11 @@ namespace LocationModifier2.Cool
             if (data.StartsWith("qlo"))
             {
                 var newdata = Convert.ToInt32(data.Replace("qlo", ""));
-                var shelfname = IwRef._OldMW.LocationIdConversion(newdata);
+                var shelfname = IwRef.OldMw.LocationIdConversion(newdata);
                 Instruct("Adding to " + shelfname);
                 foreach (var sku in ActiveCollection)
                 {
-                    sku.AddLocationWithAudit(newdata,IwRef._OldMW.AuthdEmployee,0);
+                    sku.AddLocationWithAudit(newdata,IwRef.OldMw.AuthdEmployee,0);
                 }
                 this.Close();
                 IwRef.ProcessScan(ActiveItem.ShortSku);

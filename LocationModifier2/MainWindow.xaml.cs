@@ -39,7 +39,7 @@ namespace LocationModifier2
             InitializeComponent();
             this.Focus();
             FullSkuCollection = Loader.SmartSkuCollLoad(true);
-            Misc.OperationDialog("Preparing other stuff", delegate(object sender, DoWorkEventArgs args)
+            Misc.OperationDialog("Preparing other stuff", delegate
             {
                 MixdownSkuCollection = FullSkuCollection.MakeMixdown();
             });
@@ -428,11 +428,7 @@ namespace LocationModifier2
                     else
                     {
                         var conv = LocationNameConversion(data);
-                        if (conv != -1)
-                        {
-                            NewLocationId = conv;
-                        }
-                        else NewLocationId = 0;
+                        NewLocationId = conv != -1 ? conv : 0;
                     }
                     
                     CurrentScanState = ScanState.ScannedNewShelf;
