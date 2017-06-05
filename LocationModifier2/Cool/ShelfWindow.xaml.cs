@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -58,6 +59,7 @@ namespace LocationModifier2.Cool
 
                 foreach (WhlSKU kid in ItWi.OldMw.FullSkuCollection.GatherChildren(sku.ShortSku))
                 {
+                    kid.RefreshLocations();
                     if ((kid.NewItem.IsListed || kid.PackSize == 1) && kid.Locations.Any(loc => loc.LocationID == _locationId))
                     { 
                         //GOGOOGOGOOGO
@@ -74,11 +76,23 @@ namespace LocationModifier2.Cool
 
         internal List<WhlSKU> GetSkusWithLocation(int TargetID, SkuCollection Source)
         {
-
-            List<WhlSKU> asd =
-                (Source.Where(sku => sku.Locations.Any(location => location.LocationID == TargetID)).ToList());
-            asd.Sort((sku, whlSku) => sku.SKU.CompareTo(whlSku.SKU));
-            return asd;
+            var returnlist = new List<WhlSKU>();
+            var locQuery = MySQL.SelectDataDictionary("SELECT * from whldata.sku_locations where LocationRefID ='" +
+                                                      TargetID.ToString() + "';");
+            foreach (var result in locQuery)
+            {
+                WhlSKU sku = null;
+                try
+                {
+                   sku = Source.SearchBarcodes(result["Sku"].ToString())[0];
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                }
+                
+                if (sku != null) returnlist.Add(sku);
+            }
+            return returnlist;
         }
 
         private void ScanBox_LostFocus(object sender, RoutedEventArgs e)

@@ -50,18 +50,24 @@ namespace LocationModifier2.Cool
             var kids = OldMw.FullSkuCollection.GatherChildren(sku.ShortSku);
             //Get the list of locaitons,
             var LocationIDs = new Dictionary<int, SKULocation>();
+            var HasMultiplePicking = false;
             var locationMapping = new Dictionary<SKULocation.SKULocationType, int>()
             {
                 {SKULocation.SKULocationType.Pickable, 0},
                 {SKULocation.SKULocationType.Storage, 1},
                 {SKULocation.SKULocationType.Delivery, 2},
                 {SKULocation.SKULocationType.Prepack, 3},
-                {SKULocation.SKULocationType.PrepackInstant, 4}
+                {SKULocation.SKULocationType.PrepackInstant, 4},
+                {SKULocation.SKULocationType.Unused, 5}
             };
             foreach (WhlSKU Kid in kids)
             {
                 //Refresh thing
                 Kid.RefreshLocations();
+                if (Kid.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count != 1)
+                {
+                    HasMultiplePicking = true;
+                }
                 //We're gonna have to iterate and get a list of locations.
                 foreach (SKULocation loc in Kid.Locations)
                 {
@@ -73,10 +79,10 @@ namespace LocationModifier2.Cool
             }
             //Sort them to fix the faggy ordering
             var orderedlocations = LocationIDs.OrderBy(x => locationMapping[x.Value.LocationType]);
-            var newdict = new Dictionary<int, string>();
+            var newdict = new Dictionary<int, SKULocation>();
             foreach (KeyValuePair<int, SKULocation> asd in orderedlocations)
             {
-                newdict.Add(asd.Key, asd.Value.LocationText);
+                newdict.Add(asd.Key, asd.Value);
             }
             //Now go again and make the controls.
             foreach (WhlSKU Kid in kids)
@@ -91,10 +97,17 @@ namespace LocationModifier2.Cool
                 }
 
             }
-            //And now the lcoations.
-            foreach (KeyValuePair<int, string> LocID in newdict)
+            //And now the locations.
+            foreach (KeyValuePair<int, SKULocation> LocID in newdict)
             {
-                LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value, kids, this));
+                if (HasMultiplePicking && LocID.Value.LocationType == SKULocation.SKULocationType.Pickable)
+                {
+                    LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this,true));
+                }
+                else
+                {
+                    LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this));
+                }
             }
 
         }
@@ -121,28 +134,29 @@ namespace LocationModifier2.Cool
                     {
                         //Googogo
                         //Clear
-                    PacksizeHolder.Children.Clear();
-                    LocationControlHolder.Children.Clear();
+                        PacksizeHolder.Children.Clear();
+                        LocationControlHolder.Children.Clear();
 
-                    //Find it first
-                    var Matches = OldMw.MixdownSkuCollection.SearchBarcodes(ScanData);
-                    if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, true);
-                    if (Matches.Count == 1)
-                    {
-                        ActiveItem = Matches[0];
-                        ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
-                       LoadGrid(Matches[0]);
-                    }else if (Matches.Count > 1)
-                    {
-                        var item = Distinguish.DistinguishSku(Matches);
-                        ActiveItem = item;
-                        ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
-                        LoadGrid(item);
+                        //Find it first
+                        var Matches = OldMw.MixdownSkuCollection.SearchBarcodes(ScanData);
+                        if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                        if (Matches.Count == 1)
+                        {
+                            ActiveItem = Matches[0];
+                            ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                           LoadGrid(Matches[0]);
                         }
-                    else
-                    {
-                        new MsgDialog("ERROR", "Unable to find any items which matched the search!").ShowDialog();
-                    }
+                        else if (Matches.Count > 1)
+                        {
+                            var item = Distinguish.DistinguishSku(Matches);
+                            ActiveItem = item;
+                            ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
+                            LoadGrid(item);
+                        }
+                        else
+                        {
+                            new MsgDialog("ERROR", "Unable to find any items which matched the search!").ShowDialog();
+                        }
                     }
                     else
                     {
@@ -194,11 +208,9 @@ namespace LocationModifier2.Cool
         }
         private void NotesScroller_MouseMove(object Sender, MouseEventArgs E)
         {
-            if (NotesScroller.IsMouseCaptured)
-            {
-                NotesScroller.ScrollToVerticalOffset(ScrollerVerticalOffset + (ScrollerMousePos.Y - E.GetPosition(NotesScroller).Y));
-                NotesScroller.ScrollToHorizontalOffset(ScrollerHorizontalOffset + (ScrollerMousePos.X - E.GetPosition(NotesScroller).X));
-            }
+            if (!NotesScroller.IsMouseCaptured) return;
+            NotesScroller.ScrollToVerticalOffset(ScrollerVerticalOffset + (ScrollerMousePos.Y - E.GetPosition(NotesScroller).Y));
+            NotesScroller.ScrollToHorizontalOffset(ScrollerHorizontalOffset + (ScrollerMousePos.X - E.GetPosition(NotesScroller).X));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

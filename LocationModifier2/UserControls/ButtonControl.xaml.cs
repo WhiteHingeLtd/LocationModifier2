@@ -71,7 +71,7 @@ namespace LocationModifier2.UserControls
                         }
                         finally
                         {
-                            MainRefWindow.ProcessScan(ActiveItem.SKU);
+                            MainRefWindow.ProcessScan(ActiveItem.ShortSku);
                             MainRefWindow.Refocus();
                         }
                         break;
