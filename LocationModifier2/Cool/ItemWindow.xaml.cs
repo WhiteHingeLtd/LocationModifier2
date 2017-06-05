@@ -25,6 +25,7 @@ namespace LocationModifier2.Cool
             InitializeComponent();
             ShelfWin = new ShelfWindow(this);
             OldMw = realMainWindow;
+            Refocus();
         }
 
         private void ScanBox_KeyUp(object sender, KeyEventArgs e)
@@ -215,6 +216,7 @@ namespace LocationModifier2.Cool
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.Activate();
             Refocus();
         }
 

@@ -32,12 +32,7 @@ public partial class DistinguishChoices
 		System.Windows.Forms.Cursor.Position = new System.Drawing.Point(0, 0);
 		//Reset the height of the distinguish. Form is 65 w/o buttons, plus 70 per button.
 
-		if (CancelButton.Visibility == Visibility.Visible) {
-			Height = 123 + (DistinguishChoicesHolder.Children.Count * 70);
-		} else {
-			Height = 47 + (DistinguishChoicesHolder.Children.Count * 70);
-		}
-
+		
 	}
 
 	public void ButtonClicker(object Sender, RoutedEventArgs E)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -44,6 +45,7 @@ namespace LocationModifier2.Cool
                 Instruct("Adding to " + shelfname);
                 foreach (var sku in ActiveCollection)
                 {
+                    if ((from loc in sku.Locations where loc.LocationID == newdata select loc).Any()) continue;
                     sku.AddLocationWithAudit(newdata,IwRef.OldMw.AuthdEmployee,0);
                 }
                 this.Close();
