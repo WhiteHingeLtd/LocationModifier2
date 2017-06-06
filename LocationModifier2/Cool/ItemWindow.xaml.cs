@@ -20,12 +20,14 @@ namespace LocationModifier2.Cool
         internal ShelfWindow ShelfWin;
         internal WhlSKU ActiveItem;
         internal SkuCollection ActiveCollection;
+        internal StockEntry2.ButtonType CurrentButtonType;
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
             ShelfWin = new ShelfWindow(this);
             OldMw = realMainWindow;
             Refocus();
+            CurrentButtonType = StockEntry2.ButtonType.SetStock;
         }
 
         private void ScanBox_KeyUp(object sender, KeyEventArgs e)
@@ -143,7 +145,7 @@ namespace LocationModifier2.Cool
                         LocationControlHolder.Children.Clear();
 
                         //Find it first
-                        var Matches = OldMw.MixdownSkuCollection.SearchBarcodes(ScanData);
+                        var Matches = OldMw.FullSkuCollection.SearchBarcodes(ScanData);
                         if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, true);
                         if (Matches.Count == 1)
                         {

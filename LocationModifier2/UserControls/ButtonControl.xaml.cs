@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows;
 using LocationModifier2.Cool;
 using WHLClasses;
+using WHLClasses.Exceptions;
+
 namespace LocationModifier2.UserControls
 {
 
@@ -38,10 +40,11 @@ namespace LocationModifier2.UserControls
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
-            var stockCounter = new StockEntry2(ActiveItem,LocationID);
+            var stockCounter = new StockEntry2(ActiveItem,LocationID,MainRefWindow.CurrentButtonType);
             stockCounter.ShowDialog();
             if (stockCounter.FinalStockEntry > -1 && !stockCounter.Cancel)
             {
+                MainRefWindow.CurrentButtonType = stockCounter.CurrentState;
                 switch (stockCounter.CurrentState)
                 {
                     case StockEntry2.ButtonType.SetStock:
@@ -87,7 +90,41 @@ namespace LocationModifier2.UserControls
                         }
                         finally
                         {
-                            MainRefWindow.ProcessScan(ActiveItem.SKU);
+                            MainRefWindow.ProcessScan(ActiveItem.ShortSku);
+                            MainRefWindow.Refocus();
+                        }
+                        break;
+                    case StockEntry2.ButtonType.Add:
+                        try
+                        {
+                            ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry);
+                            MainButton.Content = stockCounter.FinalStockEntry;
+                        }
+                        catch (NegativeStockException)
+                        {
+                            new MsgDialog("ERROR", "You cannot have negative stock").ShowDialog();
+                            // ignored
+                        }
+                        finally
+                        {
+                            MainRefWindow.ProcessScan(ActiveItem.ShortSku);
+                            MainRefWindow.Refocus();
+                        }
+                        break;
+                    case StockEntry2.ButtonType.Minus:
+                        try
+                        {
+                            ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry*-1);
+                            MainButton.Content = stockCounter.FinalStockEntry;
+                        }
+                        catch (NegativeStockException)
+                        {
+                            new MsgDialog("ERROR", "You cannot have negative stock").ShowDialog();
+                            // ignored
+                        }
+                        finally
+                        {
+                            MainRefWindow.ProcessScan(ActiveItem.ShortSku);
                             MainRefWindow.Refocus();
                         }
                         break;

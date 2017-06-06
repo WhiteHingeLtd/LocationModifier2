@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using WHLClasses;
 namespace LocationModifier2.Dialogs
 {
@@ -16,22 +17,70 @@ namespace LocationModifier2.Dialogs
         internal ButtonType CurrentState;
         internal int FinalStockEntry;
         internal bool Cancel;
-        public StockEntry2(WhlSKU sku,int locationId)
+        public StockEntry2(WhlSKU sku,int locationId,ButtonType buttonState)
         {
             InitializeComponent();
             ScanBox.Focus();
-            CurrentState = ButtonType.SetStock;
+            CurrentState = buttonState;
             ActiveLocation = locationId;
             ActiveItem = sku;
             NewLocation = -1;
+            switch (CurrentState)
+            {
+                case ButtonType.SetStock:
+                    SetStock.IsEnabled = false;
+                    MoveAllStock.IsEnabled = true;
+                    MoveSomeStock.IsEnabled = true;
+                    AddButton.IsEnabled = true;
+                    Minus.IsEnabled = true;
+                    this.Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
+                    break;
+                case ButtonType.MoveSomeStock:
+                        CurrentState = ButtonType.SetStock;
+                        SetStock.IsEnabled = false;
+                        MoveAllStock.IsEnabled = true;
+                        MoveSomeStock.IsEnabled = true;
+                        AddButton.IsEnabled = true;
+                        Minus.IsEnabled = true;
+                        this.Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
+                    break;
+                case ButtonType.MoveAllStock:
+                        CurrentState = ButtonType.SetStock;
+                        SetStock.IsEnabled = false;
+                        MoveAllStock.IsEnabled = true;
+                        MoveSomeStock.IsEnabled = true;
+                        AddButton.IsEnabled = true;
+                        Minus.IsEnabled = true;
+                        this.Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
+                    break;
+                case ButtonType.Add:
+                    SetStock.IsEnabled = true;
+                    MoveAllStock.IsEnabled = true;
+                    MoveSomeStock.IsEnabled = true;
+                    AddButton.IsEnabled = false;
+                    Minus.IsEnabled = true;
+                    this.Background = System.Windows.Media.Brushes.DarkGreen;
+                    break;
+                case ButtonType.Minus:
+                    SetStock.IsEnabled = true;
+                    MoveAllStock.IsEnabled = true;
+                    MoveSomeStock.IsEnabled = true;
+                    AddButton.IsEnabled = true;
+                    Minus.IsEnabled = false;
+                    this.Background = System.Windows.Media.Brushes.DarkRed;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public enum ButtonType
         {
             SetStock = 1,
             MoveSomeStock = 2,
-            MoveAllStock = 3
-            
+            MoveAllStock = 3,
+            Add = 4,
+            Minus = 5
         }
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -56,6 +105,11 @@ namespace LocationModifier2.Dialogs
             {
                 this.Close();
             }
+            else if (CurrentState == ButtonType.Add || CurrentState == ButtonType.Minus)
+            {
+                FinalStockEntry = Convert.ToInt32(ScanBox.Text);
+                this.Close();
+            }
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -77,7 +131,9 @@ namespace LocationModifier2.Dialogs
             SetStock.IsEnabled = false;
             MoveAllStock.IsEnabled = true;
             MoveSomeStock.IsEnabled = true;
-            SetupMovePanel();
+            AddButton.IsEnabled = true;
+            Minus.IsEnabled = true;
+            ResetMovePanel();
         }
 
         private void MoveSomeStock_Click(object sender, RoutedEventArgs e)
@@ -134,20 +190,22 @@ namespace LocationModifier2.Dialogs
         private void Control_Click(object sender, RoutedEventArgs e)
         {
             var refCont = sender as Button;
-            if (refCont != null)
+            if (refCont == null) return;
+            NewLocation = Convert.ToInt32(refCont.Uid);
+            switch (CurrentState)
             {
-                NewLocation = Convert.ToInt32(refCont.Uid);
-                if (CurrentState == ButtonType.MoveSomeStock)
-                {
+                case ButtonType.MoveSomeStock:
                     LoginTitle.Text = "Enter the stock you wish to move to " + WHLClasses.MiscFunctions.Misc.LocationIdConversion(NewLocation);
                     LoginTitle.FontSize = 20.0;
-                }
-                else if (CurrentState == ButtonType.MoveAllStock)
-                {
+                    break;
+                case ButtonType.MoveAllStock:
                     KeypadEnter_Click(null,null);
-                }
+                    break;
+                case ButtonType.SetStock:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            
         }
 
         private void ResetMovePanel()
@@ -162,6 +220,31 @@ namespace LocationModifier2.Dialogs
             SetStock.IsEnabled = false;
             MoveAllStock.IsEnabled = true;
             MoveSomeStock.IsEnabled = true;
+            Minus.IsEnabled = true;
+            AddButton.IsEnabled = true;
+            this.Background = new SolidColorBrush(Color.FromRgb(14,0,153));
+        }
+
+        private void Minus_Click(object sender, RoutedEventArgs e)
+        {
+            this.Background = System.Windows.Media.Brushes.DarkRed;
+            CurrentState = ButtonType.Minus;
+            SetStock.IsEnabled = true;
+            MoveAllStock.IsEnabled = true;
+            MoveSomeStock.IsEnabled = true;
+            AddButton.IsEnabled = true;
+            Minus.IsEnabled = false;
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Background = System.Windows.Media.Brushes.DarkGreen;
+            CurrentState = ButtonType.Add;
+            SetStock.IsEnabled = true;
+            MoveAllStock.IsEnabled = true;
+            MoveSomeStock.IsEnabled = true;
+            AddButton.IsEnabled = false;
+            Minus.IsEnabled = true;
         }
     }
 }
