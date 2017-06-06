@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WHLClasses;
 using WHLClasses.Exceptions;
+using Color = System.Windows.Media.Color;
 
 namespace LocationModifier2.UserControls
 {
@@ -21,7 +22,7 @@ namespace LocationModifier2.UserControls
         internal SkuCollection ActiveCollection;
         internal ItemWindow IwRef;
         internal Dictionary<string,int> Additionals = new Dictionary<string, int>();
-        public ShelfControl(int locId,string locText,SkuCollection skuColl, ItemWindow main, bool multiPick = false)
+        public ShelfControl(int locId,string locText,SkuCollection skuColl, ItemWindow main, bool multiPick = false,bool isPick = false)
         {
             InitializeComponent();
             LocationId = locId;
@@ -29,7 +30,8 @@ namespace LocationModifier2.UserControls
             ActiveCollection = skuColl;
             Button1.Content = locText;
             IwRef = main;
-            if (multiPick) Button1.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(145,255,0,0));
+            if (multiPick && !isPick) Button1.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(145,255,0,0));
+            else if(isPick) Button1.Background = new SolidColorBrush(Color.FromArgb(145,0,255,155));
             UpdateDictionary();
         }
 

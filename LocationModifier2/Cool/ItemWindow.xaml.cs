@@ -105,6 +105,10 @@ namespace LocationModifier2.Cool
                 {
                     LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this,true));
                 }
+                else if(LocID.Value.LocationType == SKULocation.SKULocationType.Pickable)
+                {
+                    LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this, false,true));
+                }
                 else
                 {
                     LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this));
