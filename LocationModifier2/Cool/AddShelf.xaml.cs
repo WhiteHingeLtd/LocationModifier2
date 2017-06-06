@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using WHLClasses;
+using WHLClasses.MySQL_Old;
 
 namespace LocationModifier2.Cool
 {
@@ -53,7 +55,25 @@ namespace LocationModifier2.Cool
             }
             else
             {
-                Instruct("Please scan a valid shelf location");
+                try
+                {
+                    var newdata = LocationNameConversion(data);
+                    if (newdata == -1) throw new Exception();
+                    var shelfname = IwRef.OldMw.LocationIdConversion(newdata);
+                    Instruct("Adding to " + shelfname);
+                    foreach (var sku in ActiveCollection)
+                    {
+                        if ((from loc in sku.Locations where loc.LocationID == newdata select loc).Any()) continue;
+                        sku.AddLocationWithAudit(newdata, IwRef.OldMw.AuthdEmployee, 0);
+                    }
+                    this.Close();
+                    IwRef.ProcessScan(ActiveItem.ShortSku);
+                }
+                catch (Exception ex)
+                {
+                    Instruct("Please scan a valid shelf location");
+                }
+
             }
         }
         private void ScanBox_KeyDown(object sender, KeyEventArgs e)
@@ -87,6 +107,33 @@ namespace LocationModifier2.Cool
         {
             this.Close();
             IwRef.ProcessScan(ActiveItem.ShortSku);
+        }
+        public int LocationNameConversion(string location)
+        {
+            try
+            {
+                var locationID = 0;
+                var locObject = MySQL_Ext.SelectData("SELECT locid FROM whldata.locationreference WHERE locText='" + location.ToUpper() + "' LIMIT 1;") as ArrayList;
+                if (locObject != null && locObject.Count > 0)
+                {
+                    foreach (ArrayList locList in locObject)
+                    {
+                        int.TryParse(locList[0].ToString(), out locationID);
+                    }
+                }
+                else
+                {
+                    locationID = -1;
+                    return locationID;
+
+                }
+
+                return locationID;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
         }
     }
 }
