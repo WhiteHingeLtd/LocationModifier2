@@ -1,4 +1,5 @@
-﻿using LocationModifier2.Cool;
+﻿using System;
+using LocationModifier2.Cool;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls.Primitives;
@@ -28,9 +29,17 @@ namespace LocationModifier2.UserControls
                 var refControl = new ButtonControl(ActiveItem,MainWindowRef,loc);
                 ExpandPanel.Children.Add(refControl);
             }
-            var result = MySQL.SelectDataDictionary("SELECT ow_isprepackfinalfinal from whldata.orderwise_data where sku='" +
-                                       ActiveItem.SKU + "'")[0];
-            IsPrepackButton.IsChecked = bool.Parse(result["ow_isprepackfinalfinal"].ToString());
+            try
+            {
+                var result = MySQL.SelectDataDictionary("SELECT ow_isprepackfinalfinal from whldata.orderwise_data where sku='" +
+                                                        ActiveItem.SKU + "'")[0];
+                IsPrepackButton.IsChecked = bool.Parse(result["ow_isprepackfinalfinal"].ToString());
+            }
+            catch (Exception)
+            {
+                IsPrepackButton.IsChecked = false;
+            }
+
             IsPrepackButton.Content = "Pack Down: " + IsPrepackButton.IsChecked.Value.ToString();
             this.Background = IsPrepackButton.IsChecked.Value ? new SolidColorBrush(Colors.LightBlue) : new SolidColorBrush(Colors.LightGray);
         }
