@@ -90,7 +90,7 @@ namespace LocationModifier2.Dialogs
 
         private void KeypadEnter_Click(object sender, RoutedEventArgs e)
         {
-            if (ScanBox.Text.Length == 0) return;
+            if (ScanBox.Text.Length == 0 && CurrentState != ButtonType.MoveAllStock) return;
             if (CurrentState == ButtonType.SetStock)
             {
                 FinalStockEntry = Convert.ToInt32(ScanBox.Text);
