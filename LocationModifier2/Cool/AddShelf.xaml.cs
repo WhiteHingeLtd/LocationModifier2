@@ -69,7 +69,7 @@ namespace LocationModifier2.Cool
                     this.Close();
                     IwRef.ProcessScan(ActiveItem.ShortSku);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Instruct("Please scan a valid shelf location");
                 }
