@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LocationModifier2.UserControls"
-             mc:Ignorable="d" MinHeight="80">
-    <Grid>
+             mc:Ignorable="d" MinHeight="110">
+    <Grid Height="109">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="110"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <WrapPanel x:Name="ExpandPanel" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="80"/>
-        <TextBlock x:Name="PacksizeBlock" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Text="1000" FontSize="24" Margin="34,12,34,36"/>
-        <ToggleButton x:Name="IsPrepackButton"  Margin="5,49,5,5" Click="IsPrepackButton_Click" IsChecked="True" Content ="Prepack: ">
+        <Button x:Name="PacksizeBlock" Content="1000" FontSize="24" Margin="25,14,25,61" Background="{x:Null}" BorderBrush="{x:Null}" Click="PacksizeBlock_Click"/>
+        <ToggleButton x:Name="IsPrepackButton"  Margin="5,80,5,10" Click="IsPrepackButton_Click" IsChecked="True" Content ="Pack Down: ">
             <ToggleButton.Template>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
                     <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
@@ -39,5 +39,6 @@
                 </ControlTemplate>
             </ToggleButton.Template>
         </ToggleButton>
+        <TextBlock x:Name="Sales" Margin="10,59,10,37" TextWrapping="Wrap" Text="Sales:"/>
     </Grid>
 </UserControl>

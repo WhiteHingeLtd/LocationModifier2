@@ -134,10 +134,19 @@ namespace LocationModifier2.Cool
                 if (ScanData.StartsWith("qzu"))
                 {
                     OldMw.ProcessScanBox(ScanData);
+                    if (ScanData.Contains("qzu53"))
+                    {
+                        new IssuesList(this).ShowDialog();
+                    }
+                    
                 }
                 else if (OldMw.AuthdEmployee != null)
                 {
-                    if (!ScanData.StartsWith("qlo"))
+                    if (ScanData.StartsWith("qwz"))
+                    {
+                        new IssuesList(this).ShowDialog();
+                    }
+                    else if (!ScanData.StartsWith("qlo"))
                     {
                         //Googogo
                         //Clear
@@ -160,12 +169,13 @@ namespace LocationModifier2.Cool
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                             LoadGrid(item);
                         }
+                        
                         else
                         {
                             new MsgDialog("ERROR", "Unable to find any items which matched the search!").ShowDialog();
                         }
                     }
-                    else
+                    else 
                     {
                         ProcessToShelfScreen(ScanData);
                     }

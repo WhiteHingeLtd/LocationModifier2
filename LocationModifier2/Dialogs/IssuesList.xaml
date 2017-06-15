@@ -13,8 +13,8 @@
                     <ColumnDefinition Width="79*"/>
                     <ColumnDefinition Width="181*"/>
                 </Grid.ColumnDefinitions>
-                <Grid x:Name="scroll" Grid.Column="1" Background="#FFBBBBBB">
-                    <ScrollViewer PanningMode="Both">
+                <Grid x:Name="scroll" Grid.Column="1" Background="White">
+                    <ScrollViewer x:Name="IssueViewer" PanningMode="Both" MinWidth="500">
                         <ScrollViewer.Template>
                             <ControlTemplate TargetType="{x:Type ScrollViewer}">
                                 <Grid x:Name="Grid" Background="{TemplateBinding Background}">

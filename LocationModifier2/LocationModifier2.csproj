@@ -27,7 +27,7 @@
     <InstallUrl>http://apps.ad.whitehinge.com/AppPublish/LocMod2/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationRevision>21</ApplicationRevision>
     <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -76,6 +76,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -118,6 +119,9 @@
     </Compile>
     <Compile Include="UserControls\ButtonControl.xaml.cs">
       <DependentUpon>ButtonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\IssueControl.xaml.cs">
+      <DependentUpon>IssueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PacksizeControl.xaml.cs">
       <DependentUpon>PacksizeControl.xaml</DependentUpon>
@@ -208,6 +212,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UserControls\ButtonControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\IssueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

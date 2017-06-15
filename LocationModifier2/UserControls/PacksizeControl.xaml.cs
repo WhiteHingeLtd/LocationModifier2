@@ -22,7 +22,7 @@ namespace LocationModifier2.UserControls
             ActiveItem = sku;
             MainWindowRef = main;
             LocList = locationList;
-            PacksizeBlock.Text = sku.PackSize.ToString();
+            PacksizeBlock.Content = sku.PackSize.ToString();
             this.Background = new SolidColorBrush(Colors.LightGray);
             foreach (var loc in locationList)
             {
@@ -39,6 +39,7 @@ namespace LocationModifier2.UserControls
             {
                 IsPrepackButton.IsChecked = false;
             }
+            Sales.Text = "Sales: " + sku.SalesData.EightWeekAverage.ToString();
 
             IsPrepackButton.Content = "Pack Down: " + IsPrepackButton.IsChecked.Value.ToString();
             this.Background = IsPrepackButton.IsChecked.Value ? new SolidColorBrush(Colors.LightBlue) : new SolidColorBrush(Colors.LightGray);
@@ -48,7 +49,7 @@ namespace LocationModifier2.UserControls
         {
             if (IsPrepackButton.IsChecked == null) return;
             MySQL.insertUpdate("UPDATE whldata.orderwise_data set ow_isprepackfinalfinal = '" + IsPrepackButton.IsChecked.Value.ToString() + "' where sku ='" + ActiveItem.SKU + "'");
-            IsPrepackButton.Content = "Prepack: " + IsPrepackButton.IsChecked.Value.ToString();
+            IsPrepackButton.Content = "Pack Down: " + IsPrepackButton.IsChecked.Value.ToString();
             if (IsPrepackButton.IsChecked.Value)
             {
                 this.Background = new SolidColorBrush(Colors.LightBlue);
@@ -57,6 +58,12 @@ namespace LocationModifier2.UserControls
             {
                 this.Background = new SolidColorBrush(Colors.LightGray);
             }
+            MainWindowRef.Refocus();
+        }
+
+        private void PacksizeBlock_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            e.Handled = false;
             MainWindowRef.Refocus();
         }
     }
