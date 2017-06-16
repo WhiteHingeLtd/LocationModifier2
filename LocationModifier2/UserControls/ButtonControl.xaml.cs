@@ -131,7 +131,11 @@ namespace LocationModifier2.UserControls
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
+            }
+            else if (stockCounter.Cancel)// If I cancel, it doesn't auto-refocus. Then I scan something and it acts like I pressed a button
+            {                            // The intent here is for this to fix the issue. Please verify, as I don't want to delete the SPC to debug
+                MainRefWindow.Refocus(); // - Colin
             }
         }
     }
