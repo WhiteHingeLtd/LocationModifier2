@@ -17,10 +17,12 @@ namespace LocationModifier2.Dialogs
         internal ItemWindow IwRef;
         internal SkuCollection IssueSkuColl;
         internal OrderDefinition LocalOrddef;
+        internal bool SendingToPrepack;
         public IssuesList(ItemWindow window)
         {
             InitializeComponent();
             IwRef = window;
+            SendingToPrepack = false;
             IssueSkuColl = IwRef.OldMw.FullSkuCollection;
             try
             {
@@ -51,6 +53,16 @@ namespace LocationModifier2.Dialogs
         {
             this.Close();
             IwRef.Refocus();
+        }
+
+        private void SendToPrepack(Order order)
+        {
+            
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckBox1.IsChecked != null) SendingToPrepack = CheckBox1.IsChecked.Value;
         }
     }
 }

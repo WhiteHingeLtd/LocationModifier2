@@ -27,7 +27,7 @@
     <InstallUrl>http://apps.ad.whitehinge.com/AppPublish/LocMod2/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>21</ApplicationRevision>
+    <ApplicationRevision>24</ApplicationRevision>
     <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -259,6 +259,10 @@
     <ProjectReference Include="..\..\Framework\Framework\Framework.vbproj">
       <Project>{8a2b93b9-4651-40f3-bbf9-d8fd0474a719}</Project>
       <Name>Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\LinnworksNetSDK\Linnworks\src\net\LinnworksAPI\LinnworksAPI.csproj">
+      <Project>{121d410c-db32-4245-996f-3b1134b0f181}</Project>
+      <Name>LinnworksAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
