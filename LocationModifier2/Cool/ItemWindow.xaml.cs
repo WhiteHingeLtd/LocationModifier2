@@ -3,10 +3,13 @@ using LocationModifier2.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using WHLClasses;
+using WHLClasses.Orders;
 
 namespace LocationModifier2.Cool
 {
@@ -21,13 +24,44 @@ namespace LocationModifier2.Cool
         internal WhlSKU ActiveItem;
         internal SkuCollection ActiveCollection;
         internal StockEntry2.ButtonType CurrentButtonType;
+        internal OrderDefinition OrderDefintions;
+        internal DispatcherTimer OrddefReloadTimer;
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
             ShelfWin = new ShelfWindow(this);
             OldMw = realMainWindow;
             Refocus();
+            OrddefReloadTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMinutes(1),
+                IsEnabled = true
+            };
+            OrddefReloadTimer.Tick += OrddefReloadTimer_Tick;
+            OrddefReloadTimer.Start();
+            OrddefReloadTimer_Tick(null, null);
             CurrentButtonType = StockEntry2.ButtonType.SetStock;
+        }
+
+        private void OrddefReloadTimer_Tick(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                try
+                {
+                    var OrddefClient =
+                        WHLClasses.Services.OrderServer.Fucnt.ConnectChannel(
+                            "net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
+                    OrderDefintions = OrddefClient.StreamOrderDefinition();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw;
+                }
+                Thread.CurrentThread.IsBackground = true;
+            }).Start();
+
         }
 
         private void ScanBox_KeyUp(object sender, KeyEventArgs e)
@@ -134,17 +168,13 @@ namespace LocationModifier2.Cool
                 if (ScanData.StartsWith("qzu"))
                 {
                     OldMw.ProcessScanBox(ScanData);
-                    if (ScanData.Contains("qzu53"))
-                    {
-                        new IssuesList(this).ShowDialog();
-                    }
                     
                 }
                 else if (OldMw.AuthdEmployee != null)
                 {
-                    if (ScanData.StartsWith("qwz"))
+                    if (ScanData.StartsWith("qwz") || ScanData.StartsWith("qzw"))
                     {
-                        new IssuesList(this).ShowDialog();
+                        new IssuesList(this, OrderDefintions).ShowDialog();
                     }
                     else if (!ScanData.StartsWith("qlo"))
                     {

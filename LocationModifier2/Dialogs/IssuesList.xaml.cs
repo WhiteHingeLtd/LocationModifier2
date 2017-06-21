@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using LocationModifier2.Cool;
@@ -18,27 +19,19 @@ namespace LocationModifier2.Dialogs
         internal SkuCollection IssueSkuColl;
         internal OrderDefinition LocalOrddef;
         internal bool SendingToPrepack;
-        public IssuesList(ItemWindow window)
+        public IssuesList(ItemWindow window,OrderDefinition FullOrddef)
         {
             InitializeComponent();
             IwRef = window;
             SendingToPrepack = false;
             IssueSkuColl = IwRef.OldMw.FullSkuCollection;
-            try
-            {
-                var OrddefClient = WHLClasses.Services.OrderServer.Fucnt.ConnectChannel("net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
-                LocalOrddef = OrddefClient.StreamOrderDefinition();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            LocalOrddef = FullOrddef;
             var WorkingOrddef = new OrderDefinition();
             WorkingOrddef.AddRange(LocalOrddef.GetByStatus(OrderStatus._MissingItem));
             WorkingOrddef.AddRange(LocalOrddef.GetByStatus(OrderStatus._Cantfind));
             var controlList = new List<IssueControl>();
-            foreach (var order in WorkingOrddef.Where(x => x.issues.Any()))
+            var ordersWithIssues = WorkingOrddef.Where(x => x.issues.Any());
+            foreach (var order in ordersWithIssues)
             {
                 controlList.AddRange(order.issues.Select(issue => new IssueControl(order, issue, this)));
             }
@@ -55,10 +48,6 @@ namespace LocationModifier2.Dialogs
             IwRef.Refocus();
         }
 
-        private void SendToPrepack(Order order)
-        {
-            
-        }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {

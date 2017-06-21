@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LocationModifier2.Dialogs;
+using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LocationModifier2.Dialogs;
 using WHLClasses;
 using WHLClasses.Orders;
-
+    
 namespace LocationModifier2.UserControls
 {
     /// <summary>
@@ -30,18 +21,28 @@ namespace LocationModifier2.UserControls
         internal WhlSKU CurrentSku;
         public IssueControl(Order order, IssueData issue, IssuesList dialog)
         {
+
             InitializeComponent();
             IssueListDialog = dialog;
             Issue = issue;
             CurrentOrder = order;
             OrderNumText.Text = order.OrderId;
+
             TimeText.Text = issue.TimeReported.ToString("HH:mm:ss");
             OrderNumText.Text = issue.Reason;
-            var Badsku = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(issue.DodgySku)[0];
+            var Badsku = FindCorrectSku(IssueListDialog.IwRef.OldMw.FullSkuCollection, issue.DodgySku);
+            //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(issue.DodgySku)[0];
             CurrentSku = Badsku;
+
+            if (Badsku.Locations.Any(x => x.LocationType == SKULocation.SKULocationType.Prepack ||
+                                          x.LocationType == SKULocation.SKULocationType.PrepackInstant))
+                nameText.Text = "Prepackable";
+
             MessageText.Text = Badsku.GetLocation(SKULocation.SKULocationType.Pickable).LocationText + ": " +
                                Badsku.Title.Label;
+
             Pickroute = Badsku.GetLocation(SKULocation.SKULocationType.Pickable).LocationID;
+
         }
 
         private void MainIssueSourceButton_Click(object sender, RoutedEventArgs e)
@@ -82,6 +83,11 @@ namespace LocationModifier2.UserControls
             }
             loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex",ordex,@"T:\AppData\Orders");
             new MsgDialog("Prepacked", "Order sent to prepack").ShowDialog();
+        }
+
+        private WhlSKU FindCorrectSku(SkuCollection searchColl, string sku)
+        {
+            return searchColl.Single(x => x.SKU == sku);
         }
     }
 }
