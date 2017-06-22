@@ -54,10 +54,9 @@ namespace LocationModifier2.Cool
                             "net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
                     OrderDefintions = OrddefClient.StreamOrderDefinition();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex);
-                    throw;
+                    //
                 }
                 Thread.CurrentThread.IsBackground = true;
             }).Start();
