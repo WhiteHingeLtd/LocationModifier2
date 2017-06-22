@@ -14,24 +14,24 @@ namespace LocationModifier2.UserControls
     /// </summary>
     public partial class IssueControl : UserControl
     {
-        internal IssueData Issue;
+        internal IssueData CurrentIssueData;
         internal IssuesList IssueListDialog;
         internal int Pickroute = 0;
         internal Order CurrentOrder;
         internal WhlSKU CurrentSku;
-        public IssueControl(Order order, IssueData issue, IssuesList dialog)
+        public IssueControl(Order order, IssueData currentIssue, IssuesList dialog)
         {
 
             InitializeComponent();
             IssueListDialog = dialog;
-            Issue = issue;
+            CurrentIssueData = currentIssue;
             CurrentOrder = order;
             OrderNumText.Text = order.OrderId;
 
-            TimeText.Text = issue.TimeReported.ToString("HH:mm:ss");
-            OrderNumText.Text = issue.Reason;
-            var Badsku = FindCorrectSku(IssueListDialog.IwRef.OldMw.FullSkuCollection, issue.DodgySku);
-            //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(issue.DodgySku)[0];
+            TimeText.Text = currentIssue.TimeReported.ToString("HH:mm:ss");
+            OrderNumText.Text = currentIssue.Reason;
+            var Badsku = FindCorrectSku(IssueListDialog.IwRef.OldMw.FullSkuCollection, currentIssue.DodgySku);
+            //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(currentIssue.DodgySku)[0];
             CurrentSku = Badsku;
 
             if (Badsku.Locations.Any(x => x.LocationType == SKULocation.SKULocationType.Prepack ||
@@ -47,18 +47,28 @@ namespace LocationModifier2.UserControls
 
         private void MainIssueSourceButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IssueListDialog.SendingToPrepack)
+            switch (IssueListDialog.CurrentSelectedResolution)
             {
-                SendToPrepack(CurrentOrder);
+                case IssuesList.IssueResolution.Default:
+                    throw new ArgumentOutOfRangeException();
+                case IssuesList.IssueResolution.ViewLocations:
+                    IssueListDialog.Close();
+                    IssueListDialog.IwRef.ProcessScan(CurrentIssueData.DodgySku);
+                    break;
+                case IssuesList.IssueResolution.SendToPrepack:
+                    ResetToPrepack(CurrentOrder);
+                    break;
+                case IssuesList.IssueResolution.ResetOrder:
+                    ResetOrder(CurrentOrder);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else
-            {
-                IssueListDialog.Close();
-                IssueListDialog.IwRef.ProcessScan(Issue.DodgySku);
-            }
+                
+            
          
         }
-        private void SendToPrepack(Order order)
+        private void ResetToPrepack(Order order)
         {
             var loader = new GenericDataController();
             var ordex = loader.LoadOrdex(order.Filename);
@@ -70,7 +80,7 @@ namespace LocationModifier2.UserControls
             {
                 try
                 {
-                    var currentIssue = ordex.issues.Single(x => x.IssueItemIndex == Issue.IssueItemIndex);
+                    var currentIssue = ordex.issues.Single(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
                     ordex.AddIssue2017(OrderStatus._Prepack,currentIssue.IssueItemIndex, CurrentSku, IssueListDialog.IwRef.OldMw.AuthdEmployee,ordex.PickingType,currentIssue.Quantity);
                     ordex.SetStatus(OrderStatus._Prepack, IssueListDialog.IwRef.OldMw.AuthdEmployee);
                 }
@@ -83,6 +93,37 @@ namespace LocationModifier2.UserControls
             }
             loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex",ordex,@"T:\AppData\Orders");
             new MsgDialog("Prepacked", "Order sent to prepack").ShowDialog();
+        }
+
+        private void ResetOrder(Order order)
+        {
+            var loader = new GenericDataController();
+            var ordex = loader.LoadOrdex(order.Filename);
+            if (ordex.Status == OrderStatus._Withdrawn)
+            {
+
+            }
+            else
+            {
+                try
+                {
+                    foreach (var issue in ordex.issues)
+                    {
+                        if (issue.IssueItemIndex != CurrentIssueData.IssueItemIndex) continue;
+                        issue.Resolved = true;
+                        ordex.PickingStrictness[issue.IssueItemIndex] = PickingStrictness.BestJudgement;
+                    }
+                }
+                catch (Exception e)
+                {
+                    WHLClasses.Reporting.ErrorReporting.ReportException(e);
+                    throw;
+                }
+                if (ordex.issues.All(x => x.Resolved))
+                    ordex.SetStatus(OrderStatus._New, IssueListDialog.IwRef.OldMw.AuthdEmployee);
+            }
+            loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
+            new MsgDialog("Reset", "Order has been reset").ShowDialog();
         }
 
         private WhlSKU FindCorrectSku(SkuCollection searchColl, string sku)

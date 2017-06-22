@@ -18,12 +18,12 @@ namespace LocationModifier2.Dialogs
         internal ItemWindow IwRef;
         internal SkuCollection IssueSkuColl;
         internal OrderDefinition LocalOrddef;
-        internal bool SendingToPrepack;
+        internal IssueResolution CurrentSelectedResolution;
         public IssuesList(ItemWindow window,OrderDefinition FullOrddef)
         {
             InitializeComponent();
             IwRef = window;
-            SendingToPrepack = false;
+            CurrentSelectedResolution = IssueResolution.ViewLocations;
             IssueSkuColl = IwRef.OldMw.FullSkuCollection;
             LocalOrddef = FullOrddef;
             var WorkingOrddef = new OrderDefinition();
@@ -40,6 +40,7 @@ namespace LocationModifier2.Dialogs
             {
                 ActualAuditContainer.Children.Add(control);
             }
+            ViewLocations.IsChecked = true;
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -51,7 +52,26 @@ namespace LocationModifier2.Dialogs
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckBox1.IsChecked != null) SendingToPrepack = CheckBox1.IsChecked.Value;
+            if (SendToPrepack.IsChecked != null && SendToPrepack.IsChecked.Value)
+            {
+                CurrentSelectedResolution = IssueResolution.SendToPrepack;
+            }
+            else if (ViewLocations.IsChecked != null && ViewLocations.IsChecked.Value)
+            {
+                CurrentSelectedResolution = IssueResolution.ViewLocations;
+            }
+            else if (ResetOrder.IsChecked != null && ResetOrder.IsChecked.Value)
+            {
+                CurrentSelectedResolution = IssueResolution.ResetOrder;
+            }
+        }
+
+        public enum IssueResolution
+        {
+            Default = 0,
+            ViewLocations = 1,
+            SendToPrepack = 3,
+            ResetOrder = 2
         }
     }
 }
