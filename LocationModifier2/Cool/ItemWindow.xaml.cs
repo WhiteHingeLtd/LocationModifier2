@@ -41,6 +41,7 @@ namespace LocationModifier2.Cool
             OrddefReloadTimer.Start();
             OrddefReloadTimer_Tick(null, null);
             CurrentButtonType = StockEntry2.ButtonType.SetStock;
+
         }
 
         private void OrddefReloadTimer_Tick(object sender, EventArgs e)
@@ -96,7 +97,7 @@ namespace LocationModifier2.Cool
                 {SKULocation.SKULocationType.PrepackInstant, 4},
                 {SKULocation.SKULocationType.Unused, 5}
             };
-            foreach (WhlSKU Kid in kids)
+            foreach (var Kid in kids)
             {
                 //Refresh thing
                 Kid.RefreshLocations();
@@ -105,7 +106,7 @@ namespace LocationModifier2.Cool
                     HasMultiplePicking = true;
                 }
                 //We're gonna have to iterate and get a list of locations.
-                foreach (SKULocation loc in Kid.Locations)
+                foreach (var loc in Kid.Locations)
                 {
                     if (!LocationIDs.Keys.Contains(loc.LocationID))
                     {
@@ -116,12 +117,12 @@ namespace LocationModifier2.Cool
             //Sort them to fix the faggy ordering
             var orderedlocations = LocationIDs.OrderBy(x => locationMapping[x.Value.LocationType]);
             var newdict = new Dictionary<int, SKULocation>();
-            foreach (KeyValuePair<int, SKULocation> asd in orderedlocations)
+            foreach (var asd in orderedlocations)
             {
                 newdict.Add(asd.Key, asd.Value);
             }
             //Now go again and make the controls.
-            foreach (WhlSKU Kid in kids)
+            foreach (var Kid in kids)
             {
                 if (Kid.NewItem.IsListed || Kid.PackSize == 1)
                 {
@@ -134,7 +135,7 @@ namespace LocationModifier2.Cool
 
             }
             //And now the locations.
-            foreach (KeyValuePair<int, SKULocation> LocID in newdict)
+            foreach (var LocID in newdict)
             {
                 if (HasMultiplePicking && LocID.Value.LocationType == SKULocation.SKULocationType.Pickable)
                 {
@@ -184,7 +185,7 @@ namespace LocationModifier2.Cool
 
                         //Find it first
                         var Matches = OldMw.FullSkuCollection.SearchBarcodes(ScanData);
-                        if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, true);
+                        if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, false);
                         if (Matches.Count == 1)
                         {
                             ActiveItem = Matches[0];

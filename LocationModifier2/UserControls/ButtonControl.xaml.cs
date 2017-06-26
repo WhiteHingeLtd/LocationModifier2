@@ -68,8 +68,9 @@ namespace LocationModifier2.UserControls
                             ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation);
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            Console.Write(ex.Message);
                             // ignored
                         }
                         finally

@@ -54,10 +54,10 @@ namespace LocationModifier2.Cool
             //Get skus
             var Skus = GetSkusWithLocation(_locationId, ItWi.OldMw.MixdownSkuCollection);
 
-            foreach (WhlSKU sku in Skus)
+            foreach (var sku in Skus)
             {
 
-                foreach (WhlSKU kid in ItWi.OldMw.FullSkuCollection.GatherChildren(sku.ShortSku))
+                foreach (var kid in ItWi.OldMw.FullSkuCollection.GatherChildren(sku.ShortSku))
                 {
                     kid.RefreshLocations();
                     if ((kid.NewItem.IsListed || kid.PackSize == 1) && kid.Locations.Any(loc => loc.LocationID == _locationId))

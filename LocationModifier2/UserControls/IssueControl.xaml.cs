@@ -34,9 +34,8 @@ namespace LocationModifier2.UserControls
             //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(currentIssue.DodgySku)[0];
             CurrentSku = Badsku;
 
-            if (Badsku.Locations.Any(x => x.LocationType == SKULocation.SKULocationType.Prepack ||
-                                          x.LocationType == SKULocation.SKULocationType.PrepackInstant))
-                nameText.Text = "Prepackable";
+            if (Badsku.Locations.Any(x => (x.LocationType == SKULocation.SKULocationType.Prepack ||
+                                          x.LocationType == SKULocation.SKULocationType.PrepackInstant) && x.LocationText.Contains("PP"))) nameText.Text = "Prepackable";
 
             MessageText.Text = Badsku.GetLocation(SKULocation.SKULocationType.Pickable).LocationText + ": " +
                                Badsku.Title.Label;
@@ -81,6 +80,10 @@ namespace LocationModifier2.UserControls
                 try
                 {
                     var currentIssue = ordex.issues.Single(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
+                    foreach (var issue in ordex.issues)
+                    {
+                        issue.Resolved = true;
+                    }
                     ordex.AddIssue2017(OrderStatus._Prepack,currentIssue.IssueItemIndex, CurrentSku, IssueListDialog.IwRef.OldMw.AuthdEmployee,ordex.PickingType,currentIssue.Quantity);
                     ordex.SetStatus(OrderStatus._Prepack, IssueListDialog.IwRef.OldMw.AuthdEmployee);
                 }
