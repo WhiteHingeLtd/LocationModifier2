@@ -1,4 +1,4 @@
-﻿<Window x:Class="LocationModifier2.Dialogs.IssuesList"
+﻿<Window x:Class="LocationModifier2.Dialogs.PrepackList"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -37,16 +37,8 @@
                     </ScrollViewer>
                 </Grid>
                 <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Issues List" VerticalAlignment="Top" Foreground="White" FontSize="36" FontFamily="Segoe UI Semilight" Margin="10,10,0,0" Height="48" Width="155"/>
-                <Button x:Name="button" Content="Close Issues List" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" FontSize="20" Padding="10,6" Height="41" Width="164" Click="button_Click"/>
-                <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="Issues List" VerticalAlignment="Top" Foreground="White" FontSize="20" FontFamily="Segoe UI Semilight" Margin="10,58,10,0" Height="27" MouseUp="ItemName_MouseUp" TouchUp="ItemName_TouchUp"/>
-                <StackPanel HorizontalAlignment="Left" Height="100" Margin="74,168,0,0" VerticalAlignment="Top" Width="100">
-                    <RadioButton x:Name="ViewLocations" GroupName="Group1" Content="View Locations" Background="White" Foreground="White" Click="CheckBox_Click"/>
-                    <RadioButton x:Name="ResetOrder" GroupName="Group1" Content="Reset Order" Background="White" Foreground="White" Click="CheckBox_Click"/>
-                    <RadioButton GroupName="Group1" x:Name="SendToPrepack" Content="SendToPrepack" HorizontalAlignment="Left" Margin="0,0,-3,0" VerticalAlignment="Top" Height="21" Width="103" Foreground="White" Click="CheckBox_Click"/>
-                    <RadioButton GroupName="Group1" x:Name="OtherWarehouse" Content="OtherWarehouse" VerticalAlignment="Top" Height="21" Foreground="White" Click="CheckBox_Click"/>
-
-                </StackPanel>
-
+                <Button x:Name="CloseButton" Content="Close Prepack List" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" FontSize="20" Padding="10,6" Height="41" Width="186" Click="CloseButton_Click"/>
+                <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="Issues List" VerticalAlignment="Top" Foreground="White" FontSize="20" FontFamily="Segoe UI Semilight" Margin="10,58,10,0" Height="27"/>
             </Grid>
         </Grid>
     </Viewbox>

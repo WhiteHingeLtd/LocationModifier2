@@ -26,17 +26,20 @@ namespace LocationModifier2.UserControls
             IssueListDialog = dialog;
             CurrentIssueData = currentIssue;
             CurrentOrder = order;
-            OrderNumText.Text = order.OrderId;
+            
 
             TimeText.Text = currentIssue.TimeReported.ToString("HH:mm:ss");
-            OrderNumText.Text = currentIssue.Reason;
+            
+            
             var Badsku = FindCorrectSku(IssueListDialog.IwRef.OldMw.FullSkuCollection, currentIssue.DodgySku);
             //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(currentIssue.DodgySku)[0];
+            OrderNumText.Text = "Pack :" + Badsku.PackSize.ToString();
+            OrderNumText.Text += " " + currentIssue.Reason;
             CurrentSku = Badsku;
-
+            var prepackString = $"Prepackable Needs {CurrentSku.PackSize}";
             if (Badsku.Locations.Any(x => (x.LocationType == SKULocation.SKULocationType.Prepack ||
-                                          x.LocationType == SKULocation.SKULocationType.PrepackInstant) && x.LocationText.Contains("PP"))) nameText.Text = "Prepackable";
-
+                                          x.LocationType == SKULocation.SKULocationType.PrepackInstant) && x.LocationText.Contains("PP"))) nameText.Text = prepackString;
+            
             MessageText.Text = Badsku.GetLocation(SKULocation.SKULocationType.Pickable).LocationText + ": " +
                                Badsku.Title.Label;
 
@@ -60,6 +63,9 @@ namespace LocationModifier2.UserControls
                 case IssuesList.IssueResolution.ResetOrder:
                     ResetOrder(CurrentOrder);
                     break;
+                case IssuesList.IssueResolution.OtherWarehouse:
+                    OtherWarehouse(CurrentOrder);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -71,20 +77,15 @@ namespace LocationModifier2.UserControls
         {
             var loader = new GenericDataController();
             var ordex = loader.LoadOrdex(order.Filename);
-            if (ordex.Status == OrderStatus._Withdrawn)
-            {
-
-            }
-            else
-            {
+            if (ordex.Status == OrderStatus._Withdrawn) return;
                 try
                 {
-                    var currentIssue = ordex.issues.Single(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
+                    var currentIssue = ordex.issues.First(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
                     foreach (var issue in ordex.issues)
                     {
                         issue.Resolved = true;
                     }
-                    ordex.AddIssue2017(OrderStatus._Prepack,currentIssue.IssueItemIndex, CurrentSku, IssueListDialog.IwRef.OldMw.AuthdEmployee,ordex.PickingType,currentIssue.Quantity);
+                    ordex.AddIssue2017(OrderStatus._Prepack,currentIssue.IssueItemIndex, CurrentSku, IssueListDialog.IwRef.OldMw.AuthdEmployee,ordex.PickingType,currentIssue.Quantity,"Sent To Prepack");
                     ordex.SetStatus(OrderStatus._Prepack, IssueListDialog.IwRef.OldMw.AuthdEmployee);
                 }
                 catch (Exception e)
@@ -92,8 +93,6 @@ namespace LocationModifier2.UserControls
                     WHLClasses.Reporting.ErrorReporting.ReportException(e);
                     throw;
                 }
-               
-            }
             loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex",ordex,@"T:\AppData\Orders");
             new MsgDialog("Prepacked", "Order sent to prepack").ShowDialog();
         }
@@ -127,6 +126,30 @@ namespace LocationModifier2.UserControls
             }
             loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
             new MsgDialog("Reset", "Order has been reset").ShowDialog();
+        }
+
+        private void OtherWarehouse(Order order)
+        {
+            var loader = new GenericDataController();
+            var ordex = loader.LoadOrdex(order.Filename);
+            if (ordex.Status == OrderStatus._Withdrawn) return;
+            try
+            {
+                var currentIssue = ordex.issues.First(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
+                foreach (var issue in ordex.issues)
+                {
+                    issue.Resolved = true;
+                }
+                ordex.AddIssue2017(OrderStatus._Cantfind, currentIssue.IssueItemIndex, CurrentSku, IssueListDialog.IwRef.OldMw.AuthdEmployee, ordex.PickingType, currentIssue.Quantity, "Item In Other Warehouse (Storage)");
+                ordex.SetStatus(OrderStatus._Cantfind, IssueListDialog.IwRef.OldMw.AuthdEmployee);
+            }
+            catch (Exception e)
+            {
+                WHLClasses.Reporting.ErrorReporting.ReportException(e);
+                throw;
+            }
+            loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
+            new MsgDialog("Corrected", "Labelled as Other Warehouse").ShowDialog();
         }
 
         private WhlSKU FindCorrectSku(SkuCollection searchColl, string sku)

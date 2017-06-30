@@ -26,6 +26,7 @@ namespace LocationModifier2.Cool
         internal StockEntry2.ButtonType CurrentButtonType;
         internal OrderDefinition OrderDefintions;
         internal DispatcherTimer OrddefReloadTimer;
+        internal DateTime LastOrddefRefresh;
         public ItemWindow(MainWindow realMainWindow)
         {
             InitializeComponent();
@@ -44,22 +45,24 @@ namespace LocationModifier2.Cool
 
         }
 
-        private void OrddefReloadTimer_Tick(object sender, EventArgs e)
+        internal void OrddefReloadTimer_Tick(object sender, EventArgs e)
         {
             new Thread(() =>
             {
+                Thread.CurrentThread.IsBackground = true;
                 try
                 {
                     var OrddefClient =
                         WHLClasses.Services.OrderServer.Fucnt.ConnectChannel(
                             "net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
                     OrderDefintions = OrddefClient.StreamOrderDefinition();
+                    LastOrddefRefresh = DateTime.Now;
                 }
                 catch (Exception)
                 {
                     //
                 }
-                Thread.CurrentThread.IsBackground = true;
+                
             }).Start();
 
         }
@@ -284,7 +287,7 @@ namespace LocationModifier2.Cool
         private void AddShelfButton_Click(object sender, RoutedEventArgs e)
         {
             new AddShelf(this, ActiveItem, ActiveCollection).ShowDialog();
-            ProcessScan(ActiveItem.ShortSku);
+            ProcessScan(ActiveItem.SKU);
             Refocus();
         }
 

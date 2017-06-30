@@ -27,7 +27,7 @@
     <InstallUrl>http://apps.ad.whitehinge.com/AppPublish/LocMod2/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>31</ApplicationRevision>
+    <ApplicationRevision>36</ApplicationRevision>
     <ApplicationVersion>1.0.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -114,6 +114,9 @@
     <Compile Include="Dialogs\IssuesList.xaml.cs">
       <DependentUpon>IssuesList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\PrepackList.xaml.cs">
+      <DependentUpon>PrepackList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\StockEntry2.xaml.cs">
       <DependentUpon>StockEntry2.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\IssuesList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PrepackList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

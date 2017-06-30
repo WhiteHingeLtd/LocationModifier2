@@ -37,7 +37,19 @@ namespace LocationModifier2
         {
             InitializeComponent();
             this.Focus();
-            FullSkuCollection = Loader.SmartSkuCollLoad(true);
+            try
+            {
+                FullSkuCollection = Loader.SmartSkuCollLoad(true);
+                if (FullSkuCollection == null) throw new NullReferenceException();
+                if (FullSkuCollection.Count == 0) throw new NullReferenceException();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                Application.Current.Shutdown();
+                
+            }
+
             Misc.OperationDialog("Preparing other stuff", delegate
             {
                 MixdownSkuCollection = FullSkuCollection.MakeMixdown();
