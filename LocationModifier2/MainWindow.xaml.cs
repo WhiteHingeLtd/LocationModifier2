@@ -31,6 +31,7 @@ namespace LocationModifier2
         public SkuCollection ActiveChildrenCollection;
         public int InitialLocationId;
         public int NewLocationId;
+        public CurrentUnit Unit = CurrentUnit.Unit14;
         
         private DispatcherTimer _updateMode = new DispatcherTimer();
         public MainWindow()
@@ -109,6 +110,12 @@ namespace LocationModifier2
             ScannedNewShelf = 3
         }
 
+        public enum CurrentUnit
+        {
+            Unit14 = 0,
+            Unit1 = 1,
+            AllUnits = 2
+        }
         public void ProcessScanBox(string scannedText)
         {
             if (scannedText.StartsWith("qzu"))

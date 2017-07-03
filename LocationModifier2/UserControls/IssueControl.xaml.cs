@@ -19,6 +19,7 @@ namespace LocationModifier2.UserControls
         internal int Pickroute = 0;
         internal Order CurrentOrder;
         internal WhlSKU CurrentSku;
+        internal int Warehouse;
         public IssueControl(Order order, IssueData currentIssue, IssuesList dialog)
         {
 
@@ -44,6 +45,7 @@ namespace LocationModifier2.UserControls
                                Badsku.Title.Label;
 
             Pickroute = Badsku.GetLocation(SKULocation.SKULocationType.Pickable).LocationID;
+            Warehouse = Badsku.GetLocation(SKULocation.SKULocationType.Pickable).WarehouseID;
 
         }
 

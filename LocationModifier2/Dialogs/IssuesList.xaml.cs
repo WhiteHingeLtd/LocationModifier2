@@ -22,7 +22,28 @@ namespace LocationModifier2.Dialogs
         public IssuesList(ItemWindow window,OrderDefinition fullOrddef)
         {
             InitializeComponent();
+            
             IwRef = window;
+            switch (IwRef.OldMw.Unit)
+            {
+                case MainWindow.CurrentUnit.Unit14:
+                    Unit14Button.IsChecked = true;
+                    Unit1Button.IsChecked = false;
+                    AllUnitsButton.IsChecked = false;
+                    break;
+                case MainWindow.CurrentUnit.Unit1:
+                    Unit1Button.IsChecked = true;
+                    Unit14Button.IsChecked = false;
+                    AllUnitsButton.IsChecked = false;
+                    break;
+                case MainWindow.CurrentUnit.AllUnits:
+                    Unit1Button.IsChecked = false;
+                    Unit14Button.IsChecked = false;
+                    AllUnitsButton.IsChecked = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             CurrentSelectedResolution = IssueResolution.ViewLocations;
             IssueSkuColl = IwRef.OldMw.FullSkuCollection;
             ItemName.Text = IwRef.LastOrddefRefresh.ToShortTimeString();
@@ -36,8 +57,23 @@ namespace LocationModifier2.Dialogs
             {
                 controlList.AddRange(order.issues.Select(issue => new IssueControl(order, issue, this)));
             }
-            controlList.Sort((x,y) => x.Pickroute.CompareTo(y.Pickroute));
-            foreach (var control in controlList)
+            var controlListSorted = new List<IssueControl>();
+            switch(IwRef.OldMw.Unit)
+            {
+                    case MainWindow.CurrentUnit.Unit14:
+                    controlListSorted = controlList.Where(x => x.Warehouse == 1).ToList();
+                        break;
+                    case MainWindow.CurrentUnit.Unit1:
+                    controlListSorted = controlList.Where(x => x.Warehouse == 2).ToList();
+                    break;
+                case MainWindow.CurrentUnit.AllUnits:
+                    controlListSorted = controlList;
+                    controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
+                    break;
+                default:
+                        throw new ArgumentOutOfRangeException();
+            }
+            foreach (var control in controlListSorted)
             {
                 ActualAuditContainer.Children.Add(control);
             }
@@ -85,8 +121,24 @@ namespace LocationModifier2.Dialogs
                 if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
                 controlList.AddRange(order.issues.Select(issue => new IssueControl(order, issue, this)));
             }
+            var controlListSorted = new List<IssueControl>();
+            switch (IwRef.OldMw.Unit)
+            {
+                case MainWindow.CurrentUnit.Unit14:
+                    controlListSorted = controlList.Where(x => x.Warehouse == 1).ToList();
+                    break;
+                case MainWindow.CurrentUnit.Unit1:
+                    controlListSorted = controlList.Where(x => x.Warehouse == 2).ToList();
+                    break;
+                case MainWindow.CurrentUnit.AllUnits:
+                    controlListSorted = controlList;
+                    controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             controlList.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
-            foreach (var control in controlList)
+            foreach (var control in controlListSorted)
             {
                 if (control.CurrentIssueData.Reason.ToLower().Contains("prepack") | control.CurrentIssueData.Reason.ToLower().Contains("gs1")) continue;
                 ActualAuditContainer.Children.Add(control);
@@ -138,6 +190,23 @@ namespace LocationModifier2.Dialogs
             }
             if (returnOrddef != null) return returnOrddef;
             throw new InvalidOperationException();
+        }
+
+        private void Unit14Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (Unit14Button.IsChecked != null && Unit14Button.IsChecked.Value)
+            {
+                IwRef.OldMw.Unit = MainWindow.CurrentUnit.Unit14;
+                
+            }
+            else if (Unit1Button.IsChecked != null && Unit1Button.IsChecked.Value)
+            {
+                IwRef.OldMw.Unit = MainWindow.CurrentUnit.Unit1;
+            }
+            else if (AllUnitsButton.IsChecked != null && AllUnitsButton.IsChecked.Value)
+            {
+                IwRef.OldMw.Unit = MainWindow.CurrentUnit.AllUnits;
+            }
         }
     }
 }
