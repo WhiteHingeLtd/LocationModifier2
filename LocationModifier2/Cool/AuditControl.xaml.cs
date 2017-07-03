@@ -21,7 +21,7 @@ namespace LocationModifier2.Cool
         }
 
 
-        private static string[] auditstrings = {"---","NEW", "ADJ","DEL","A-ADJ", "A-DEL", "A-NEW"};
+        private static string[] auditstrings = {"---","NEW", "ADJ","DEL","A-ADJ", "A-DEL", "A-NEW","","","","","ADJ +","ADJ -", "ADJ", "MV FR", "MV TO"};
 
     }
 
