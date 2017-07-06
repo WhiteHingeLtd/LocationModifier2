@@ -48,7 +48,7 @@ namespace LocationModifier2.Cool
                 foreach (var sku in ActiveCollection)
                 {
                     if ((from loc in sku.Locations where loc.LocationID == newdata select loc).Any()) continue;
-                    sku.AddLocationWithAudit(newdata,IwRef.OldMw.AuthdEmployee,0);
+                    sku.AddLocationWithAudit(newdata,IwRef.OldMw.AuthdEmployee,0, "Location Modifier");
                 }
                 this.Close();
                 IwRef.ProcessScan(ActiveItem.ShortSku);
@@ -64,7 +64,7 @@ namespace LocationModifier2.Cool
                     foreach (var sku in ActiveCollection)
                     {
                         if ((from loc in sku.Locations where loc.LocationID == newdata select loc).Any()) continue;
-                        sku.AddLocationWithAudit(newdata, IwRef.OldMw.AuthdEmployee, 0);
+                        sku.AddLocationWithAudit(newdata, IwRef.OldMw.AuthdEmployee, 0, "Location Modifier");
                     }
                     this.Close();
                     IwRef.ProcessScan(ActiveItem.ShortSku);

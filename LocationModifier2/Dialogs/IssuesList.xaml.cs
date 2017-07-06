@@ -55,16 +55,19 @@ namespace LocationModifier2.Dialogs
             var ordersWithIssues = workingOrddef.Where(x => x.issues.Any());
             foreach (var order in ordersWithIssues)
             {
-                controlList.AddRange(order.issues.Select(issue => new IssueControl(order, issue, this)));
+                if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
+                controlList.AddRange(from issue in order.issues where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack") select new IssueControl(order, issue, this));
             }
             var controlListSorted = new List<IssueControl>();
             switch(IwRef.OldMw.Unit)
             {
                     case MainWindow.CurrentUnit.Unit14:
                     controlListSorted = controlList.Where(x => x.Warehouse == 1).ToList();
-                        break;
+                    controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
+                    break;
                     case MainWindow.CurrentUnit.Unit1:
                     controlListSorted = controlList.Where(x => x.Warehouse == 2).ToList();
+                    controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
                     break;
                 case MainWindow.CurrentUnit.AllUnits:
                     controlListSorted = controlList;
@@ -119,16 +122,18 @@ namespace LocationModifier2.Dialogs
             foreach (var order in ordersWithIssues)
             {
                 if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
-                controlList.AddRange(order.issues.Select(issue => new IssueControl(order, issue, this)));
+                controlList.AddRange(from issue in order.issues where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack") select new IssueControl(order, issue, this));
             }
             var controlListSorted = new List<IssueControl>();
             switch (IwRef.OldMw.Unit)
             {
                 case MainWindow.CurrentUnit.Unit14:
                     controlListSorted = controlList.Where(x => x.Warehouse == 1).ToList();
+                    controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
                     break;
                 case MainWindow.CurrentUnit.Unit1:
                     controlListSorted = controlList.Where(x => x.Warehouse == 2).ToList();
+                    controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
                     break;
                 case MainWindow.CurrentUnit.AllUnits:
                     controlListSorted = controlList;

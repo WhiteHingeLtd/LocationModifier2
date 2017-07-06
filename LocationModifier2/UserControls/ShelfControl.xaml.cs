@@ -85,7 +85,7 @@ namespace LocationModifier2.UserControls
                         {
                             try
                             {
-                                item.RemoveLocationWithAudit(LocationId, IwRef.OldMw.AuthdEmployee);
+                                item.RemoveLocationWithAudit(LocationId, IwRef.OldMw.AuthdEmployee,"Location Modifier");
                             }
                             catch (LocationNullReferenceException)
                             {

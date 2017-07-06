@@ -278,7 +278,7 @@ namespace LocationModifier2
                                 switch (currentstate)
                                 {
                                         case StockEntry.AddRemoveSet.Add:
-                                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                            ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount,"Location Modifier");
                                             HistoryBlock.Text = HistoryBlock.Text.Insert(0,
                                                     "Added " + amount.ToString() + " of " + ActiveItem.SKU + " by " +
                                                     amount.ToString() + Environment.NewLine + "At " +
@@ -289,14 +289,14 @@ namespace LocationModifier2
                                         case StockEntry.AddRemoveSet.Remove:
                                             if (amount == 0)
                                             {
-                                                ActiveItem.RemoveLocationWithAudit(currentLoc, AuthdEmployee);
+                                                ActiveItem.RemoveLocationWithAudit(currentLoc, AuthdEmployee, "Location Modifier");
                                                 HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed all of " + ActiveItem.SKU + Environment.NewLine + "At " +
                                                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
                                                                                                 "======================" + Environment.NewLine);
                                             }
                                             else
                                             {
-                                                ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount);
+                                                ActiveItem.AdjustStockWithAudit(currentLoc, AuthdEmployee, amount, "Location Modifier");
                                                 HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Removed " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "At " +
                                                                                                 LocationIdConversion(currentLoc) + Environment.NewLine +
                                                                                                 "======================" + Environment.NewLine);
@@ -306,7 +306,7 @@ namespace LocationModifier2
                                             Instruct("Success. Please scan a new item");
                                         break;
                                         case StockEntry.AddRemoveSet.Set:
-                                            ActiveItem.SetLocationStockWithAudit(currentLoc,AuthdEmployee,amount);
+                                            ActiveItem.SetLocationStockWithAudit(currentLoc,AuthdEmployee,amount, "Location Modifier");
                                             HistoryBlock.Text = HistoryBlock.Text.Insert(0, "Set stock of " + ActiveItem.SKU + " To "+ amount.ToString() + Environment.NewLine + "At " +
                                                                      LocationIdConversion(currentLoc) + Environment.NewLine +
                                                                      "======================" + Environment.NewLine);
@@ -457,7 +457,7 @@ namespace LocationModifier2
                         var amount = stockCheck.FinalStockEntry;
                         try
                         {
-                            ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId);
+                            ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId, "Location Modifier");
                             HistoryBlock.Text = HistoryBlock.Text.Insert(0,
                                 "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
                                 + LocationIdConversion(InitialLocationId) + " to " +

@@ -50,7 +50,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.SetStock:
                         try
                         {
-                            ActiveItem.SetLocationStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry);
+                            ActiveItem.SetLocationStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception)
@@ -65,7 +65,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.MoveSomeStock:
                         try
                         {
-                            ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation);
+                            ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception ex)
@@ -82,7 +82,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.MoveAllStock:
                         try
                         { 
-                            ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.NewLocation);
+                            ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.NewLocation, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception)
@@ -98,7 +98,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.Add:
                         try
                         {
-                            ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry);
+                            ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (NegativeStockException)
@@ -115,7 +115,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.Minus:
                         try
                         {
-                            ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry*-1);
+                            ActiveItem.AdjustStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry*-1, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (NegativeStockException)
