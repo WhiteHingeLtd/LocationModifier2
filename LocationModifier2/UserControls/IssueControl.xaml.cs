@@ -2,6 +2,8 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WHLClasses;
@@ -49,7 +51,7 @@ namespace LocationModifier2.UserControls
 
         }
 
-        private void MainIssueSourceButton_Click(object sender, RoutedEventArgs e)
+        private async void MainIssueSourceButton_Click(object sender, RoutedEventArgs e)
         {
             switch (IssueListDialog.CurrentSelectedResolution)
             {
@@ -66,7 +68,8 @@ namespace LocationModifier2.UserControls
                     ResetOrder(CurrentOrder);
                     break;
                 case IssuesList.IssueResolution.OtherWarehouse:
-                    OtherWarehouse(CurrentOrder);
+                    await OtherWarehouse(CurrentOrder);
+                    new MsgDialog("Corrected", "Labelled as Other Warehouse").ShowDialog();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -130,11 +133,11 @@ namespace LocationModifier2.UserControls
             new MsgDialog("Reset", "Order has been reset").ShowDialog();
         }
 
-        private void OtherWarehouse(Order order)
+        private async Task<bool> OtherWarehouse(Order order)
         {
             var loader = new GenericDataController();
             var ordex = loader.LoadOrdex(order.Filename);
-            if (ordex.Status == OrderStatus._Withdrawn) return;
+            if (ordex.Status == OrderStatus._Withdrawn) return true;
             try
             {
                 var currentIssue = ordex.issues.First(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
@@ -142,16 +145,25 @@ namespace LocationModifier2.UserControls
                 {
                     issue.Resolved = true;
                 }
+                ordex.SetStatus(OrderStatus._New, IssueListDialog.IwRef.OldMw.AuthdEmployee);
+                loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
+                var delay = Task.Delay(1000);
+                Console.WriteLine("Sleeping");
+                Thread.Sleep(3000);
+                ordex = loader.LoadOrdex(order.Filename);
                 ordex.AddIssue2017(OrderStatus._Cantfind, currentIssue.IssueItemIndex, CurrentSku, IssueListDialog.IwRef.OldMw.AuthdEmployee, ordex.PickingType, currentIssue.Quantity, "Item In Other Warehouse (Storage)");
                 ordex.SetStatus(OrderStatus._Cantfind, IssueListDialog.IwRef.OldMw.AuthdEmployee);
+                await delay;
+                loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
+                return true;
             }
             catch (Exception e)
             {
                 WHLClasses.Reporting.ErrorReporting.ReportException(e);
-                throw;
+                return false;
             }
-            loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
-            new MsgDialog("Corrected", "Labelled as Other Warehouse").ShowDialog();
+            
+            
         }
 
         private WhlSKU FindCorrectSku(SkuCollection searchColl, string sku)
