@@ -179,6 +179,10 @@ namespace LocationModifier2.Cool
                     {
                         new IssuesList(this, OrderDefintions).ShowDialog();
                     }
+                    else if (ScanData.StartsWith("ppl"))
+                    {
+                        new PrepackList(OrderDefintions, this).ShowDialog();
+                    }
                     else if (!ScanData.StartsWith("qlo"))
                     {
                         //Googogo
