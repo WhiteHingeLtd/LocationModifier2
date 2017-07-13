@@ -36,9 +36,13 @@
                         <StackPanel x:Name="ActualAuditContainer" VerticalAlignment="Top" MinHeight="100"/>
                     </ScrollViewer>
                 </Grid>
-                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Issues List" VerticalAlignment="Top" Foreground="White" FontSize="36" FontFamily="Segoe UI Semilight" Margin="10,10,0,0" Height="48" Width="155"/>
+                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Prepack List" VerticalAlignment="Top" Foreground="White" FontSize="36" FontFamily="Segoe UI Semilight" Margin="10,10,0,0" Height="48" Width="155"/>
                 <Button x:Name="CloseButton" Content="Close Prepack List" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" FontSize="20" Padding="10,6" Height="41" Width="186" Click="CloseButton_Click"/>
-                <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="Issues List" VerticalAlignment="Top" Foreground="White" FontSize="20" FontFamily="Segoe UI Semilight" Margin="10,58,10,0" Height="27"/>
+                <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="Prepack List" VerticalAlignment="Top" Foreground="White" FontSize="20" FontFamily="Segoe UI Semilight" Margin="10,58,10,0" Height="27"/>
+                <StackPanel Margin="10,122,10,70">
+                    <RadioButton GroupName="Units" x:Name="ViewButton" Content="View Locations" IsChecked="True" Height="35" Click="ViewButton_Click" Foreground="White"/>
+                    <RadioButton GroupName="Units" x:Name="ResetButton" Content="Reset Order" Height="35" IsChecked="False" Click="ViewButton_Click" Foreground="White"/>
+                </StackPanel>
             </Grid>
         </Grid>
     </Viewbox>

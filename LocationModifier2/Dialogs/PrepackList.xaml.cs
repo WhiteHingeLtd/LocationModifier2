@@ -16,6 +16,7 @@ namespace LocationModifier2.Dialogs
         internal ItemWindow IwRef;
         internal SkuCollection IssueSkuColl;
         private OrderDefinition _fullOrddef;
+        internal ViewOrReset CurrentViewState = ViewOrReset.View;
         public PrepackList(OrderDefinition fullOrderDefinition, ItemWindow itemWindow)
         {
             InitializeComponent();
@@ -40,5 +41,24 @@ namespace LocationModifier2.Dialogs
         {
             this.Close();
         }
+
+        private void ViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewButton.IsChecked != null && ViewButton.IsChecked.Value)
+            {
+                CurrentViewState = ViewOrReset.View;
+            }
+            else
+            {
+                CurrentViewState = ViewOrReset.Reset;
+            }
+        }
+
+        internal enum ViewOrReset
+        {
+            View = 0,
+            Reset = 1
+        }
+
     }
 }

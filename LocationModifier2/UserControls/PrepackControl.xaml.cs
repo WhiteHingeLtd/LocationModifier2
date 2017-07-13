@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using LocationModifier2.Dialogs;
@@ -47,8 +48,49 @@ namespace LocationModifier2.UserControls
 
         private void MainIssueSourceButton_Click(object sender, RoutedEventArgs e)
         {
-            IssueListDialog.Close();
-            IssueListDialog.IwRef.ProcessScan(CurrentIssueData.DodgySku);
+            switch(IssueListDialog.CurrentViewState)
+                {
+                    case PrepackList.ViewOrReset.View:
+                        IssueListDialog.Close();
+                        IssueListDialog.IwRef.ProcessScan(CurrentIssueData.DodgySku);
+                    break;
+                    case PrepackList.ViewOrReset.Reset:
+                        ResetOrder(CurrentOrder);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+        }
+        private void ResetOrder(Order order)
+        {
+            var loader = new GenericDataController();
+            var ordex = loader.LoadOrdex(order.Filename);
+            if (ordex.Status == OrderStatus._Withdrawn)
+            {
+
+            }
+            else
+            {
+                try
+                {
+                    foreach (var issue in ordex.issues)
+                    {
+                        if (issue.IssueItemIndex != CurrentIssueData.IssueItemIndex) continue;
+                        issue.Resolved = true;
+                        ordex.PickingStrictness[issue.IssueItemIndex] = PickingStrictness.BestJudgement;
+                    }
+                }
+                catch (Exception e)
+                {
+                    WHLClasses.Reporting.ErrorReporting.ReportException(e);
+                    throw;
+                }
+                if (ordex.issues.All(x => x.Resolved))
+                    ordex.SetStatus(OrderStatus._New, IssueListDialog.IwRef.OldMw.AuthdEmployee);
+            }
+            loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
+            new MsgDialog("Reset", "Order has been reset").ShowDialog();
         }
         private WhlSKU FindCorrectSku(SkuCollection searchColl, string sku)
         {
