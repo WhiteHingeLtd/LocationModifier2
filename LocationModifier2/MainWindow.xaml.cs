@@ -312,6 +312,8 @@ namespace LocationModifier2
                                                                      "======================" + Environment.NewLine);
                                             Instruct("Success. Please scan a new item");
                                         break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
                                 }
 
                                 CurrentScanState = ScanState.InitialScan;
