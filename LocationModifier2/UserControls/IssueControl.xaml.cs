@@ -53,23 +53,34 @@ namespace LocationModifier2.UserControls
 
         private async void MainIssueSourceButton_Click(object sender, RoutedEventArgs e)
         {
+            
             switch (IssueListDialog.CurrentSelectedResolution)
             {
                 case IssuesList.IssueResolution.Default:
                     throw new ArgumentOutOfRangeException();
                 case IssuesList.IssueResolution.ViewLocations:
+                    
                     IssueListDialog.Close();
                     IssueListDialog.IwRef.ProcessScan(CurrentIssueData.DodgySku);
                     break;
                 case IssuesList.IssueResolution.SendToPrepack:
-                    ResetToPrepack(CurrentOrder);
+                    var yesnoprepack = new YesNoDialog("Are you sure you want to send this order to prepack?", "Are you sure");
+                    yesnoprepack.ShowDialog();
+                    if(yesnoprepack.Result) ResetToPrepack(CurrentOrder);
                     break;
                 case IssuesList.IssueResolution.ResetOrder:
-                    ResetOrder(CurrentOrder);
+                    var yesno = new YesNoDialog("Are you sure you want to send this order to prepack?", "Are you sure");
+                    yesno.ShowDialog();
+                    if(yesno.Result)ResetOrder(CurrentOrder);
                     break;
                 case IssuesList.IssueResolution.OtherWarehouse:
-                    await OtherWarehouse(CurrentOrder);
-                    new MsgDialog("Corrected", "Labelled as Other Warehouse").ShowDialog();
+                    var yesnother = new YesNoDialog("Are you sure you want to send this order to prepack?", "Are you sure");
+                    yesnother.ShowDialog();
+                    if (yesnother.Result)
+                    {
+                        await OtherWarehouse(CurrentOrder);
+                        new MsgDialog("Corrected", "Labelled as Other Warehouse").ShowDialog(); 
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
