@@ -35,7 +35,7 @@ namespace LocationModifier2.Dialogs
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            Result = true;
+            Result = false;
             this.Close();
         }
     }

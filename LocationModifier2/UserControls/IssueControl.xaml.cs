@@ -66,15 +66,19 @@ namespace LocationModifier2.UserControls
                 case IssuesList.IssueResolution.SendToPrepack:
                     var yesnoprepack = new YesNoDialog("Are you sure you want to send this order to prepack?", "Are you sure");
                     yesnoprepack.ShowDialog();
-                    if(yesnoprepack.Result) ResetToPrepack(CurrentOrder);
+                    if (yesnoprepack.Result)
+                    {
+                        ResetToPrepack(CurrentOrder);
+                        new MsgDialog("Corrected", "Order sent to Prepack").ShowDialog();
+                    }
                     break;
                 case IssuesList.IssueResolution.ResetOrder:
-                    var yesno = new YesNoDialog("Are you sure you want to send this order to prepack?", "Are you sure");
+                    var yesno = new YesNoDialog("Are you sure you want to reset this order?", "Are you sure");
                     yesno.ShowDialog();
                     if(yesno.Result)ResetOrder(CurrentOrder);
                     break;
                 case IssuesList.IssueResolution.OtherWarehouse:
-                    var yesnother = new YesNoDialog("Are you sure you want to send this order to prepack?", "Are you sure");
+                    var yesnother = new YesNoDialog("Are you sure you want mark this order as other Warehouse?", "Are you sure");
                     yesnother.ShowDialog();
                     if (yesnother.Result)
                     {
