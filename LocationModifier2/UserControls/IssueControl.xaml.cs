@@ -151,11 +151,12 @@ namespace LocationModifier2.UserControls
             if (ordex.Status == OrderStatus._Withdrawn) return true;
             try
             {
-                var currentIssue = ordex.issues.First(x => x.IssueItemIndex == CurrentIssueData.IssueItemIndex);
-                foreach (var issue in ordex.issues)
+                var currentIssue = ordex.issues.First(x => x.DodgySku  == CurrentIssueData.DodgySku);
+                foreach (var issue in ordex.issues.Where(x => x.DodgySku == CurrentIssueData.DodgySku))
                 {
                     issue.Resolved = true;
                 }
+                
                 ordex.SetStatus(OrderStatus._New, IssueListDialog.IwRef.OldMw.AuthdEmployee);
                 loader.SaveDataToFile(ordex.LinnOpenOrder.NumOrderId.ToString() + ".ordex", ordex, @"T:\AppData\Orders");
                 var delay = Task.Delay(1000);
