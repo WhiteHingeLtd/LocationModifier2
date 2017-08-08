@@ -459,7 +459,7 @@ namespace LocationModifier2
                         var amount = stockCheck.FinalStockEntry;
                         try
                         {
-                            ActiveItem.AdjustLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId, "Location Modifier");
+                            ActiveItem.MoveLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId, "Location Modifier");
                             HistoryBlock.Text = HistoryBlock.Text.Insert(0,
                                 "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
                                 + LocationIdConversion(InitialLocationId) + " to " +

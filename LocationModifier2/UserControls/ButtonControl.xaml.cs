@@ -65,7 +65,7 @@ namespace LocationModifier2.UserControls
                     case StockEntry2.ButtonType.MoveSomeStock:
                         try
                         {
-                            ActiveItem.AdjustLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation, "Location Modifier");
+                            ActiveItem.MoveLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception ex)
@@ -81,8 +81,30 @@ namespace LocationModifier2.UserControls
                         break;
                     case StockEntry2.ButtonType.MoveAllStock:
                         try
-                        { 
-                            ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.NewLocation, "Location Modifier");
+                        {
+                            try
+                            {
+                                if (ActiveItem.Locations.Single(x => x.LocationID == LocationID).LocationType !=
+                                    SKULocation.SKULocationType.Pickable)
+                                {
+                                    ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow.OldMw.AuthdEmployee,stockCounter.NewLocation, "Location Modifier");
+                                }
+                                else
+                                {
+                                    var currentLoc = ActiveItem.Locations.Single(x => x.LocationID == LocationID);
+                                    ActiveItem.MoveLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee,Convert.ToInt32(currentLoc.Additional),stockCounter.NewLocation, "Location Modifier");
+                                }
+                                    
+                            }
+                            catch (NegativeStockException)
+                            {
+                                throw;
+                            }
+                            catch (Exception)
+                            {
+                                ActiveItem.MoveAllBetweenLocations(LocationID, MainRefWindow.OldMw.AuthdEmployee,stockCounter.NewLocation, "Location Modifier");
+                            }
+                            
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
                         catch (Exception)
