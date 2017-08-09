@@ -52,10 +52,10 @@ namespace LocationModifier2.Cool
                 Thread.CurrentThread.IsBackground = true;
                 try
                 {
-                    var OrddefClient =
+                    var orddefClient =
                         WHLClasses.Services.OrderServer.Fucnt.ConnectChannel(
                             "net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
-                    OrderDefintions = OrddefClient.StreamOrderDefinition();
+                    OrderDefintions = orddefClient.StreamOrderDefinition();
                     LastOrddefRefresh = DateTime.Now;
                 }
                 catch (Exception)
@@ -89,8 +89,8 @@ namespace LocationModifier2.Cool
             //Get kids.
             var kids = OldMw.FullSkuCollection.GatherChildren(sku.ShortSku);
             //Get the list of locaitons,
-            var LocationIDs = new Dictionary<int, SKULocation>();
-            var HasMultiplePicking = false;
+            var locationIDs = new Dictionary<int, SKULocation>();
+            var hasMultiplePicking = false;
             var locationMapping = new Dictionary<SKULocation.SKULocationType, int>()
             {
                 {SKULocation.SKULocationType.Pickable, 0},
@@ -100,63 +100,64 @@ namespace LocationModifier2.Cool
                 {SKULocation.SKULocationType.PrepackInstant, 4},
                 {SKULocation.SKULocationType.Unused, 5}
             };
-            foreach (var Kid in kids)
+            foreach (var kid in kids)
             {
                 //Refresh thing
-                Kid.RefreshLocations();
-                if (Kid.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count != 1)
+                kid.RefreshLocations();
+                if (kid.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count != 1)
                 {
-                    HasMultiplePicking = true;
+                    hasMultiplePicking = true;
                 }
                 //We're gonna have to iterate and get a list of locations.
-                foreach (var loc in Kid.Locations)
+                foreach (var loc in kid.Locations)
                 {
-                    if (!LocationIDs.Keys.Contains(loc.LocationID))
+                    if (!locationIDs.Keys.Contains(loc.LocationID))
                     {
-                        LocationIDs.Add(loc.LocationID, loc);
+                        locationIDs.Add(loc.LocationID, loc);
                     }
                 }
             }
             //Sort them to fix the faggy ordering
-            var orderedlocations = LocationIDs.OrderBy(x => locationMapping[x.Value.LocationType]);
+            var orderedlocations = locationIDs.OrderBy(x => locationMapping[x.Value.LocationType]);
             var newdict = new Dictionary<int, SKULocation>();
             foreach (var asd in orderedlocations)
             {
                 newdict.Add(asd.Key, asd.Value);
             }
             //Now go again and make the controls.
-            foreach (var Kid in kids)
+            foreach (var kid in kids)
             {
-                if (Kid.NewItem.IsListed || Kid.PackSize == 1)
+                if (kid.NewItem.IsListed || kid.PackSize == 1)
                 {
-                    var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), Kid, this);
+                    var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), kid, this);
                     packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
                     packsizecontrol.MouseLeftButtonDown += NotesScroller_MouseLeftButtonDown;
                     packsizecontrol.MouseMove += NotesScroller_MouseMove;
                     PacksizeHolder.Children.Add(packsizecontrol);
                 }
-
             }
             //And now the locations.
-            foreach (var LocID in newdict)
+            foreach (var locId in newdict)
             {
-                if (HasMultiplePicking && LocID.Value.LocationType == SKULocation.SKULocationType.Pickable)
+                if (hasMultiplePicking && locId.Value.LocationType == SKULocation.SKULocationType.Pickable)
                 {
-                    LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this,true));
+                    LocationControlHolder.Children.Add(
+                        new ShelfControl(locId.Key, locId.Value.LocationText, kids, this, true));
                 }
-                else if(LocID.Value.LocationType == SKULocation.SKULocationType.Pickable)
+                else if (locId.Value.LocationType == SKULocation.SKULocationType.Pickable)
                 {
-                    LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this, false,true));
+                    LocationControlHolder.Children.Add(
+                        new ShelfControl(locId.Key, locId.Value.LocationText, kids, this, false, true));
                 }
                 else
                 {
-                    LocationControlHolder.Children.Add(new ShelfControl(LocID.Key, LocID.Value.LocationText, kids, this));
+                    LocationControlHolder.Children.Add(
+                        new ShelfControl(locId.Key, locId.Value.LocationText, kids, this));
                 }
             }
-
         }
 
-        internal void ProcessScan(string ScanData)
+        internal void ProcessScan(string scanData)
         {
             try
             {
@@ -168,22 +169,22 @@ namespace LocationModifier2.Cool
             }
             try
             {
-                if (ScanData.StartsWith("qzu"))
+                if (scanData.StartsWith("qzu"))
                 {
-                    OldMw.ProcessScanBox(ScanData);
+                    OldMw.ProcessScanBox(scanData);
                     
                 }
                 else if (OldMw.AuthdEmployee != null)
                 {
-                    if (ScanData.StartsWith("qwz") || ScanData.StartsWith("qzw"))
+                    if (scanData.StartsWith("qwz") || scanData.StartsWith("qzw"))
                     {
                         new IssuesList(this, OrderDefintions).ShowDialog();
                     }
-                    else if (ScanData.StartsWith("ppl"))
+                    else if (scanData.StartsWith("ppl"))
                     {
                         new PrepackList(OrderDefintions, this).ShowDialog();
                     }
-                    else if (!ScanData.StartsWith("qlo"))
+                    else if (!scanData.StartsWith("qlo"))
                     {
                         //Googogo
                         //Clear
@@ -191,17 +192,17 @@ namespace LocationModifier2.Cool
                         LocationControlHolder.Children.Clear();
 
                         //Find it first
-                        var Matches = OldMw.FullSkuCollection.SearchBarcodes(ScanData);
-                        if (Matches.Count == 0) Matches = OldMw.MixdownSkuCollection.SearchSKUS(ScanData, false);
-                        if (Matches.Count == 1)
+                        var matches = OldMw.FullSkuCollection.SearchBarcodes(scanData);
+                        if (matches.Count == 0) matches = OldMw.MixdownSkuCollection.SearchSKUS(scanData, false);
+                        if (matches.Count == 1)
                         {
-                            ActiveItem = Matches[0];
+                            ActiveItem = matches[0];
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
-                           LoadGrid(Matches[0]);
+                           LoadGrid(matches[0]);
                         }
-                        else if (Matches.Count > 1)
+                        else if (matches.Count > 1)
                         {
-                            var item = Distinguish.DistinguishSku(Matches);
+                            var item = Distinguish.DistinguishSku(matches);
                             ActiveItem = item;
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                             LoadGrid(item);
@@ -214,28 +215,28 @@ namespace LocationModifier2.Cool
                     }
                     else 
                     {
-                        ProcessToShelfScreen(ScanData);
+                        ProcessToShelfScreen(scanData);
                     }
                 }
                 else
                 {
-                    (new MsgDialog("ERROR", "You must log in before scanning stuff")).ShowDialog();
+                    new MsgDialog("ERROR", "You must log in before scanning stuff").ShowDialog();
                 }
             }
             catch (Exception ex)
             {
                 WHLClasses.Reporting.ErrorReporting.ReportException(ex, false);
-                (new MsgDialog("Scan Error", "An unknown error occurred while processing you scan.")).ShowDialog();
+                new MsgDialog("Scan Error", "An unknown error occurred while processing you scan.").ShowDialog();
                 Refocus();
             }
 
             
         }
 
-        private void ProcessToShelfScreen(string ScanData)
+        private void ProcessToShelfScreen(string scanData)
         {
             ShelfWin.Show();
-            ShelfWin.LoadShelf(ScanData);
+            ShelfWin.LoadShelf(scanData);
 
         }
 
@@ -245,26 +246,26 @@ namespace LocationModifier2.Cool
         }
 
 
-        Point ScrollerMousePos;
-        double ScrollerVerticalOffset;
-        double ScrollerHorizontalOffset;
-        private void NotesScroller_MouseLeftButtonDown(object Sender, MouseButtonEventArgs E)
+        private Point _scrollerMousePos;
+        private double _scrollerVerticalOffset;
+        private double _scrollerHorizontalOffset;
+        private void NotesScroller_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             NotesScroller.CaptureMouse();
-            ScrollerMousePos = E.GetPosition(NotesScroller);
-            ScrollerVerticalOffset = NotesScroller.VerticalOffset;
-            ScrollerHorizontalOffset = NotesScroller.HorizontalOffset;
+            _scrollerMousePos = e.GetPosition(NotesScroller);
+            _scrollerVerticalOffset = NotesScroller.VerticalOffset;
+            _scrollerHorizontalOffset = NotesScroller.HorizontalOffset;
         }
-        private void NotesScroller_MouseLeftButtonUp(object Sender, MouseButtonEventArgs E)
+        private void NotesScroller_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             NotesScroller.ReleaseMouseCapture();
             Refocus();
         }
-        private void NotesScroller_MouseMove(object Sender, MouseEventArgs E)
+        private void NotesScroller_MouseMove(object sender, MouseEventArgs e)
         {
             if (!NotesScroller.IsMouseCaptured) return;
-            NotesScroller.ScrollToVerticalOffset(ScrollerVerticalOffset + (ScrollerMousePos.Y - E.GetPosition(NotesScroller).Y));
-            NotesScroller.ScrollToHorizontalOffset(ScrollerHorizontalOffset + (ScrollerMousePos.X - E.GetPosition(NotesScroller).X));
+            NotesScroller.ScrollToVerticalOffset(_scrollerVerticalOffset + (_scrollerMousePos.Y - e.GetPosition(NotesScroller).Y));
+            NotesScroller.ScrollToHorizontalOffset(_scrollerHorizontalOffset + (_scrollerMousePos.X - e.GetPosition(NotesScroller).X));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -297,7 +298,7 @@ namespace LocationModifier2.Cool
 
         private void AuditButton_Click(object sender, RoutedEventArgs e)
         {
-            (new AuditTrailWindow(ShortSku.Text, ItemName.Text,this)).ShowDialog();
+            new AuditTrailWindow(ShortSku.Text, ItemName.Text,this).ShowDialog();
         }
 
         private void Grid_MouseUp(object sender, MouseButtonEventArgs e)

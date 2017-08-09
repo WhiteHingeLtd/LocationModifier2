@@ -13,13 +13,13 @@ namespace LocationModifier2.Dialogs
     /// <summary>
     /// Interaction logic for IssuesList.xaml
     /// </summary>
-    public partial class IssuesList : Window
+    public partial class IssuesList 
     {
         internal ItemWindow IwRef;
-        internal SkuCollection IssueSkuColl;
         internal OrderDefinition LocalOrddef;
         internal IssueResolution CurrentSelectedResolution;
-        public IssuesList(ItemWindow window,OrderDefinition fullOrddef)
+
+        public IssuesList(ItemWindow window, OrderDefinition fullOrddef)
         {
             InitializeComponent();
             
@@ -58,14 +58,14 @@ namespace LocationModifier2.Dialogs
                 if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
                 controlList.AddRange(from issue in order.issues where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack") select new IssueControl(order, issue, this));
             }
-            var controlListSorted = new List<IssueControl>();
-            switch(IwRef.OldMw.Unit)
+            List<IssueControl> controlListSorted;
+            switch (IwRef.OldMw.Unit)
             {
                     case MainWindow.CurrentUnit.Unit14:
                     controlListSorted = controlList.Where(x => x.Warehouse == 1).ToList();
                     controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
                     break;
-                    case MainWindow.CurrentUnit.Unit1:
+                case MainWindow.CurrentUnit.Unit1:
                     controlListSorted = controlList.Where(x => x.Warehouse == 2).ToList();
                     controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
                     break;
@@ -74,7 +74,7 @@ namespace LocationModifier2.Dialogs
                     controlListSorted.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
                     break;
                 default:
-                        throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
             }
             foreach (var control in controlListSorted)
             {
@@ -83,7 +83,7 @@ namespace LocationModifier2.Dialogs
             ViewLocations.IsChecked = true;
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
             IwRef.Refocus();
@@ -122,7 +122,9 @@ namespace LocationModifier2.Dialogs
             foreach (var order in ordersWithIssues)
             {
                 if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
-                controlList.AddRange(from issue in order.issues where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack") select new IssueControl(order, issue, this));
+                controlList.AddRange(from issue in order.issues
+                    where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack")
+                    select new IssueControl(order, issue, this));
             }
             var controlListSorted = new List<IssueControl>();
             switch (IwRef.OldMw.Unit)
@@ -145,7 +147,8 @@ namespace LocationModifier2.Dialogs
             controlList.Sort((x, y) => x.Pickroute.CompareTo(y.Pickroute));
             foreach (var control in controlListSorted)
             {
-                if (control.CurrentIssueData.Reason.ToLower().Contains("prepack") | control.CurrentIssueData.Reason.ToLower().Contains("gs1")) continue;
+                if (control.CurrentIssueData.Reason.ToLower().Contains("prepack") |
+                    control.CurrentIssueData.Reason.ToLower().Contains("gs1")) continue;
                 ActualAuditContainer.Children.Add(control);
             }
         }
@@ -186,7 +189,9 @@ namespace LocationModifier2.Dialogs
             OrderDefinition returnOrddef;
             try
             {
-                var orddefClient = WHLClasses.Services.OrderServer.Fucnt.ConnectChannel("net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
+                var orddefClient =
+                    WHLClasses.Services.OrderServer.Fucnt.ConnectChannel(
+                        "net.tcp://orderserver.ad.whitehinge.com:801/OrderServer/1");
                 returnOrddef = orddefClient.StreamOrderDefinition();
             }
             catch (Exception)
