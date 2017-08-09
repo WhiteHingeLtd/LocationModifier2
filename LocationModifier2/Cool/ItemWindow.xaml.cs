@@ -174,6 +174,11 @@ namespace LocationModifier2.Cool
                     OldMw.ProcessScanBox(scanData);
                     
                 }
+                else if (scanData == "")
+                {
+                    PacksizeHolder.Children.Clear();
+                    LocationControlHolder.Children.Clear();
+                }
                 else if (OldMw.AuthdEmployee != null)
                 {
                     if (scanData.StartsWith("qwz") || scanData.StartsWith("qzw"))
@@ -313,8 +318,13 @@ namespace LocationModifier2.Cool
 
         private void Logout()
         {
+            ProcessScan("");
+            ItemName.Text = "_";
+            ShortSku.Text = "_";
             OldMw.AuthdEmployee = null;
+            ActiveItem = null;
             new MsgDialog("Logged out", "You have logged out sucessfully").ShowDialog();
+            
         }
     }
 }

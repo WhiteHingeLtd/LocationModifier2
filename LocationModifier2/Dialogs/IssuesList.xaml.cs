@@ -45,7 +45,6 @@ namespace LocationModifier2.Dialogs
                     throw new ArgumentOutOfRangeException();
             }
             CurrentSelectedResolution = IssueResolution.ViewLocations;
-            IssueSkuColl = IwRef.OldMw.FullSkuCollection;
             ItemName.Text = IwRef.LastOrddefRefresh.ToShortTimeString();
             LocalOrddef = fullOrddef;
             var workingOrddef = new OrderDefinition();
