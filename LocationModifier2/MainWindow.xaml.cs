@@ -461,9 +461,7 @@ namespace LocationModifier2
                         {
                             ActiveItem.MoveLocationWithAudit(InitialLocationId, AuthdEmployee, amount, NewLocationId, "Location Modifier");
                             HistoryBlock.Text = HistoryBlock.Text.Insert(0,
-                                "Moved " + amount.ToString() + " of " + ActiveItem.SKU + Environment.NewLine + "From "
-                                + LocationIdConversion(InitialLocationId) + " to " +
-                                LocationIdConversion(NewLocationId) + Environment.NewLine
+                                $"Moved {amount} of {ActiveItem.SKU}" + Environment.NewLine + $"From {LocationIdConversion(InitialLocationId)} to {LocationIdConversion(NewLocationId)}" + Environment.NewLine
                                 + "======================" + Environment.NewLine);
                             ActiveItem = null;
                             NewLocationId = 0;
@@ -710,7 +708,7 @@ namespace LocationModifier2
 
         }
 
-        public int LocationNameConversion(string location)
+        internal int LocationNameConversion(string location)
         {
             try
             {
