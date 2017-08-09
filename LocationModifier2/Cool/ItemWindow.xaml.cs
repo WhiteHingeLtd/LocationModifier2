@@ -299,5 +299,21 @@ namespace LocationModifier2.Cool
         {
             (new AuditTrailWindow(ShortSku.Text, ItemName.Text,this)).ShowDialog();
         }
+
+        private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if(OldMw.AuthdEmployee != null) Logout();
+        }
+
+        private void Grid_TouchUp(object sender, TouchEventArgs e)
+        {
+            if (OldMw.AuthdEmployee != null) Logout();
+        }
+
+        private void Logout()
+        {
+            OldMw.AuthdEmployee = null;
+            new MsgDialog("Logged out", "You have logged out sucessfully").ShowDialog();
+        }
     }
 }
