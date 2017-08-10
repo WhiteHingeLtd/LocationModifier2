@@ -31,11 +31,22 @@ namespace LocationModifier2.UserControls
 
 
             TimeText.Text = currentIssue.TimeReported.ToString("HH:mm:ss");
+            int correctAmount;
 
 
             var Badsku = FindCorrectSku(IssueListDialog.IwRef.OldMw.FullSkuCollection, currentIssue.DodgySku);
+            try
+            {
+                var bundleSkus = new SkuCollection(true);
+                bundleSkus.AddRange(CurrentOrder.BetterItems.Select(result => FindCorrectSku(IssueListDialog.IwRef.OldMw.FullSkuCollection, result.SKU)));
+                correctAmount = bundleSkus.Any(x => x.isBundle) ? CurrentOrder.BetterItems[0].OrderQuantity : CurrentOrder.BetterItems.First(x => x.SKU != null && x.SKU == CurrentIssueData.DodgySku).OrderQuantity;
+            }
+            catch (Exception)
+            {
+                correctAmount = 1;
+            }
             //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(currentIssue.DodgySku)[0];
-            OrderNumText.Text = $"{currentIssue.Quantity} x {Badsku.PackSize} Pack";
+            OrderNumText.Text = $"{correctAmount} of {Badsku.PackSize}";
             OrderNumText.Text += " " + currentIssue.Reason;
             CurrentSku = Badsku;
             var prepackString = $"Prepackable Needs {CurrentSku.PackSize}";

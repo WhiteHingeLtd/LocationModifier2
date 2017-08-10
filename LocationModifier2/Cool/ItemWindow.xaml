@@ -18,10 +18,10 @@
                 <RowDefinition/>
                 <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Column="3" Background="Black" Margin="0,0,48,0" MouseUp="Grid_MouseUp" TouchUp="Grid_TouchUp">
+            <Grid Grid.Column="3" Background="Black" Margin="0,0,48,0" >
                 <TextBlock x:Name="ShortSku" HorizontalAlignment="Center" TextWrapping="Wrap" Text="_" VerticalAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold"/>
             </Grid>
-            <Viewbox Grid.Column="2" Margin="10,0,10,3">
+            <Viewbox Grid.Column="2" Margin="10,0,60,3">
                 <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="_"/>
             </Viewbox>
             <ScrollViewer x:Name="NotesScroller" Grid.Row="1" Grid.ColumnSpan="4" PanningMode="Both" MouseLeftButtonDown="NotesScroller_MouseLeftButtonDown" MouseLeftButtonUp="NotesScroller_MouseLeftButtonUp" MouseMove="NotesScroller_MouseMove" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFE8E8E8">
@@ -84,7 +84,9 @@
             <Button x:Name="AuditButton" Grid.Column="1" Margin="3" FontSize="18" Click="AuditButton_Click">
                 <TextBlock Text="Audit Trail" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
             </Button>
-
+            <Button x:Name="LogoutButton" Grid.Column="2" Margin="493,3,0,3" FontSize="18" MouseUp="Grid_MouseUp" TouchUp="Grid_TouchUp">
+                <TextBlock Text="Log out" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
+            </Button>
         </Grid>
     </Viewbox>
 

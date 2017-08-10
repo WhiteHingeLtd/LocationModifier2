@@ -1,11 +1,10 @@
-﻿using System;
-using LocationModifier2.Cool;
+﻿using LocationModifier2.Cool;
 using LocationModifier2.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using WHLClasses;
 using WHLClasses.Orders;
 
 namespace LocationModifier2.Dialogs

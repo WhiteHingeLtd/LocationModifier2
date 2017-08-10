@@ -231,7 +231,7 @@ namespace LocationModifier2.Cool
             catch (Exception ex)
             {
                 WHLClasses.Reporting.ErrorReporting.ReportException(ex, false);
-                new MsgDialog("Scan Error", "An unknown error occurred while processing you scan.").ShowDialog();
+                new MsgDialog("Scan Error", "An unknown error occurred while processing your scan.").ShowDialog();
                 Refocus();
             }
 
@@ -296,6 +296,7 @@ namespace LocationModifier2.Cool
 
         private void AddShelfButton_Click(object sender, RoutedEventArgs e)
         {
+            if (ActiveItem == null) return;
             new AddShelf(this, ActiveItem, ActiveCollection).ShowDialog();
             ProcessScan(ActiveItem.SKU);
             Refocus();
