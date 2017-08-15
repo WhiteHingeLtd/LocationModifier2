@@ -33,7 +33,7 @@ namespace LocationModifier2.Dialogs
                     MoveSomeStock.IsEnabled = true;
                     AddButton.IsEnabled = true;
                     Minus.IsEnabled = true;
-                    this.Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
+                    Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
                     break;
                 case ButtonType.MoveSomeStock:
                         CurrentState = ButtonType.SetStock;
@@ -42,7 +42,7 @@ namespace LocationModifier2.Dialogs
                         MoveSomeStock.IsEnabled = true;
                         AddButton.IsEnabled = true;
                         Minus.IsEnabled = true;
-                        this.Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
+                        Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
                     break;
                 case ButtonType.MoveAllStock:
                         CurrentState = ButtonType.SetStock;
@@ -51,7 +51,7 @@ namespace LocationModifier2.Dialogs
                         MoveSomeStock.IsEnabled = true;
                         AddButton.IsEnabled = true;
                         Minus.IsEnabled = true;
-                        this.Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
+                        Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
                     break;
                 case ButtonType.Add:
                     SetStock.IsEnabled = true;
@@ -59,7 +59,7 @@ namespace LocationModifier2.Dialogs
                     MoveSomeStock.IsEnabled = true;
                     AddButton.IsEnabled = false;
                     Minus.IsEnabled = true;
-                    this.Background = System.Windows.Media.Brushes.DarkGreen;
+                    Background = Brushes.DarkGreen;
                     break;
                 case ButtonType.Minus:
                     SetStock.IsEnabled = true;
@@ -67,7 +67,7 @@ namespace LocationModifier2.Dialogs
                     MoveSomeStock.IsEnabled = true;
                     AddButton.IsEnabled = true;
                     Minus.IsEnabled = false;
-                    this.Background = System.Windows.Media.Brushes.DarkRed;
+                    Background = Brushes.DarkRed;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -85,7 +85,7 @@ namespace LocationModifier2.Dialogs
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             Cancel = true;
-            this.Close();
+            Close();
         }
 
         private void KeypadEnter_Click(object sender, RoutedEventArgs e)
@@ -94,21 +94,21 @@ namespace LocationModifier2.Dialogs
             if (CurrentState == ButtonType.SetStock)
             {
                 FinalStockEntry = Convert.ToInt32(ScanBox.Text);
-                this.Close();
+                Close();
             }
             else if ( CurrentState == ButtonType.MoveSomeStock && NewLocation != -1 && ScanBox.Text.Length != 0)
             {
                 FinalStockEntry = Convert.ToInt32(ScanBox.Text);
-                this.Close();
+                Close();
             }
             else if (CurrentState == ButtonType.MoveAllStock  && NewLocation != -1 )
             {
-                this.Close();
+                Close();
             }
             else if (CurrentState == ButtonType.Add || CurrentState == ButtonType.Minus)
             {
                 FinalStockEntry = Convert.ToInt32(ScanBox.Text);
-                this.Close();
+                Close();
             }
         }
 
@@ -156,6 +156,7 @@ namespace LocationModifier2.Dialogs
 
         private void SetupMovePanel()
         {
+            Background = new SolidColorBrush(Color.FromRgb(14, 0, 153));
             ActiveItem.RefreshLocations();
             ButtonPanel.Children.Clear();
             foreach (var loc in ActiveItem.Locations.Where(x => x.LocationID != ActiveLocation))
@@ -222,12 +223,12 @@ namespace LocationModifier2.Dialogs
             MoveSomeStock.IsEnabled = true;
             Minus.IsEnabled = true;
             AddButton.IsEnabled = true;
-            this.Background = new SolidColorBrush(Color.FromRgb(14,0,153));
+            Background = new SolidColorBrush(Color.FromRgb(14,0,153));
         }
 
         private void Minus_Click(object sender, RoutedEventArgs e)
         {
-            this.Background = System.Windows.Media.Brushes.DarkRed;
+            Background = Brushes.DarkRed;
             CurrentState = ButtonType.Minus;
             SetStock.IsEnabled = true;
             MoveAllStock.IsEnabled = true;
@@ -238,7 +239,7 @@ namespace LocationModifier2.Dialogs
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Background = System.Windows.Media.Brushes.DarkGreen;
+            Background = Brushes.DarkGreen;
             CurrentState = ButtonType.Add;
             SetStock.IsEnabled = true;
             MoveAllStock.IsEnabled = true;

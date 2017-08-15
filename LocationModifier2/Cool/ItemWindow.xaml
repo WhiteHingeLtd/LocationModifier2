@@ -84,7 +84,7 @@
             <Button x:Name="AuditButton" Grid.Column="1" Margin="3" FontSize="18" Click="AuditButton_Click">
                 <TextBlock Text="Audit Trail" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
             </Button>
-            <Button x:Name="LogoutButton" Grid.Column="2" Margin="493,3,0,3" FontSize="18" MouseUp="Grid_MouseUp" TouchUp="Grid_TouchUp">
+            <Button x:Name="LogoutButton" Grid.Column="2" Margin="493,3,0,3" FontSize="18" MouseUp="Grid_MouseUp" TouchUp="Grid_TouchUp" Click="LogoutButton_OnClick">
                 <TextBlock Text="Log out" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
             </Button>
         </Grid>

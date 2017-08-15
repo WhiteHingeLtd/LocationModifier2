@@ -2,7 +2,6 @@
 using LocationModifier2.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -18,7 +17,6 @@ namespace LocationModifier2.UserControls
     public partial class ShelfControl
     {
         internal int LocationId;
-        internal string LocationText;
         internal SkuCollection ActiveCollection;
         internal ItemWindow IwRef;
         internal Dictionary<string,int> Additionals = new Dictionary<string, int>();
@@ -26,11 +24,10 @@ namespace LocationModifier2.UserControls
         {
             InitializeComponent();
             LocationId = locId;
-            LocationText = locText;
             ActiveCollection = skuColl;
             Button1.Content = locText;
             IwRef = main;
-            if (multiPick && !isPick) Button1.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(145,255,0,0));
+            if (multiPick && !isPick) Button1.Background = new SolidColorBrush(Color.FromArgb(145,255,0,0));
             else if(isPick) Button1.Background = new SolidColorBrush(Color.FromArgb(145,0,255,155));
             UpdateDictionary();
         }

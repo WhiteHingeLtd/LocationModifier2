@@ -45,10 +45,10 @@
                     <Button x:Name="KeypadEnter" Content="Enter" Foreground="White" BorderBrush="{x:Null}" Background="#72919191" FontSize="24" Margin="1.5" Click="KeypadEnter_Click"/>
                 </UniformGrid>
                 <Button x:Name="CancelButton" Content="Cancel" Margin="0,10,26,0" Foreground="White" BorderBrush="{x:Null}" Background="#72919191" Click="CancelButton_Click" Grid.Row="1"/>
-                <StackPanel x:Name="ButtonPanel" HorizontalAlignment="Left" Height="211" Margin="10,10,0,0" VerticalAlignment="Top" Width="74">
-                    <Button x:Name="SetStock" Content="Set" Height="24" Margin="2" IsEnabled="False" Click="SetStock_Click"/>
-                    <Button x:Name="MoveSomeStock" Content="Move Some" Height="24" Margin="2" IsEnabled="True" Click="MoveSomeStock_Click"/>
-                    <Button x:Name="MoveAllStock" Content="Move All" Height="24" Margin="2" IsEnabled="True" Click="MoveAllStock_Click"/>
+                <StackPanel x:Name="ButtonPanel" HorizontalAlignment="Left" Height="211" Margin="10,10,0,0" VerticalAlignment="Top" Width="95">
+                    <Button x:Name="SetStock" Content="Set" Height="28" Margin="2" IsEnabled="False" Click="SetStock_Click" FontSize="18"/>
+                    <Button x:Name="MoveSomeStock" Content="Move Some" Height="28" Margin="2" IsEnabled="True" Click="MoveSomeStock_Click" FontSize="16"/>
+                    <Button x:Name="MoveAllStock" Content="Move All" Height="28" Margin="2" IsEnabled="True" Click="MoveAllStock_Click" FontSize="16"/>
                 </StackPanel>
 
             </Grid>

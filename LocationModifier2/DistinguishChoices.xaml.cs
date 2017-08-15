@@ -25,7 +25,7 @@ public partial class DistinguishChoices
 		        Tag = sku
 		    };
             if (sku.Title.Distinguish.Trim().Length == 0)
-                newButton.Content = sku.PackSize.ToString() + " pack " + sku.Title.Label;
+                newButton.Content = $"{sku.PackSize} + pack + {sku.Title.Label}";
 		    //Formatting done, we can FINALLY start doing useful datas.
 		    newButton.Click += ButtonClicker;
 		    DistinguishChoicesHolder.Children.Add(newButton);

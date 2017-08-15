@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -29,13 +28,13 @@ namespace LocationModifier2.Cool
         }
 
 
-        internal void LoadShelf(string ScanData)
+        internal void LoadShelf(string scanData)
         {
             Headers = false;
             ItemName.Text = "No items found";
-            ShortSku.Text = ScanData.Replace("qlo", "");
+            ShortSku.Text = scanData.Replace("qlo", "");
             PacksizeHolder.Children.Clear();
-            _locationId = Convert.ToInt32(ScanData.Replace("qlo", ""));
+            _locationId = Convert.ToInt32(scanData.Replace("qlo", ""));
             MainDisp = this.Dispatcher;
 
             //Get matching skus from mixdown.
@@ -153,7 +152,7 @@ namespace LocationModifier2.Cool
             Refocus();
         }
 
-        internal void Refocus()
+        private void Refocus()
         {
             ScanBox.Text = "";
             ScanBox.Focus();

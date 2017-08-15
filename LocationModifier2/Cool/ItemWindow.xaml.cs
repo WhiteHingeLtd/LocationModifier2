@@ -325,7 +325,12 @@ namespace LocationModifier2.Cool
             OldMw.AuthdEmployee = null;
             ActiveItem = null;
             new MsgDialog("Logged out", "You have logged out sucessfully").ShowDialog();
-            
+            Refocus();
+        }
+
+        private void LogoutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (OldMw.AuthdEmployee != null) Logout();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace LocationModifier2.Cool
         public AuditControl(Dictionary<string,object> data)
         {
             InitializeComponent();
-            AdjustText.Text = auditstrings[((int?) data["AuditEvent"]).Value] + " " + data["stock"].ToString();
+            AdjustText.Text = _auditstrings[((int?) data["AuditEvent"]).Value] + " " + data["stock"].ToString();
 
             DetailText.Text = ((DateTime?) data["DateRecorded"]).Value.ToString("dd/MM/yyyy HH:mm:ss") + " - User " +
                               data["AuditUserID"].ToString() + " on " + data["packsize"].ToString() + " pack at " +
@@ -21,7 +21,7 @@ namespace LocationModifier2.Cool
         }
 
 
-        private static string[] auditstrings = {"---","NEW", "ADJ","DEL","A-ADJ", "A-DEL", "A-NEW","","","","","ADJ +","ADJ -", "ADJ", "MV FR", "MV TO"};
+        private static string[] _auditstrings = {"---","NEW", "ADJ","DEL","A-ADJ", "A-DEL", "A-NEW","","","","","ADJ +","ADJ -", "ADJ", "MV FR", "MV TO"};
 
     }
 
