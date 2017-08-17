@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Dialogs"
         mc:Ignorable="d"
-         Title="StockEntry2" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" >
+         Title="StockEntry2" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="#7F000000" WindowState="Maximized" >
     <Window.Resources>
         <ControlTemplate x:Key="OutsideButtonTemplate" TargetType="{x:Type Button}">
             <Border x:Name="border" BorderBrush="{x:Null}" Background="#A5FFFFFF"  SnapsToDevicePixels="True" Padding="6" Margin="3">
@@ -28,7 +28,7 @@
         </ControlTemplate>
     </Window.Resources>
     <Viewbox>
-        <Grid Width="550" Height="450" Background="#FF0E0099">
+        <Grid x:Name="_5252" Width="550" Height="450" Background="#FF0E0099">
             <Grid.RowDefinitions>
                 <RowDefinition Height="31*"/>
                 <RowDefinition Height="41*"/>
