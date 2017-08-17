@@ -17,6 +17,7 @@ namespace LocationModifier2.Dialogs
         internal ButtonType CurrentState;
         internal int FinalStockEntry;
         internal bool Cancel;
+        internal ControlTemplate buttontemplate;
         public StockEntry2(WhlSKU sku,int locationId,ButtonType buttonState)
         {
             InitializeComponent();
@@ -72,6 +73,7 @@ namespace LocationModifier2.Dialogs
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            buttontemplate = FindResource("OutsideButtonTemplate") as ControlTemplate;
         }
 
         public enum ButtonType
@@ -163,9 +165,8 @@ namespace LocationModifier2.Dialogs
             {
                 var control = new Button
                 {
-                    Margin = new Thickness(2.0),
+                    Template = buttontemplate,
                     Content = loc.LocationText,
-                    FontSize = 18.0,
                     Uid = loc.LocationID.ToString()
                    
                 };
@@ -174,9 +175,8 @@ namespace LocationModifier2.Dialogs
             }
             var cancel = new Button
             {
-                Margin = new Thickness(2.0),
-                Content = "Cancel",
-                FontSize = 18.0
+                Template = buttontemplate,
+                Content = "Cancel"
             };
             cancel.Click += Cancel_Click;
             ButtonPanel.Children.Add(cancel);

@@ -62,25 +62,61 @@
                            Margin="10,10,0,0" Height="48" Width="155" />
                 <Button x:Name="button" Content="Close Issues List" HorizontalAlignment="Left"
                         VerticalAlignment="Bottom" Margin="10,0,0,10" FontSize="20" Padding="10,6" Height="41"
-                        Width="164" Click="Button_Click" />
+                        Width="217" Click="Button_Click" Background="#B27E7E7E" BorderBrush="{x:Null}" Foreground="White" />
                 <TextBlock x:Name="ItemName" TextWrapping="Wrap" Text="Issues List" VerticalAlignment="Top"
                            Foreground="White" FontSize="20" FontFamily="Segoe UI Semilight" Margin="10,58,10,0"
                            Height="27" MouseUp="ItemName_MouseUp" TouchUp="ItemName_TouchUp" />
-                <StackPanel HorizontalAlignment="Left" Height="127" Margin="10,90,0,0" VerticalAlignment="Top"
-                            Width="132">
-                    <RadioButton x:Name="ViewLocations" GroupName="Group1" Content="View Locations" Background="White"
-                                 Foreground="White" Click="CheckBox_Click" Height="30" />
-                    <RadioButton x:Name="ResetOrder" GroupName="Group1" Content="Reset Order" Background="White"
-                                 Foreground="White" Click="CheckBox_Click" Height="30" />
+                <StackPanel HorizontalAlignment="Left" Height="145" Margin="10,109,0,0" VerticalAlignment="Top"
+                            Width="217">
+                    <RadioButton x:Name="ViewLocations" GroupName="Group1" Content="View Locations" Background="#FF818181"
+                                 Foreground="White" Click="CheckBox_Click" Padding="4,1,0,0" Margin="0,10" FontSize="8" RenderTransformOrigin="0,0" HorizontalAlignment="Left" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+                    <RadioButton x:Name="ResetOrder" GroupName="Group1" Content="Reset Order" Background="#FF818181"
+                                 Foreground="White" Click="CheckBox_Click" Padding="4,1,0,0" Margin="0,10" FontSize="8" RenderTransformOrigin="0,0" HorizontalAlignment="Left" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
                     <RadioButton GroupName="Group1" x:Name="SendToPrepack" Content="SendToPrepack"
-                                 HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="132"
-                                 Foreground="White" Click="CheckBox_Click" />
+                                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                                 Foreground="White" Click="CheckBox_Click" Padding="4,1,0,0" Margin="0,10" FontSize="8" Background="#FF818181" RenderTransformOrigin="0,0" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
                     <RadioButton GroupName="Group1" x:Name="OtherWarehouse" Content="OtherWarehouse"
-                                 VerticalAlignment="Top" Height="30" Foreground="White" Click="CheckBox_Click" />
+                                 VerticalAlignment="Top" Foreground="White" Click="CheckBox_Click" Padding="4,1,0,0" Margin="0,10" FontSize="8" Background="#FF818181" RenderTransformOrigin="0,0" HorizontalAlignment="Left" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
 
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Left" Height="100" Margin="10,222,0,0" VerticalAlignment="Top"
-                            Width="113" RenderTransformOrigin="0.5,0.5">
+                <StackPanel HorizontalAlignment="Left" Height="100" Margin="10,274,0,0" VerticalAlignment="Top"
+                            Width="217" RenderTransformOrigin="0.5,0.5">
                     <StackPanel.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform />
@@ -89,12 +125,39 @@
                             <TranslateTransform Y="0.327" />
                         </TransformGroup>
                     </StackPanel.RenderTransform>
-                    <RadioButton GroupName="Units" x:Name="Unit14Button" Content="Unit 14" Height="26" IsChecked="True"
-                                 Click="Unit14Button_Click" Foreground="White" />
-                    <RadioButton GroupName="Units" x:Name="Unit1Button" Content="Unit 1" Height="26"
-                                 Click="Unit14Button_Click" Foreground="White" />
-                    <RadioButton GroupName="Units" x:Name="AllUnitsButton" Content="All Units" Height="26"
-                                 Click="Unit14Button_Click" Foreground="White" />
+                    <RadioButton GroupName="Units" x:Name="Unit14Button" Content="Unit 14" IsChecked="True"
+                                 Click="Unit14Button_Click" Foreground="White" FontSize="8" Background="#FFA0A0A0" HorizontalAlignment="Left" RenderTransformOrigin="0,0.5" Margin="0,10" Padding="4,1,0,0" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+                    <RadioButton GroupName="Units" x:Name="Unit1Button" Content="Unit 1"
+                                 Click="Unit14Button_Click" Foreground="White" FontSize="8" Background="#FFA0A0A0" HorizontalAlignment="Left" RenderTransformOrigin="0,0.5" Margin="0,10" Padding="4,1,0,0" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+                    <RadioButton GroupName="Units" x:Name="AllUnitsButton" Content="All Units"
+                                 Click="Unit14Button_Click" Foreground="White" FontSize="8" Background="#FFA0A0A0" HorizontalAlignment="Left" RenderTransformOrigin="0,0.5" Margin="0,10" Padding="4,1,0,0" >
+                        <RadioButton.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
                 </StackPanel>
 
             </Grid>
