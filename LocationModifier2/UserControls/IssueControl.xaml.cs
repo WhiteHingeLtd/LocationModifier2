@@ -47,6 +47,7 @@ namespace LocationModifier2.UserControls
             }
             //var Badsku2 = IssueListDialog.IwRef.OldMw.FullSkuCollection.SearchSKUS(currentIssue.DodgySku)[0];
             OrderNumText.Text = $"{correctAmount} of {Badsku.PackSize}";
+            if (currentIssue.Reason.ToLower().Contains("no stock")) currentIssue.Reason = "No Stock";
             OrderNumText.Text += " " + currentIssue.Reason;
             CurrentSku = Badsku;
             var prepackString = $"Prepackable Needs {CurrentSku.PackSize}";
