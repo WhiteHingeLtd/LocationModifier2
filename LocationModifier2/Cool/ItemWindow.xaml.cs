@@ -26,6 +26,7 @@ namespace LocationModifier2.Cool
         internal StockEntry2.ButtonType CurrentButtonType;
         internal OrderDefinition OrderDefintions;
         internal DispatcherTimer OrddefReloadTimer;
+        internal DispatcherTimer MaximizeTimer;
         internal DateTime LastOrddefRefresh;
         public ItemWindow(MainWindow realMainWindow)
         {
@@ -43,6 +44,26 @@ namespace LocationModifier2.Cool
             OrddefReloadTimer_Tick(null, null);
             CurrentButtonType = StockEntry2.ButtonType.SetStock;
 
+
+            MaximizeTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1),
+                IsEnabled = true
+            };
+            MaximizeTimer.Tick += MaximizeTimer_Tick;
+            MaximizeTimer.Start();
+        }
+
+        private void MaximizeTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if(this.IsVisible) this.WindowState = WindowState.Maximized;
+            }
+            catch (Exception)
+            {
+                //
+            }
         }
 
         internal void OrddefReloadTimer_Tick(object sender, EventArgs e)
