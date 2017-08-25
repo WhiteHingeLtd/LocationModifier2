@@ -219,7 +219,7 @@ namespace LocationModifier2.Cool
 
                         //Find it first
                         var matches = OldMw.FullSkuCollection.SearchBarcodes(scanData);
-                        if (matches.Count == 0) matches = OldMw.MixdownSkuCollection.SearchSKUS(scanData, false);
+                        if (matches.Count == 0) matches = OldMw.MixdownSkuCollection.SearchSkusExact(scanData,  false);
                         if (matches.Count == 1)
                         {
                             ActiveItem = matches[0];
@@ -228,10 +228,21 @@ namespace LocationModifier2.Cool
                         }
                         else if (matches.Count > 1)
                         {
-                            var item = Distinguish.DistinguishSku(matches);
-                            ActiveItem = item;
+                            var noBundleMatches = matches.Where(x => !x.isBundle).ToList();
+                            if (noBundleMatches.Count == 1)
+                            {
+                                ActiveItem = noBundleMatches.First();
+                            }
+                            else
+                            {
+                                var tempColl = new SkuCollection(true);
+                                tempColl.AddRange(noBundleMatches);
+                                var item = Distinguish.DistinguishSku(tempColl);
+                                ActiveItem = item;
+
+                            }
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
-                            LoadGrid(item);
+                            LoadGrid(ActiveItem);
                         }
                         
                         else
