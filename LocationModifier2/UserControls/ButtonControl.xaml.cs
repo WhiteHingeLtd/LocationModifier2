@@ -1,6 +1,7 @@
 ﻿using LocationModifier2.Dialogs;
 using System;
 using System.Linq;
+using System.ServiceModel.Configuration;
 using System.Windows;
 using LocationModifier2.Cool;
 using WHLClasses;
@@ -51,14 +52,25 @@ namespace LocationModifier2.UserControls
                         try
                         {
                             ActiveItem.SetLocationStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry, "Location Modifier");
+                            if (ActiveItem.PackSize == 1 && stockCounter.FinalStockEntry == 0)
+                            {
+                                var rootItem = MainRefWindow.OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku)
+                                    .Where(x => x.PackSize == 0).ToList();
+                                if (rootItem.Count == 1)
+                                {
+                                    rootItem[0].SetLocationStockWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee,
+                                        stockCounter.FinalStockEntry, "Location Modifier");
+                                }
+                            }
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             // ignored
                         }
                         finally
                         {
+                            MainRefWindow.ProcessScan(ActiveItem.ShortSku);
                             MainRefWindow.Refocus();
                         }
                         break;

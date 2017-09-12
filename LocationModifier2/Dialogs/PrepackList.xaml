@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationModifier2.Dialogs"
         mc:Ignorable="d"
-        Title="IssuesList" Height="480" Width="800" Background="#E0000000" AllowsTransparency="True" WindowStyle="None" WindowState="Maximized">
+        Title="IssuesList" Height="480" Width="800" Background="#E0000000" AllowsTransparency="True" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize">
     <Viewbox>
         <Grid Width="800" Height="480">
             <Grid Margin="20,20,0,20">

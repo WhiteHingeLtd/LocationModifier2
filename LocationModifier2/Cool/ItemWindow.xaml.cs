@@ -26,6 +26,7 @@ namespace LocationModifier2.Cool
         internal StockEntry2.ButtonType CurrentButtonType;
         internal OrderDefinition OrderDefintions;
         internal DispatcherTimer OrddefReloadTimer;
+        internal DispatcherTimer MaximizeTimer;
         internal DateTime LastOrddefRefresh;
         public ItemWindow(MainWindow realMainWindow)
         {
@@ -43,6 +44,26 @@ namespace LocationModifier2.Cool
             OrddefReloadTimer_Tick(null, null);
             CurrentButtonType = StockEntry2.ButtonType.SetStock;
 
+
+            MaximizeTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1),
+                IsEnabled = true
+            };
+            MaximizeTimer.Tick += MaximizeTimer_Tick;
+            MaximizeTimer.Start();
+        }
+
+        private void MaximizeTimer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if(this.IsVisible) this.WindowState = WindowState.Maximized;
+            }
+            catch (Exception)
+            {
+                //
+            }
         }
 
         internal void OrddefReloadTimer_Tick(object sender, EventArgs e)
@@ -205,7 +226,7 @@ namespace LocationModifier2.Cool
 
                         //Find it first
                         var matches = OldMw.FullSkuCollection.SearchBarcodes(scanData);
-                        if (matches.Count == 0) matches = OldMw.MixdownSkuCollection.SearchSKUS(scanData, false);
+                        if (matches.Count == 0) matches = OldMw.MixdownSkuCollection.SearchSkusExact(scanData,  false);
                         if (matches.Count == 1)
                         {
                             ActiveItem = matches[0];
@@ -228,7 +249,7 @@ namespace LocationModifier2.Cool
                                 ActiveItem = tempColl.Count == 1 ? tempColl[0] : Distinguish.DistinguishSku(tempColl);
                             }s
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
-                            LoadGrid(item);
+                            LoadGrid(ActiveItem);
                         }
                         
                         else
