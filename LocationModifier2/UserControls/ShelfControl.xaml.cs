@@ -75,25 +75,23 @@ namespace LocationModifier2.UserControls
             {
                 try
                 {
-                    foreach (var item in ActiveCollection)
+                    var item = ActiveCollection[0];
+                    if (item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
+                    else
                     {
-                        if (item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
-                        else
+                        try
                         {
-                            try
-                            {
-                                item.RemoveLocationWithAudit(LocationId, IwRef.OldMw.AuthdEmployee,"Location Modifier");
-                            }
-                            catch (LocationNullReferenceException)
-                            {
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Data.Add("Sku",item.SKU);
-                                throw;
-                            }
-                            
+                            item.RemoveLocationWithAudit(LocationId, IwRef.OldMw.AuthdEmployee,"Location Modifier");
                         }
+                        catch (LocationNullReferenceException)
+                        {
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.Data.Add("Sku",item.SKU);
+                            throw;
+                        }
+                            
                     }
                     var msg = new MsgDialog("Success", "This location has been removed");
                     msg.ShowDialog();

@@ -524,12 +524,12 @@ namespace LocationModifier2
                 ItemDetailsStackPanel.Children.Clear();
                 PickLocationsBlock.Text = "";
                 OtherLocationsBlock.Text = "";
-                var dict = MySQL_New.GetData("SELECT * FROM whldata.sku_locations WHERE LocationRefID='"+ data.Replace("qlo","") + "';");
+                var dict = MySQL_New.GetData("SELECT * FROM whldata.shortsku_locations WHERE LocationId='"+ data.Replace("qlo","") + "';");
                 
                 
                 foreach (var result in dict)
                 {
-                    if (result["Sku"].ToString().Contains("xxxx")) continue;
+                    if (result["Shortsku"].ToString().Contains("xxxx")) continue;
                     int stock;
                     try
                     {
@@ -540,7 +540,7 @@ namespace LocationModifier2
                         stock = 0;
                     }
                     var onShelf = new TextBlock();
-                    var searchColl = FullSkuCollection.SearchBarcodes(result["Sku"].ToString());
+                    var searchColl = FullSkuCollection.SearchBarcodes(result["Shortsku"].ToString());
                     var item = searchColl[0];
                     onShelf.Text += item.SKU + " " + item.Title.Label + Environment.NewLine + "Stock: " +
                                     stock.ToString() + Environment.NewLine;
