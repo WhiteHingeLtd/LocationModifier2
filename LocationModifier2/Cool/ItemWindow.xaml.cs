@@ -247,7 +247,7 @@ namespace LocationModifier2.Cool
                                 tempColl.AddRange(noBundleMatches);
                                 tempColl = tempColl.MakeMixdown();
                                 ActiveItem = tempColl.Count == 1 ? tempColl[0] : Distinguish.DistinguishSku(tempColl);
-                            }s
+                            }
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                             LoadGrid(ActiveItem);
                         }
