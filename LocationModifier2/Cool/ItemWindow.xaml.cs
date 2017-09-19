@@ -121,22 +121,29 @@ namespace LocationModifier2.Cool
                 {SKULocation.SKULocationType.PrepackInstant, 4},
                 {SKULocation.SKULocationType.Unused, 5}
             };
+
+            bool useRoot = kids.Any(item => item.SKU.EndsWith("xxxx"));
             foreach (var kid in kids)
             {
-                //Refresh thing
-                kid.RefreshLocations();
-                if (kid.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count != 1)
+                if ((useRoot && kid.SKU.EndsWith("xxxx") || (!useRoot && kid.PackSize == 1)))
                 {
-                    hasMultiplePicking = true;
-                }
-                //We're gonna have to iterate and get a list of locations.
-                foreach (var loc in kid.Locations)
-                {
-                    if (!locationIDs.Keys.Contains(loc.LocationID))
+                    //Refresh thing
+
+                    kid.RefreshLocations();
+                    if (kid.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count != 1)
                     {
-                        locationIDs.Add(loc.LocationID, loc);
+                        hasMultiplePicking = true;
+                    }
+                    //We're gonna have to iterate and get a list of locations.
+                    foreach (var loc in kid.Locations)
+                    {
+                        if (!locationIDs.Keys.Contains(loc.LocationID))
+                        {
+                            locationIDs.Add(loc.LocationID, loc);
+                        }
                     }
                 }
+                
             }
             //Sort them to fix the faggy ordering
             var orderedlocations = locationIDs.OrderBy(x => locationMapping[x.Value.LocationType]);
@@ -148,7 +155,7 @@ namespace LocationModifier2.Cool
             //Now go again and make the controls.
             foreach (var kid in kids)
             {
-                if (kid.NewItem.IsListed || kid.PackSize == 1)
+                if ((useRoot && kid.SKU.EndsWith("xxxx") || (!useRoot && kid.PackSize == 1)))
                 {
                     var packsizecontrol = new PacksizeControl(newdict.Keys.ToList(), kid, this);
                     packsizecontrol.MouseLeftButtonUp += NotesScroller_MouseLeftButtonUp;
@@ -236,10 +243,10 @@ namespace LocationModifier2.Cool
                             else
                             {
                                 var tempColl = new SkuCollection(true);
+                                
                                 tempColl.AddRange(noBundleMatches);
-                                var item = Distinguish.DistinguishSku(tempColl);
-                                ActiveItem = item;
-
+                                tempColl = tempColl.MakeMixdown();
+                                ActiveItem = tempColl.Count == 1 ? tempColl[0] : Distinguish.DistinguishSku(tempColl);
                             }
                             ActiveCollection = OldMw.FullSkuCollection.GatherChildren(ActiveItem.ShortSku);
                             LoadGrid(ActiveItem);

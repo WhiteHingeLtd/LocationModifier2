@@ -7,12 +7,12 @@
              mc:Ignorable="d" MinHeight="110">
     <Grid Height="109">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="120"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <WrapPanel x:Name="ExpandPanel" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="80"/>
-        <Button x:Name="PacksizeBlock" Content="1000" FontSize="24" Margin="25,14,25,61" Background="{x:Null}" BorderBrush="{x:Null}" Click="PacksizeBlock_Click"/>
-        <ToggleButton x:Name="IsPrepackButton"  Margin="5,80,5,10" Click="IsPrepackButton_Click" IsChecked="True" Content ="Pack Down: ">
+        <Button x:Name="PacksizeBlock" Content="1000" FontSize="24" Margin="25,14,25,61" Background="{x:Null}" BorderBrush="{x:Null}" Click="PacksizeBlock_Click" Opacity="0"/>
+        <ToggleButton x:Name="IsPrepackButton"  Margin="5,80,5,10" Click="IsPrepackButton_Click" IsChecked="True" Content ="Pack Down: " Opacity="0">
             <ToggleButton.Template>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
                     <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
@@ -39,6 +39,6 @@
                 </ControlTemplate>
             </ToggleButton.Template>
         </ToggleButton>
-        <TextBlock x:Name="Sales" Margin="10,59,10,37" TextWrapping="Wrap" Text="Sales:"/>
+        <TextBlock x:Name="Sales" Margin="10,59,10,37" TextWrapping="Wrap" Text="Sales:" Opacity="0"/>
     </Grid>
 </UserControl>

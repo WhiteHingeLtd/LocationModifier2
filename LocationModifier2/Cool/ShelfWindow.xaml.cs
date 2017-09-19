@@ -76,14 +76,14 @@ namespace LocationModifier2.Cool
         internal List<WhlSKU> GetSkusWithLocation(int TargetID, SkuCollection Source)
         {
             var returnlist = new List<WhlSKU>();
-            var locQuery = MySQL.SelectDataDictionary("SELECT * from whldata.sku_locations where LocationRefID ='" +
+            var locQuery = MySQL.SelectDataDictionary("SELECT * from whldata.Shortsku_locations where LocationID ='" +
                                                       TargetID.ToString() + "';");
             foreach (var result in locQuery)
             {
                 WhlSKU sku = null;
                 try
                 {
-                   sku = Source.SearchBarcodes(result["Sku"].ToString())[0];
+                   sku = Source.GatherChildren(result["ShortSku"].ToString())[0];
                 }
                 catch (ArgumentOutOfRangeException)
                 {

@@ -45,11 +45,7 @@ namespace LocationModifier2.Cool
                 var newdata = Convert.ToInt32(data.Replace("qlo", ""));
                 var shelfname = IwRef.OldMw.LocationIdConversion(newdata);
                 Instruct("Adding to " + shelfname);
-                foreach (var sku in ActiveCollection)
-                {
-                    if ((from loc in sku.Locations where loc.LocationID == newdata select loc).Any()) continue;
-                    sku.AddLocationWithAudit(newdata,IwRef.OldMw.AuthdEmployee,0, "Location Modifier");
-                }
+                if (!(from loc in ActiveItem.Locations where loc.LocationID == newdata select loc).Any()) ActiveItem.AddLocationWithAudit(newdata,IwRef.OldMw.AuthdEmployee,0, "Location Modifier");
                 this.Close();
                 IwRef.ProcessScan(ActiveItem.ShortSku);
             }
@@ -61,11 +57,7 @@ namespace LocationModifier2.Cool
                     if (newdata == -1) throw new Exception();
                     var shelfname = IwRef.OldMw.LocationIdConversion(newdata);
                     Instruct("Adding to " + shelfname);
-                    foreach (var sku in ActiveCollection)
-                    {
-                        if ((from loc in sku.Locations where loc.LocationID == newdata select loc).Any()) continue;
-                        sku.AddLocationWithAudit(newdata, IwRef.OldMw.AuthdEmployee, 0, "Location Modifier");
-                    }
+                        if (!(from loc in ActiveItem.Locations where loc.LocationID == newdata select loc).Any()) ActiveItem.AddLocationWithAudit(newdata, IwRef.OldMw.AuthdEmployee, 0, "Location Modifier");
                     this.Close();
                     IwRef.ProcessScan(ActiveItem.ShortSku);
                 }
