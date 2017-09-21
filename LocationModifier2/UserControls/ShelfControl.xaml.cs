@@ -29,7 +29,6 @@ namespace LocationModifier2.UserControls
             IwRef = main;
             if (multiPick && !isPick) Button1.Background = new SolidColorBrush(Color.FromArgb(145,255,0,0));
             else if(isPick) Button1.Background = new SolidColorBrush(Color.FromArgb(145,0,255,155));
-            UpdateDictionary();
         }
 
         private void ShelfControlUC_TouchUp(object sender, TouchEventArgs e)
@@ -44,29 +43,13 @@ namespace LocationModifier2.UserControls
 
         private void UpdateDictionary()
         {
-            Additionals.Clear();
-            foreach (var sku in ActiveCollection)
-            {
-                int info;
-                try
-                {
-                    info = (from loc in sku.Locations
-                            where (loc.LocationID == LocationId)
-                            select Convert.ToInt32(loc.Additional))
-                        .Single();
-                }
-                catch (InvalidOperationException)
-                {
-                    continue;
-                }
-                if (info != -1) Additionals.Add(sku.SKU, info);
-            }
         }
 
         private void RemoveAllFromShelf()
         {
-            UpdateDictionary();
-            if (Additionals.Any(add => add.Value != 0))
+            var item = ActiveCollection[0];
+            item.RefreshLocations();
+            if (item.Locations.FirstOrDefault((x)=> x.LocationID==LocationId).Additional!="0")
             {
                 var msg = new MsgDialog("ERROR","These shelves aren't empty!");
                 msg.ShowDialog();
@@ -75,7 +58,6 @@ namespace LocationModifier2.UserControls
             {
                 try
                 {
-                    var item = ActiveCollection[0];
                     if (item.GetLocationsByType(SKULocation.SKULocationType.Pickable).Count == 1 && item.GetLocationsByType(SKULocation.SKULocationType.Pickable)[0].LocationID == LocationId) throw new LocationNullReferenceException("This location has only one pickable location");
                     else
                     {
