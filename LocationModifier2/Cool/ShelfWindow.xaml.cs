@@ -83,7 +83,7 @@ namespace LocationModifier2.Cool
                 WhlSKU sku = null;
                 try
                 {
-                   sku = Source.GatherChildren(result["ShortSku"].ToString())[0];
+                   sku = Source.GatherChildren(result["Shortsku"].ToString())[0];
                 }
                 catch (ArgumentOutOfRangeException)
                 {
