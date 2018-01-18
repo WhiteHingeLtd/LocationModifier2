@@ -27,8 +27,8 @@
     <InstallUrl>http://apps.ad.whitehinge.com/AppPublish/LocMod2/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>22</ApplicationRevision>
-    <ApplicationVersion>3.0.5.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>3.1.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -72,6 +72,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>SPC.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LocationModifier2.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -96,6 +99,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppDisabled.xaml.cs">
+      <DependentUpon>AppDisabled.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Cool\AddShelf.xaml.cs">
       <DependentUpon>AddShelf.xaml</DependentUpon>
     </Compile>
@@ -138,6 +144,10 @@
     <Compile Include="UserControls\ShelfControl.xaml.cs">
       <DependentUpon>ShelfControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="AppDisabled.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Cool\AddShelf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -297,6 +307,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AppDisabled for SYstem2.0.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
