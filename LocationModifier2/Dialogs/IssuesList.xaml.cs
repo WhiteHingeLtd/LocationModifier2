@@ -53,8 +53,17 @@ namespace LocationModifier2.Dialogs
             var ordersWithIssues = workingOrddef.Where(x => x.issues.Any());
             foreach (var order in ordersWithIssues)
             {
-                if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
-                controlList.AddRange(from issue in order.issues where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack") select new IssueControl(order, issue, this));
+                try
+                {
+                    if (order.State == OrderStatus._Prepack || order.State == OrderStatus._Withdrawn) continue;
+                    controlList.AddRange(from issue in order.issues where !issue.Resolved && !issue.Reason.ToLower().Contains("prepack") && issue.DodgySku != null select new IssueControl(order, issue, this));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
             }
             List<IssueControl> controlListSorted;
             switch (IwRef.OldMw.Unit)

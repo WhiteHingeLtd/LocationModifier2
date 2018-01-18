@@ -66,6 +66,7 @@ namespace LocationModifier2.UserControls
                         }
                         catch (Exception ex)
                         {
+                            Console.WriteLine(ex);
                             // ignored
                         }
                         finally
@@ -80,10 +81,10 @@ namespace LocationModifier2.UserControls
                             ActiveItem.MoveLocationWithAudit(LocationID, MainRefWindow.OldMw.AuthdEmployee, stockCounter.FinalStockEntry,stockCounter.NewLocation, "Location Modifier");
                             MainButton.Content = stockCounter.FinalStockEntry;
                         }
-                        catch (Exception ex)
+                        catch (NegativeStockException ex)
                         {
-                            Console.Write(ex.Message);
-                            // ignored
+                            Console.WriteLine(ex);
+                            new MsgDialog("Error", "You can't have negative stock").ShowDialog();
                         }
                         finally
                         {

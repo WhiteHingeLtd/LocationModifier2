@@ -211,7 +211,16 @@ namespace LocationModifier2.Cool
                 {
                     if (scanData.StartsWith("qwz") || scanData.StartsWith("qzw"))
                     {
-                        new IssuesList(this, OrderDefintions).ShowDialog();
+                        try
+                        {
+                            new IssuesList(this, OrderDefintions).ShowDialog();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                        
                     }
                     else if (scanData.StartsWith("ppl"))
                     {
